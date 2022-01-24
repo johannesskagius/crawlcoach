@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>145240700505-q1h6am0vsdmgu7i786mu53iki65n1jkl.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.145240700505-q1h6am0vsdmgu7i786mu53iki65n1jkl</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAmUr40qdA4xDMlMoeUr84_naGejmNG_0g</string>
+	<key>GCM_SENDER_ID</key>
+	<string>145240700505</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.crawlCoach</string>
+	<key>PROJECT_ID</key>
+	<string>developprojs</string>
+	<key>STORAGE_BUCKET</key>
+	<string>developprojs.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:145240700505:ios:ca849a1d398441c6a02348</string>
+	<key>DATABASE_URL</key>
+	<string>https://developprojs-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "145240700505",
+    "firebase_url": "https://developprojs-default-rtdb.firebaseio.com",
+    "project_id": "developprojs",
+    "storage_bucket": "developprojs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145240700505:android:228c4e9c047ef360a02348",
+        "android_client_info": {
+          "package_name": "com.example.crawl_coach"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145240700505-qv0k7rs3t3rc388cde0cvr1jimd4gr2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC01tBeFcp66-tzXgfoEZ0QL0JpPS0l2-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145240700505-qv0k7rs3t3rc388cde0cvr1jimd4gr2j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "145240700505-pmrkpi4jp07agf3rs0v0emrn64bdodm2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gym2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145240700505:android:34e10e58b1891117a02348",
+        "android_client_info": {
+          "package_name": "com.example.firebase_auth_tutorial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145240700505-qv0k7rs3t3rc388cde0cvr1jimd4gr2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC01tBeFcp66-tzXgfoEZ0QL0JpPS0l2-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145240700505-qv0k7rs3t3rc388cde0cvr1jimd4gr2j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "145240700505-pmrkpi4jp07agf3rs0v0emrn64bdodm2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gym2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
