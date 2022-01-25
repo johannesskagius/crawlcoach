@@ -1,12 +1,11 @@
 import 'package:crawl_course_3/session/excerise/current_exercises.dart';
 import 'package:crawl_course_3/session/session.dart';
-import 'package:crawl_course_3/user.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
   const Home(this._localUserName,{Key? key}) : super(key: key);
   final String _localUserName;
-
 
   @override
   Widget build(BuildContext context) {

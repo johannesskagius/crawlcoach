@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocalUser {
   LocalUser(this._firstName, this._lastName, this._email, this._userAuth2);
   String _firstName, _lastName, _email, _userAuth2;
+  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
 
   Map<String, dynamic> toJson() => {
     '_firstName': _firstName,
@@ -18,11 +19,10 @@ class LocalUser {
   };
 
   //create user space in realtimeDatabase
-  void createUserData() async {
-    final database = FirebaseDatabase.instance.ref().child('users');
-    print('here');
-    database.set(toJson()).catchError((error) => print('Error! $error'));
+  void syncToServer() async {
+    await _ref.child(_email).set(toJson());
   }
+
 
   LocalUser.fromJson(Map<String, dynamic> json)
   :_firstName = json['_firstName'],

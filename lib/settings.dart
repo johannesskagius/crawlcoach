@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
 
@@ -20,14 +19,10 @@ class _SettingsState extends State<Settings> {
   late LocalUser _localUser;
   late String userJson;
 
-
-
   @override
   void initState() {
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +30,13 @@ class _SettingsState extends State<Settings> {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-       body: const Account(),//,
+      body: const Account(), //,
     );
   }
 }
 
 class Account extends StatefulWidget {
-   const Account({Key? key}) : super(key: key);
+  const Account({Key? key}) : super(key: key);
 
   @override
   State<Account> createState() => _AccountState();
@@ -49,33 +44,35 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   LocalUser? _localUser;
-  String _fName= '';
-  String _lName ='';
-  String _email='';
+  String _fName = '';
+  String _lName = '';
+  String _email = '';
   @override
   void initState() {
     getUserData();
     super.initState();
   }
 
-  void getUserData() async{
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    try{
-      Map<String, dynamic> userMap = jsonDecode(sharedPreferences.getString('USER_CRED')!);
+  void getUserData() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    try {
+      Map<String, dynamic> userMap =
+          jsonDecode(sharedPreferences.getString('USER_CRED')!);
       _localUser = LocalUser.fromJson(userMap);
       setState(() {
         _fName = _localUser!.firstName;
         _lName = _localUser!.lastName;
         _email = _localUser!.email;
       });
-    }catch(error){
-     print(error);
+    } catch (error) {
+      print(error);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final database = FirebaseDatabase.instance.ref();
+    DatabaseReference database = FirebaseDatabase.instance.ref();
 
     final _formKey = GlobalKey<FormState>();
     final _height = MediaQuery.of(context).size.height;
@@ -89,18 +86,19 @@ class _AccountState extends State<Account> {
     _txtEditList.elementAt(1).text = _lName;
     _txtEditList.elementAt(2).text = _email;
 
-    Future<void> _createUser() async  {
+    Future<void> _createUser() async {
       final FirebaseAuth _auth = FirebaseAuth.instance;
-      String _userAuth2 ='';
+      String _userAuth2 = '';
       User? user;
       try {
         user = (await _auth.createUserWithEmailAndPassword(
-            email: _txtEditList.elementAt(2).value.text, password: 'test1234'))
+                email: _txtEditList.elementAt(2).value.text,
+                password: 'test1234'))
             .user;
         _userAuth2 = user!.uid;
       } catch (error) {
         switch (error) {
-        //TODO fix the error codes. we want different things to happen depending the response from the server.
+          //TODO fix the error codes. we want different things to happen depending the response from the server.
           case 'email-already-exists': //Går aldrig in här.
             print('This email is already in use');
             break;
@@ -115,16 +113,18 @@ class _AccountState extends State<Account> {
             _txtEditList.elementAt(0).value.text,
             _txtEditList.elementAt(1).value.text,
             _txtEditList.elementAt(2).value.text,
-            _userAuth2
-        );
+            _userAuth2);
+
         _newLocalUser.saveToSharedPreferences();
+        _newLocalUser.syncToServer();
       }
     }
 
     /// Get from gallery
     void _getFromGallery() async {
-      XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if(pickedFile != null){
+      XFile? pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
         setState(() {
           _imgSource = pickedFile.path;
         });
@@ -142,8 +142,10 @@ class _AccountState extends State<Account> {
               child: SizedBox(
                 height: _height / 4,
                 width: _width / 2,
-                child: Image.asset(_imgSource,
-                fit: BoxFit.cover,),
+                child: Image.asset(
+                  _imgSource,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             SizedBox(
@@ -157,7 +159,7 @@ class _AccountState extends State<Account> {
                       controller: _txtEditList.elementAt(0),
                       autovalidateMode: AutovalidateMode.always,
                       decoration: const InputDecoration(
-                        hintText: 'Johannes',
+                        hintText: 'John',
                         labelText: 'First name',
                       ),
                       validator: (value) {
@@ -170,7 +172,7 @@ class _AccountState extends State<Account> {
                     TextFormField(
                       controller: _txtEditList.elementAt(1),
                       decoration: const InputDecoration(
-                        hintText: 'Skagius',
+                        hintText: 'Andersson',
                         labelText: 'Last name',
                       ),
                       autovalidateMode: AutovalidateMode.always,
@@ -204,11 +206,8 @@ class _AccountState extends State<Account> {
                       },
                     ),
                     ElevatedButton(
-                        onPressed: _createUser, child: const Text('create user')),
-                    ElevatedButton(
-                        onPressed: (){
-                          database.child('users').child(_localUser!.userAuth2).set(_localUser!.toJson());
-                        }, child: const Text('Upload')),
+                        onPressed: _createUser,
+                        child: const Text('create user')),
                   ],
                 ),
               ),
@@ -219,4 +218,3 @@ class _AccountState extends State<Account> {
     );
   }
 }
-
