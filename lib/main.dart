@@ -24,26 +24,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: <String, WidgetBuilder>{
-        // '/home': (BuildContext context) {
-        //   return  Home(_localUser!);
-        // },
-        '/about': (BuildContext context) {
-          return const About();
-        },
-        '/session': (BuildContext context) {
-          return Session00(
-            session: Session('First session', CurrentExercises().exercises,
-                'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
-          );
-        },
-        '/settings': (BuildContext context) {
-          return const Settings();
-        },
-      },
-      theme:
-          ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),
-      home: Layout(),
+      theme: ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),
+      home: const Layout(),
     );
   }
 }
@@ -69,7 +51,6 @@ class _LayoutState extends State<Layout> {
       return _localUser;
     } catch (exception) {
       return LocalUser('', '', '', '');
-      //return null;
     }
   }
 
@@ -106,11 +87,11 @@ class _LayoutState extends State<Layout> {
             const Settings(),
           ];
         } else {
-          childs = <Widget>[Home('unkown'), const About(), const Settings()];
+          childs = <Widget>[const Home('unkown'), const About(), const Settings()];
         }
         return Scaffold(
             appBar: AppBar(
-              title: const Text('Crawlcoach'),
+              title: const Text('Crawl Coach'),
             ),
             body: Center(
               child: PageView(
