@@ -23,7 +23,7 @@ class Session03 extends StatelessWidget {
             //mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SessionAttributes('Exercises: ', session.exercises.length.toString(), _width,),
-              SessionAttributes('Time: ', session.getTime().inMinutes.toString() +' minutes', _width,),
+              //SessionAttributes('Time: ', session.getTime().inMinutes.toString() +' minutes', _width,),
               //SessionAttributes('Number of exercises: ', session.exercises.length.toString()),
             ],
           ),

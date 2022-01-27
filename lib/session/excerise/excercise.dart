@@ -37,15 +37,15 @@ class ExerciseViewPort extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: _width/3,
-                        child: exercise.perk1
+                        child: Text(exercise.perk1)
                     ),
                     SizedBox(
                       width: _width/3,
-                      child:exercise.perk2,
+                      child:Text(exercise.perk2),
                     ),
                     SizedBox(
                       width: _width/3,
-                      child:  exercise.perk3,
+                      child: Text(exercise.perk3),
                     )
                   ],
                 ),

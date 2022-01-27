@@ -10,29 +10,42 @@ import 'package:firebase_core/firebase_core.dart';
 @JsonSerializable()
 class Exercise {
   String _title, _subTitle;
-  Perks _perk1, _perk2, _perk3;
-  Duration _timeToFinish;
-  List<String> _description;
-  Exercise(this._title, this._subTitle, this._perk1, this._perk2, this._perk3, this._timeToFinish ,this._description);
+  String _perk1, _perk2, _perk3;
+  List<dynamic> _description;
+  Exercise(this._title, this._subTitle, this._perk1, this._perk2, this._perk3,this._description);
 
-  Perks get perk1 => _perk1;
 
-  Duration get timeToFinish => _timeToFinish;
 
-  List<String> get description => _description;
-  String get title => _title;
   get subTitle => _subTitle;
 
+  factory Exercise.fromJson(dynamic json) => _exerciseFromJson(json);
+
   Map<String, dynamic> toJson() => {
-        'title': _title,
-        'subTitle': _subTitle,
-        '_description': _description,
-      };
+    'title' : title,
+    'subTitle': subTitle,
+    'perk1': _perk1,
+    'perk2': _perk2,
+    'perk3': _perk3,
+    'description': description,
+  };
 
+  List<dynamic> get description => _description;
+  String get title => _title;
+  String get perk1 => _perk1;
   get perk2 => _perk2;
-
   get perk3 => _perk3;
 }
+
+Exercise _exerciseFromJson(dynamic json) {
+  return Exercise(
+      json['title'] as String,
+      json['subTitle'] as String,
+      json['perk1'] as String,
+      json['perk2'] as String,
+      json['perk3'] as String,
+      json['description'] as List<dynamic>);
+}
+
 
 Future<void> loadToFireBase(Exercise exercise) async {
   final DatabaseReference database = FirebaseDatabase.instance.ref('exercises');
@@ -44,9 +57,6 @@ void _storeData(Exercise exercise) {
   database.set(exercise.toJson());
 }
 
-/**
- *
- */
 class Explained extends StatelessWidget {
   const Explained(
       {Key? key,
@@ -104,3 +114,5 @@ class Perks extends StatelessWidget {
     );
   }
 }
+
+

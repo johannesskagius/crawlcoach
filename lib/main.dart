@@ -1,15 +1,18 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:crawl_course_3/session/excerise/current_exercises.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:crawl_course_3/session/session_view_00.dart';
 import 'package:crawl_course_3/settings.dart';
-import 'package:crawl_course_3/user.dart';
+import 'package:crawl_course_3/account/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'about.dart';
+import 'account/admin.dart';
 import 'home.dart';
 
 void main() async {
@@ -24,7 +27,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),
+      theme:
+          ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),
       home: const Layout(),
     );
   }
@@ -39,24 +43,33 @@ class Layout extends StatefulWidget {
 
 class _LayoutState extends State<Layout> {
   final PageController pControll = PageController();
+  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   int _selected = 0;
 
-  Future<LocalUser> getLocalUser() async {
+  Future<bool> _activateListener() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    try {
-      Map<String, dynamic> userMap =
-          jsonDecode(sharedPreferences.getString('USER_CRED')!);
-      LocalUser _localUser = LocalUser.fromJson(userMap);
-      return _localUser;
-    } catch (exception) {
-      return LocalUser('', '', '', '');
+    Map<String, dynamic> userMap =
+        jsonDecode(sharedPreferences.getString('USER_CRED')!);
+    LocalUser _local = LocalUser.fromJson(userMap);
+    UserCredential _usercred = await _auth.signInWithEmailAndPassword(
+        email: _local.email, password: _local.password);
+
+    DataSnapshot tes = await _ref
+        .child('users')
+        .child(_usercred.user!.uid)
+        .child('admin').get();
+
+    if (tes.value.toString() == 'true') {
+      return Future<bool>.value(true);
+    } else {
+      return Future<bool>.value(false);
     }
   }
 
   @override
   void initState() {
-    getLocalUser();
     super.initState();
   }
 
@@ -76,45 +89,51 @@ class _LayoutState extends State<Layout> {
       });
     }
 
-    return FutureBuilder<LocalUser>(
-      future: getLocalUser(),
-      builder: (BuildContext context, AsyncSnapshot<LocalUser> snapshot) {
-        List<Widget> childs;
-        if (snapshot.hasData) {
-          childs = <Widget>[
-            Home(snapshot.data!.firstName),
-            const About(),
-            const Settings(),
-          ];
-        } else {
-          childs = <Widget>[const Home('unkown'), const About(), const Settings()];
-        }
-        return Scaffold(
-            appBar: AppBar(
-              title: const Text('Crawl Coach'),
-            ),
-            body: Center(
-              child: PageView(
-                controller: pControll,
-                pageSnapping: true,
-                children: childs,
-                onPageChanged: _onPageChanged,
-              ),
-            ),
-            bottomSheet: BottomNavigationBar(
-                items: const [
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.home_outlined), label: 'Home'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.run_circle_outlined), label: 'Swim'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.settings_outlined), label: 'Settings'),
-                ],
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Crawl Coach'),
+        ),
+        body: Center(
+          child: PageView(
+            controller: pControll,
+            pageSnapping: true,
+            onPageChanged: _onPageChanged,
+            children: const [
+              Home(),
+              About(),
+              Settings(),
+              First(),
+            ],
+          ),
+        ),
+        bottomSheet: FutureBuilder(
+          future: _activateListener(),
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            List<BottomNavigationBarItem> _navigationList = [
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined), label: 'Home'),
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.run_circle_outlined), label: 'Swim'),
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.settings_outlined), label: 'Settings'),
+            ];
+            if (snapshot.hasData && snapshot.data == true) {
+              _navigationList.add(const BottomNavigationBarItem(
+                  icon: Icon(Icons.admin_panel_settings_outlined),
+                  label: 'Admin'));
+            }
+            return BottomNavigationBar(items: _navigationList,
                 currentIndex: _selected,
                 showSelectedLabels: true,
                 selectedItemColor: Colors.greenAccent,
-                onTap: _onTapped));
-      },
-    );
+                onTap: _onTapped);
+          },
+        ));
   }
 }
+
+//BottomNavigationBar(
+//                 items: const [
+
+//                 ],
+
