@@ -17,13 +17,6 @@ class AddExercise extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final List<TextEditingController> _txtEditList = List.generate(6, (index) => TextEditingController());
-    _txtEditList.elementAt(0).text = 'Catch up';
-    _txtEditList.elementAt(1).text = 'Flow';
-    _txtEditList.elementAt(2).text = 'Grip';
-    _txtEditList.elementAt(3).text = 'Rotation';
-    _txtEditList.elementAt(4).text = 'Tempo';
-    _txtEditList.elementAt(5).text = 'In your freestyle, catchup with the hands in streamline position';
-
 
 
     final _formKey = GlobalKey<FormState>();

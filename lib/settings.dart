@@ -17,8 +17,9 @@ class _SettingsState extends State<Settings> {
   late LocalUser _localUser;
   late String userJson;
 
-  Future<bool> _gotAUser() async{
-    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
+  Future<bool> _gotAUser() async {
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
     return _sharedPreferences.getBool('GOT_USER') ?? false;
   }
 
@@ -29,13 +30,27 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: const UserSettings(),
-    );
+    final _height = MediaQuery.of(context).size.height;
+    final _width = MediaQuery.of(context).size.width;
+    return const UserSettings();
   }
 }
 
+//
 
+//TODO use later for a more interactive experience,
+//SizedBox(
+//         height: _height,
+//         width: _width,
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//               children: [
+//
+//               ],
+//             )
+//           ],
+//         ),
+//       ),

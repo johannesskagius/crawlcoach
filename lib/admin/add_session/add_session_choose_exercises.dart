@@ -18,7 +18,7 @@ class SessionExercises extends StatefulWidget {
 }
 
 class _SessionExercisesState extends State<SessionExercises> {
-  List<Exercise> _chosens = [];
+  List<String> _chosens = [];
   int _nrChosen = 0;
   List<Exercise> _exercises = [];
 
@@ -40,8 +40,8 @@ class _SessionExercisesState extends State<SessionExercises> {
   }
 
   void increment(int index){
-    if(!_chosens.contains(_exercises.elementAt(index))){
-      _chosens.add(_exercises.elementAt(index));
+    if(!_chosens.contains(_exercises.elementAt(index).title)){
+      _chosens.add(_exercises.elementAt(index).title);
       setState(() {
         _nrChosen++;
       });

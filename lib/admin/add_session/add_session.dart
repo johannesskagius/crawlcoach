@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -33,13 +32,10 @@ class AddSession extends StatelessWidget {
 class SessionGeneral extends StatelessWidget {
   SessionGeneral({Key? key}) : super(key: key);
   final _formKey = GlobalKey<FormState>();
-  String _name ='';
-  String _desc ='';
   @override
   Widget build(BuildContext context) {
-
     final List<TextEditingController> _txtEditList =
-    List.generate(4, (index) => TextEditingController());
+        List.generate(2, (index) => TextEditingController());
     return Center(
       child: Form(
         key: _formKey,
@@ -56,7 +52,6 @@ class SessionGeneral extends StatelessWidget {
                   return 'Session name';
                 }
               },
-              onSaved: (value){_name = value!;},
             ),
             TextFormField(
               keyboardType: TextInputType.multiline,
@@ -71,13 +66,19 @@ class SessionGeneral extends StatelessWidget {
                   return 'error';
                 }
               },
-              onSaved: (value){_desc = value!;},
             ),
-            ElevatedButton(onPressed: (){
-              if(_formKey.currentState!.validate()){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SessionExercises(_name, _desc)));
-              }
-            }, child: Text('Show exercises')),
+            ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SessionExercises(
+                                _txtEditList.elementAt(0).value.text,
+                                _txtEditList.elementAt(1).value.text)));
+                  }
+                },
+                child: Text('Show exercises')),
           ],
         ),
       ),
