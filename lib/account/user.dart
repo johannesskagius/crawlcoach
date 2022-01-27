@@ -1,9 +1,8 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalUser {
@@ -24,6 +23,27 @@ class LocalUser {
     _password = value;
   }
 
+  static Future<LocalUser> getLocalUser() async{
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    Map<String, dynamic> userMap =
+    jsonDecode(sharedPreferences.getString('USER_CRED')!);
+    return LocalUser.fromJson(userMap);
+  }
+
+  static void logOutUser(){
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    _auth.signOut();
+    _resetLastUser();
+  }
+
+
+
+
+  static _resetLastUser() async{
+    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences.setString('USER_CRED', '');
+  }
+
   void doesHaveAUser() async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool(_GOTUSER, true);
@@ -37,8 +57,10 @@ class LocalUser {
   //create user space in realtimeDatabase
   void syncToServer() async {
     try {
-      print(toString());
+      //Create user json on firebase
       await _ref.child('users').child(_userAuth2).update(toJson()).catchError((o) => print(o));
+      //Set to done no intro sessions
+      await _ref.child('users').child(_userAuth2).child('intro_sessions').set(false);
     } catch (e) {
       print(e);
     }

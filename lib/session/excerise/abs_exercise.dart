@@ -14,8 +14,6 @@ class Exercise {
   List<dynamic> _description;
   Exercise(this._title, this._subTitle, this._perk1, this._perk2, this._perk3,this._description);
 
-
-
   get subTitle => _subTitle;
 
   factory Exercise.fromJson(dynamic json) => _exerciseFromJson(json);
@@ -50,11 +48,6 @@ Exercise _exerciseFromJson(dynamic json) {
 Future<void> loadToFireBase(Exercise exercise) async {
   final DatabaseReference database = FirebaseDatabase.instance.ref('exercises');
   database.push();
-}
-
-void _storeData(Exercise exercise) {
-  final DatabaseReference database = FirebaseDatabase.instance.ref('exercises');
-  database.set(exercise.toJson());
 }
 
 class Explained extends StatelessWidget {

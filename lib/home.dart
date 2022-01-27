@@ -15,10 +15,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
+    final _height = MediaQuery.of(context).size.height-AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
 
-    //TODO Change to get user session / Training info
     Future<LocalUser> getLocalUser() async {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       try {
@@ -34,7 +33,6 @@ class _HomeState extends State<Home> {
 
     @override
     void initState() {
-      getLocalUser();
       super.initState();
     }
 

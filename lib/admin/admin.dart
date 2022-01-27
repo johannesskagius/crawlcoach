@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 
-class First extends StatelessWidget {
-  const First({Key? key}) : super(key: key);
+class Admin extends StatelessWidget {
+  const Admin({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +14,9 @@ class First extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            ElevatedButton(onPressed: (){
+              Navigator.pushNamed(context, '/addoffer');
+            }, child: const Text('Add Offer')),
             ElevatedButton(onPressed: (){
               Navigator.pushNamed(context, '/addsession');
             }, child: const Text('Add Session')),

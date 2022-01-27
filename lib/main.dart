@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:crawl_course_3/admin/offer/add_offer.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:crawl_course_3/session/session_view_00.dart';
 import 'package:crawl_course_3/settings.dart';
@@ -30,8 +31,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/addsession':(context)=>  const AddSession(),
-        '/addexercise':(context)=>  const AddExercise(),
+        '/addsession': (context) => const AddSession(),
+        '/addoffer': (context) => const AddOffer(),
+        '/addexercise': (context) => const AddExercise(),
       },
       theme:
           ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),
@@ -55,21 +57,23 @@ class _LayoutState extends State<Layout> {
   int _selected = 0;
 
   Future<bool> _activateListener() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Map<String, dynamic> userMap =
-        jsonDecode(sharedPreferences.getString('USER_CRED')!);
-    LocalUser _local = LocalUser.fromJson(userMap);
-    UserCredential _usercred = await _auth.signInWithEmailAndPassword(
-        email: _local.email, password: _local.password);
+    try {
+      final _localUser = await LocalUser.getLocalUser();
+      UserCredential _usercred = await _auth.signInWithEmailAndPassword(
+          email: _localUser.email, password: _localUser.password);
 
-    DataSnapshot tes = await _ref
-        .child('users')
-        .child(_usercred.user!.uid)
-        .child('admin').get();
+      DataSnapshot checkIfAdmin = await _ref
+          .child('admins')
+          .child(_usercred.user!.uid)
+          .child('isadmin')
+          .get();
 
-    if (tes.value.toString() == 'true') {
-      return Future<bool>.value(true);
-    } else {
+      if (checkIfAdmin.value.toString() == 'true') {
+        return Future<bool>.value(true);
+      } else {
+        return Future<bool>.value(false);
+      }
+    } catch (e) {
       return Future<bool>.value(false);
     }
   }
@@ -108,7 +112,7 @@ class _LayoutState extends State<Layout> {
               Home(),
               About(),
               Settings(),
-              First(),
+              Admin(),
             ],
           ),
         ),
@@ -128,7 +132,8 @@ class _LayoutState extends State<Layout> {
                   icon: Icon(Icons.admin_panel_settings_outlined),
                   label: 'Admin'));
             }
-            return BottomNavigationBar(items: _navigationList,
+            return BottomNavigationBar(
+                items: _navigationList,
                 currentIndex: _selected,
                 showSelectedLabels: true,
                 selectedItemColor: Colors.greenAccent,
@@ -142,4 +147,3 @@ class _LayoutState extends State<Layout> {
 //                 items: const [
 
 //                 ],
-

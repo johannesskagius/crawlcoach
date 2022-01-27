@@ -4,22 +4,20 @@ import 'package:crawl_course_3/account/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserSettings extends StatefulWidget {
-  const UserSettings({Key? key}) : super(key: key);
+class CreateUser extends StatefulWidget {
+  const CreateUser({Key? key}) : super(key: key);
 
   @override
-  State<UserSettings> createState() => _UserSettingsState();
+  State<CreateUser> createState() => _CreateUserState();
 }
 
-class _UserSettingsState extends State<UserSettings> {
+class _CreateUserState extends State<CreateUser> {
   LocalUser? _localUser;
   String _fName = '';
   String _lName = '';
   String _email = '';
-  bool _gotAnAccount = false;
   @override
   void initState() {
     getUserData();
@@ -28,21 +26,11 @@ class _UserSettingsState extends State<UserSettings> {
 
   void getUserData() async {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    void _updateStrings(){
+    void _updateStrings() {
       setState(() {
         _fName = _localUser!.firstName;
         _email = _localUser!.email;
-        _gotAnAccount = true;
       });
-    }
-
-    try {
-      Map<String, dynamic> userMap =
-      jsonDecode(sharedPreferences.getString('USER_CRED')!);
-      _localUser = LocalUser.fromJson(userMap);
-      _updateStrings();
-    } catch (error) {
-      print(error);
     }
   }
 
@@ -97,16 +85,6 @@ class _UserSettingsState extends State<UserSettings> {
       }
     }
 
-    /// Get from gallery
-    void _getFromGallery() async {
-      XFile? pickedFile =
-      await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        setState(() {
-          _imgSource = pickedFile.path;
-        });
-      }
-    }
 
     return SizedBox(
       height: _height,
@@ -115,17 +93,6 @@ class _UserSettingsState extends State<UserSettings> {
         margin: const EdgeInsets.all(8),
         child: Column(
           children: [
-            GestureDetector(
-              onTap: _getFromGallery,
-              child: SizedBox(
-                height: _height / 4,
-                width: _width / 2,
-                child: Image.asset(
-                  _imgSource,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
             SizedBox(
               width: _width,
               child: Form(
