@@ -1,7 +1,7 @@
+import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import '../session.dart';
 
 class SessionsSummary extends StatelessWidget {
   SessionsSummary(this._session,

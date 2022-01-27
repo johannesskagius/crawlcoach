@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:crawl_course_3/session/add_session/session_exercises.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+import 'add_session_choose_exercises.dart';
 
 class AddSession extends StatelessWidget {
   const AddSession({Key? key}) : super(key: key);

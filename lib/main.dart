@@ -12,7 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'about.dart';
-import 'account/admin.dart';
+import 'admin/add_exercises_admin.dart';
+import 'admin/add_session/add_session.dart';
+import 'admin/admin.dart';
 import 'home.dart';
 
 void main() async {
@@ -27,6 +29,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        '/addsession':(context)=>  const AddSession(),
+        '/addexercise':(context)=>  const AddExercise(),
+      },
       theme:
           ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),
       home: const Layout(),

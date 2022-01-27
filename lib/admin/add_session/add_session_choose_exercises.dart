@@ -1,9 +1,9 @@
 
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
+import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import '../session.dart';
 import 'add_session_summary.dart';
 
 
@@ -77,7 +77,7 @@ class _SessionExercisesState extends State<SessionExercises> {
                     child: ListTile(
                       onTap: ()=> increment(index),
                       leading: Text(index.toString()),
-                      title: Text(_exercises.elementAt(index).title!),
+                      title: Text(_exercises.elementAt(index).title),
                       trailing: Text(_exercises.elementAt(index).subTitle!),
                     ),
                   );
@@ -90,7 +90,7 @@ class _SessionExercisesState extends State<SessionExercises> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SessionsSummary(Session(desc: widget._desc, sessionName: widget._name, exercises: _chosens))));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SessionsSummary(Session(widget._name, widget._desc,_chosens,''))));
                   }, child: Text('Go to summary'),),
                   FloatingActionButton(
                       onPressed: (){
