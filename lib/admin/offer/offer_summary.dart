@@ -1,11 +1,58 @@
+import 'package:crawl_course_3/admin/offer/offer.dart';
+import 'package:crawl_course_3/session/session.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-
 class OfferSummary extends StatelessWidget {
-  const OfferSummary({Key? key}) : super(key: key);
+  OfferSummary(this._offer, {Key? key}) : super(key: key);
+  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
+  final Offer _offer;
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final _height = MediaQuery.of(context).size.height - AppBar().preferredSize.height;
+    final _width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('summary'),
+      ),
+      body: SizedBox(
+        width: _width,
+        height: _height,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Name: '),
+                Text(_offer.name),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Desc: '),
+                Text(_offer.price),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Nr och exercises: '),
+                Text(_offer.listOfSessions.length.toString()),
+              ],
+            ),
+          ],
+        ),
+      ),
+      bottomSheet: ElevatedButton(
+        onPressed: () {
+          _ref.child('courses').child(_offer.name).set(_offer.toJson());
+          Navigator.pop(context);
+        },
+        child: const Text('To Server'),
+      ),
+    );
   }
 }

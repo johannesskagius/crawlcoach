@@ -4,7 +4,7 @@ import 'package:crawl_course_3/account/user.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'account/user_settings.dart';
+import 'account/create_user.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class _SettingsState extends State<Settings> {
 
     //return const CreateUser();
     return FutureBuilder(future: LocalUser.getLocalUser(),
-      builder: (BuildContext context, AsyncSnapshot<LocalUser> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<LocalUser?> snapshot) {
       if(snapshot.hasData){
         return SignedIn(snapshot.data);
       }else{
@@ -65,7 +65,7 @@ class SignedIn extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: _height*0.5,
+            height: _height*0.4,
             child: Form(
               key: _formKey, child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -91,17 +91,31 @@ class SignedIn extends StatelessWidget {
                       if(_formKey.currentState!.validate()){
                         //todo update user
                       }
-                    }, child: Text('Sign out')),
+                    }, child: const Text('something')),
                     ElevatedButton(onPressed: (){
                       //Todo send a new password,
                       LocalUser.logOutUser();
-                    }, child: Text('Change password')),
+                    }, child: const Text('Sign out')),
                   ],
                 )
               ],
             ),
             ),
           ),
+          SizedBox(
+            height: _height*0.4,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  children: [
+                    Text('Assigned to: '),
+                    Text(_localUser!.assignedCourses.toString()),
+                  ],
+                ),
+              ],
+            ),
+          )
 
         ],
       ),

@@ -25,7 +25,8 @@ class _CreateUserState extends State<CreateUser> {
   }
 
   void getUserData() async {
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
     void _updateStrings() {
       setState(() {
         _fName = _localUser!.firstName;
@@ -44,11 +45,10 @@ class _CreateUserState extends State<CreateUser> {
     String _imgSource = 'assets/human.jpeg';
 
     List<TextEditingController> _txtEditList =
-    List.generate(3, (index) => TextEditingController());
+        List.generate(3, (index) => TextEditingController());
     _txtEditList.elementAt(0).text = _fName;
     _txtEditList.elementAt(1).text = _lName;
     _txtEditList.elementAt(2).text = _email;
-
 
     Future<void> _createUser() async {
       final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -56,13 +56,13 @@ class _CreateUserState extends State<CreateUser> {
       User? user;
       try {
         user = (await _auth.createUserWithEmailAndPassword(
-            email: _txtEditList.elementAt(1).value.text,
-            password: _txtEditList.elementAt(2).value.text))
+                email: _txtEditList.elementAt(1).value.text,
+                password: _txtEditList.elementAt(2).value.text))
             .user;
         _userAuth2 = user!.uid;
       } catch (error) {
         switch (error) {
-        //TODO fix the error codes. we want different things to happen depending the response from the server.
+          //TODO fix the error codes. we want different things to happen depending the response from the server.
           case 'email-already-exists': //Går aldrig in här.
             print('This email is already in use');
             break;
@@ -70,21 +70,20 @@ class _CreateUserState extends State<CreateUser> {
             print(error.toString());
         }
       }
-      try{
+      try {
         if (user != null && _userAuth2 != '') {
           LocalUser _newLocalUser = LocalUser(
               _txtEditList.elementAt(0).value.text, //Firstname
               _txtEditList.elementAt(1).value.text, //Email
               _txtEditList.elementAt(2).value.text, //Password
-              _userAuth2);                          //userID
+              _userAuth2); //userID
           _newLocalUser.saveToSharedPreferences();
           _newLocalUser.syncToServer();
         }
-      }catch(e){
+      } catch (e) {
         print(e);
       }
     }
-
 
     return SizedBox(
       height: _height,
@@ -99,10 +98,11 @@ class _CreateUserState extends State<CreateUser> {
                 key: _formKey,
                 child: Column(
                   children: [
-                  TextFormField(
+                    TextFormField(
                       keyboardType: TextInputType.name,
                       controller: _txtEditList.elementAt(0),
                       autovalidateMode: AutovalidateMode.always,
+                      autofocus: true,
                       decoration: const InputDecoration(
                         hintText: 'John',
                         labelText: 'First name',
@@ -114,10 +114,11 @@ class _CreateUserState extends State<CreateUser> {
                         return null;
                       },
                     ),
-                  TextFormField(
+                    TextFormField(
                       keyboardType: TextInputType.emailAddress,
                       autovalidateMode: AutovalidateMode.always,
                       controller: _txtEditList.elementAt(1),
+                      autofocus: true,
                       decoration: const InputDecoration(
                         hintText: 'email',
                         labelText: 'Email',
@@ -128,21 +129,21 @@ class _CreateUserState extends State<CreateUser> {
                         }
                         var email = value;
                         bool isValid = RegExp(
-                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                             .hasMatch(email);
                         if (!isValid) {
                           return 'please enter a correct email';
                         }
                       },
                     ),
-                  TextFormField(
+                    TextFormField(
                       keyboardType: TextInputType.visiblePassword,
                       autovalidateMode: AutovalidateMode.always,
                       controller: _txtEditList.elementAt(2),
+                      autofocus: true,
                       decoration: const InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'minimum 6 characters'
-                      ),
+                          labelText: 'Password',
+                          hintText: 'minimum 6 characters'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'please enter a password';
@@ -151,14 +152,14 @@ class _CreateUserState extends State<CreateUser> {
                           return 'please enter a correct email';
                         }
                       },
-                    ), ElevatedButton(
-                      onPressed: (){
-                        if(_formKey.currentState!.validate()){
-                          _createUser();
-                        }
-                      },
-                      child: const Text('create user')
-                  ),
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _createUser();
+                          }
+                        },
+                        child: const Text('create user')),
                   ],
                 ),
               ),

@@ -10,7 +10,7 @@ class Session02 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> exercisesIDS = session.exercises; //TODO Excercises should be collected from server and displayed.
+    //List<String> exercisesIDS = session.exercises; //TODO Excercises should be collected from server and displayed.
 
     List<Exercise> exercises = [];
 

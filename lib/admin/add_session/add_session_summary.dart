@@ -48,33 +48,11 @@ class SessionsSummary extends StatelessWidget {
       ),
       bottomSheet: ElevatedButton(
         onPressed: () {
-          _ref.child('sessions').child('entrylevel').child(_session.sessionName).set(_session.toJson());
+          _ref.child('sessions').child(_session.sessionName).set(_session.toJson());
+          Navigator.pop(context);
         },
         child: const Text('To Server'),
       ),
     );
   }
 }
-
-//            Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text('Name: '),
-//                 Text(_session.sessionName),
-//               ],
-//             ),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text('Desc: '),
-//                 Text(_session.desc),
-//               ],
-//             ),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text('Nr och exercises: '),
-//                 Text(_session.exercises.length.toString()),
-//               ],
-//             ),
-//

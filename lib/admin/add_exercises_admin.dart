@@ -3,8 +3,6 @@
 import 'dart:convert';
 
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -18,6 +16,12 @@ class AddExercise extends StatelessWidget {
 
     final List<TextEditingController> _txtEditList = List.generate(6, (index) => TextEditingController());
 
+    _txtEditList.elementAt(0).text = 'Pull ups';
+    _txtEditList.elementAt(1).text = 'Strengthen';
+    _txtEditList.elementAt(2).text = 'Lats';
+    _txtEditList.elementAt(3).text = 'Back';
+    _txtEditList.elementAt(4).text = 'Strength';
+    _txtEditList.elementAt(5).text = 'Hang on a bar, pull yourself up';
 
     final _formKey = GlobalKey<FormState>();
     final _height = MediaQuery.of(context).size.height;
@@ -32,6 +36,7 @@ class AddExercise extends StatelessWidget {
         child: SizedBox(
           width: _width*0.9,
           child: Scrollable(
+            physics: const ScrollPhysics(),
               viewportBuilder: (BuildContext context, ViewportOffset position) {
                 return Form(
                   key: _formKey,
@@ -40,6 +45,7 @@ class AddExercise extends StatelessWidget {
                       TextFormField(
                         keyboardType: TextInputType.name,
                         autovalidateMode: AutovalidateMode.always,
+                        autofocus: true,
                         controller: _txtEditList.elementAt(0),
                         decoration: const InputDecoration(
                             labelText: 'title', hintText: 'minimum 3 characters'),
@@ -54,6 +60,7 @@ class AddExercise extends StatelessWidget {
                       ),
                       TextFormField(
                         keyboardType: TextInputType.name,
+                        autofocus: true,
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(1),
                         decoration: const InputDecoration(
@@ -69,6 +76,7 @@ class AddExercise extends StatelessWidget {
                       ),
                       TextFormField(
                         keyboardType: TextInputType.text,
+                        autofocus: true,
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(2),
                         decoration: const InputDecoration(
@@ -86,6 +94,7 @@ class AddExercise extends StatelessWidget {
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(3),
+                        autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Perk 2', hintText: 'one word, max 10 characher'),
                         validator: (value) {
@@ -101,6 +110,7 @@ class AddExercise extends StatelessWidget {
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(4),
+                        autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Perk 3', hintText: 'one word, max 10 characher'),
                         validator: (value) {
@@ -112,26 +122,23 @@ class AddExercise extends StatelessWidget {
                           }
                         },
                       ),
-                      Wrap(
-                        children: [
-                          TextFormField(
-                            keyboardType: TextInputType.multiline,
-                            autovalidateMode: AutovalidateMode.always,
-                            controller: _txtEditList.elementAt(5),
-                            minLines: 1,
-                            maxLines: 10, //TODO doesn't work
-                            decoration: const InputDecoration(
-                                labelText: 'Bullet point', hintText: 'Write bullet points to the exercise separate with comma (,)'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'please enter a description of the exercise';
-                              }
-                              if (value.length < 10) {
-                                return 'please enter a correct email';
-                              }
-                            },
-                          )
-                        ],
+                      TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        autovalidateMode: AutovalidateMode.always,
+                        controller: _txtEditList.elementAt(5),
+                        autofocus: true,
+                        minLines: 1,
+                        maxLines: 10, //TODO doesn't work
+                        decoration: const InputDecoration(
+                            labelText: 'Bullet point', hintText: 'Write bullet points to the exercise separate with comma (,)'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'please enter a description of the exercise';
+                          }
+                          if (value.length < 10) {
+                            return 'please enter a correct email';
+                          }
+                        },
                       ),
                       ElevatedButton(onPressed: () async {
                         if(_formKey.currentState!.validate()){

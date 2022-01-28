@@ -16,6 +16,7 @@ import 'about.dart';
 import 'admin/add_exercises_admin.dart';
 import 'admin/add_session/add_session.dart';
 import 'admin/admin.dart';
+import 'admin/offer/buy_offer.dart';
 import 'home.dart';
 
 void main() async {
@@ -53,27 +54,28 @@ class _LayoutState extends State<Layout> {
   final PageController pControll = PageController();
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   int _selected = 0;
 
   Future<bool> _activateListener() async {
     try {
       final _localUser = await LocalUser.getLocalUser();
       UserCredential _usercred = await _auth.signInWithEmailAndPassword(
-          email: _localUser.email, password: _localUser.password);
-
+          email: _localUser!.email, password: _localUser.password);
       DataSnapshot checkIfAdmin = await _ref
           .child('admins')
           .child(_usercred.user!.uid)
           .child('isadmin')
           .get();
-
       if (checkIfAdmin.value.toString() == 'true') {
         return Future<bool>.value(true);
       } else {
         return Future<bool>.value(false);
       }
     } catch (e) {
+      //Download anonymous user
+      if(e == Exception){
+
+      }
       return Future<bool>.value(false);
     }
   }

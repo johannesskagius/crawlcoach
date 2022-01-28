@@ -58,6 +58,7 @@ class _SessionExercisesState extends State<SessionExercises> {
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
+    final List<bool> _listSelected = [];
 
     return Scaffold(
       appBar: AppBar(
@@ -75,7 +76,9 @@ class _SessionExercisesState extends State<SessionExercises> {
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                     child: ListTile(
-                      onTap: ()=> increment(index),
+                      onTap: (){
+                        increment(index);
+                      },
                       leading: Text(index.toString()),
                       title: Text(_exercises.elementAt(index).title),
                       trailing: Text(_exercises.elementAt(index).subTitle!),

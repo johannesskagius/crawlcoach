@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'offer_choose_sessions.dart';
+import 'offer_chose_sessions.dart';
 
 class AddOffer extends StatelessWidget {
   const AddOffer({Key? key}) : super(key: key);
@@ -33,7 +33,7 @@ class SessionGeneral extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
-    List.generate(2, (index) => TextEditingController());
+    List.generate(3, (index) => TextEditingController());
     return Center(
       child: Form(
         key: _formKey,
@@ -70,7 +70,7 @@ class SessionGeneral extends StatelessWidget {
               autovalidateMode: AutovalidateMode.always,
               minLines: 1,
               maxLines: 4,
-              controller: _txtEditList.elementAt(1),
+              controller: _txtEditList.elementAt(2),
               decoration: const InputDecoration(
                   hintText: 'USD 19,99', labelText: 'Price'),
               validator: (value) {
@@ -90,7 +90,7 @@ class SessionGeneral extends StatelessWidget {
                                 _txtEditList.elementAt(1).value.text)));
                   }
                 },
-                child: Text('Show exercises')),
+                child: Text('Pick sessions')),
           ],
         ),
       ),

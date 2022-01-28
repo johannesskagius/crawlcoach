@@ -4,13 +4,13 @@ import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import 'offer.dart';
 import 'offer_summary.dart';
 
 
 
 class ChooseSessions extends StatefulWidget {
-  ChooseSessions(this._name, this._desc, {Key? key}) : super(key: key);
-  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
+  const ChooseSessions(this._name, this._desc, {Key? key}) : super(key: key);
   final String _name, _desc;
 
   @override
@@ -18,21 +18,26 @@ class ChooseSessions extends StatefulWidget {
 }
 
 class _ChooseSessionsState extends State<ChooseSessions> {
+  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
+
   List<String> _chosens = [];
   int _nrChosen = 0;
   List<Session> _exercises = [];
 
-  void _activateListener(){
+  void _activateListener() async{
     List<Session> _ex = [];
-    widget._ref.child('sessions').onValue.listen((event) {
-      for (var element in event.snapshot.children) {
+
+    _ref.child('sessions').onValue.listen((event) {
+      Map<String, List<dynamic>> test = {};
+      for(var element in event.snapshot.children){
         Object? test = element.value;
-        try {
+        try{
           _ex.add(Session.fromJson(test));
-        } catch (e) {
-          print('test');
+        }catch(e){
+          print(e);
         }
       }
+
       setState(() {
         _exercises = _ex;
       });
@@ -90,7 +95,7 @@ class _ChooseSessionsState extends State<ChooseSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => OfferSummary()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => OfferSummary(Offer(widget._name, widget._desc, _chosens))));
                   }, child: Text('Go to summary'),),
                   FloatingActionButton(
                       onPressed: (){

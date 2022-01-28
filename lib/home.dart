@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:crawl_course_3/session/session.dart';
 import 'package:crawl_course_3/account/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,26 +15,42 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _localUser = LocalUser.getLocalUser();
+  String test = ' not';
+
+  //change to load next session,
+  Future<Session> getEntrySessions() async {
+    DatabaseReference _ref = FirebaseDatabase.instance.ref();
+    List<String> _startingSessions = [];
+
+    DataSnapshot _sessionKeys = await _ref.child('courses').child('test').child('sessions').get();
+
+    for(DataSnapshot _snap in _sessionKeys.children){
+      final String _session = _snap.value.toString();
+      if(!_startingSessions.contains(_session)){
+        _startingSessions.add(_session);
+      }
+    }
+
+    DataSnapshot singleSession = await _ref.child('sessions').child(_startingSessions.elementAt(0)).get();
+    //final String fromSnapshot = singleSession.value;
+
+    Session nextSession = Session.fromJson(singleSession.value);
+    return nextSession;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height-AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
 
-    Future<LocalUser> getLocalUser() async {
-      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      try {
-        Map<String, dynamic> userMap =
-        jsonDecode(sharedPreferences.getString('USER_CRED')!);
-        LocalUser _localUser = LocalUser.fromJson(userMap);
-        _localUser.doesHaveAUser();
-        return _localUser;
-      } catch (exception) {
-        return LocalUser('','', '', '');
-      }
-    }
+
 
     @override
     void initState() {
+      getEntrySessions();
       super.initState();
     }
 
@@ -40,43 +58,49 @@ class _HomeState extends State<Home> {
       body: SizedBox(
         height: _height,
         width: _width,
-        child: FutureBuilder(future: getLocalUser(),
-          builder: (BuildContext context, AsyncSnapshot<LocalUser> snapshot) {
-            String _userName='';
-            if(snapshot.hasData){
-              _userName = snapshot.data!.firstName;
-          }
+        child: FutureBuilder(future: getEntrySessions(),
+          builder: (BuildContext context, AsyncSnapshot<Session> snapshot) {
+          late Widget test;
+            //String _userName='';
+            if(snapshot.hasData && snapshot.data != null){
+              test = SessionPreview(snapshot.requireData);
+          }else{
+              test = Text('test');
+            }
             return Center(
-              child: Stack(
-                alignment: Alignment.topCenter,
+              child: Column(
                 children: [
-                  SizedBox(
-                    height: _height,
-                    child: Container(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Column(
+                  Stack(
+                    alignment: Alignment.topCenter,
                     children: [
                       SizedBox(
-                        height: _height*0.2,
-                        width: _width*.8,
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: const Text(
-                            'Today is your opportunity to build the tomorrow you want',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
+                        height: _height*0.9,
+                        child: Container(   //Background
+                          color: Colors.grey,
                         ),
                       ),
-                      // SessionPreview(Session('First session', CurrentExercises().exercises,
-                      //     'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4')),
+                      Column(               //QUOTE
+                        children: [
+                          SizedBox(
+                            height: _height*0.2,
+                            width: _width*.8,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: const Text(
+                                'Today is your opportunity to build the tomorrow you want',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                          ),
+                          test,
+                        ],
+                      ),
+
                     ],
                   ),
-                  Text(_userName),
                 ],
               )
             );

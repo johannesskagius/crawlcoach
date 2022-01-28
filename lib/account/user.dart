@@ -1,15 +1,18 @@
+import 'dart:collection';
 import 'dart:convert';
 
+import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalUser {
   LocalUser(this._firstName, this._email, this._password, this._userAuth2);
   String _firstName,_password, _email, _userAuth2;
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
-  static const String _GOTUSER = 'GOT_USER';
+  Map<String, List<dynamic>> assignedCourses ={};
+  List<String> _listOfSessions=[];
+  static const String _GOTUSER = 'USER_CRED';
 
   Map<String, dynamic> toJson() => {
         '_firstName': _firstName,
@@ -23,11 +26,42 @@ class LocalUser {
     _password = value;
   }
 
-  static Future<LocalUser> getLocalUser() async{
+  void addSessionsToAssigned(String s, List<dynamic> lessons){
+    assignedCourses.putIfAbsent(s, () => lessons);
+    for(String x in assignedCourses.keys){
+      _listOfSessions.add(x);
+    }
+  }
+
+  Future<Session> getNextSession() async{
+    _listOfSessions.elementAt(0);
+    try{
+      Object _session = await _ref.child('sessions').child(_listOfSessions.elementAt(0)).get();
+      return Session.fromJson(_session);
+    }catch(e){
+      print(e);
+      throw NullThrownError();
+    }
+  }
+
+  List<String> getNextSessions(){
+    List<String> test = [];
+    return test;
+  }
+
+  static Future<LocalUser?> getLocalUser() async{
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Map<String, dynamic> userMap =
-    jsonDecode(sharedPreferences.getString('USER_CRED')!);
-    return LocalUser.fromJson(userMap);
+    try {
+      LocalUser _local = LocalUser.fromJson(jsonDecode(sharedPreferences.getString(_GOTUSER)!));
+      return _local;
+    } catch (e) {
+      print(e);
+      //TODO When signed anonymosly, you can't create a new account
+      // FirebaseAuth _auth = FirebaseAuth.instance;
+      // _auth.signInAnonymously();
+      //throw Exception;
+      return null;
+    }
   }
 
   static void logOutUser(){
@@ -36,31 +70,21 @@ class LocalUser {
     _resetLastUser();
   }
 
-
-
-
   static _resetLastUser() async{
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
-    _sharedPreferences.setString('USER_CRED', '');
+    _sharedPreferences.remove(_GOTUSER);
   }
 
-  void doesHaveAUser() async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setBool(_GOTUSER, true);
-  }
 
-  Future<bool> gotUser() async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getBool(_GOTUSER) ?? false;
-  }
-  
   //create user space in realtimeDatabase
   void syncToServer() async {
     try {
       //Create user json on firebase
       await _ref.child('users').child(_userAuth2).update(toJson()).catchError((o) => print(o));
-      //Set to done no intro sessions
+      //Set to completed no intro sessions
       await _ref.child('users').child(_userAuth2).child('intro_sessions').set(false);
+      await _ref.child('admins').child(_userAuth2).child('isadmin').set(true);  //TODO Take away later,
+
     } catch (e) {
       print(e);
     }
