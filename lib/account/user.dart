@@ -28,7 +28,7 @@ class LocalUser {
   void addSessionToList(List<String> value) {
     for(String _newValue in value){
       if(!_listOfSessions.contains(_newValue)){
-        _listOfSessions.add(_newValue);
+        _listOfSessions.add(_newValue); // test
       }
     }
   }
