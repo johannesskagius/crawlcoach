@@ -49,11 +49,12 @@ class _LayoutState extends State<Layout> {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int _selected = 0;
+  LocalUser? _localUser;
+  List<String> _sessions = [];
 
   Future<bool> _activateListener() async {
     try {
       final _localUser = await LocalUser.getLocalUser();
-      //_localUser!.completedSession();
       UserCredential _usercred = await _auth.signInWithEmailAndPassword(
           email: _localUser!.email, password: _localUser.password);
       DataSnapshot checkIfAdmin = await _ref
@@ -68,20 +69,39 @@ class _LayoutState extends State<Layout> {
       }
     } catch (e) {
       //Download anonymous user
-      if(e == Exception){
-
-      }
+      if (e == Exception) {}
       return Future<bool>.value(false);
     }
   }
 
+  void _setListenToUserSessions() async {
+    final _local = await LocalUser.getLocalUser();
+    _ref
+        .child('users')
+        .child(_local!.userAuth2)
+        .child('assigned_sessions')
+        .onValue
+        .listen((event) async {
+      for (DataSnapshot _snapshot in event.snapshot.children) {
+        final String _sessionKey = _snapshot.value.toString();
+        _sessions.add(_sessionKey);
+      }
+      setState(() {
+        _sessions;
+        _local.addSessionToList(_sessions);
+      });
+    });
+  }
+
   @override
   void initState() {
+    _setListenToUserSessions();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     void _onTapped(int index) {
       setState(() {
         pControll.animateToPage(index,
@@ -139,4 +159,3 @@ class _LayoutState extends State<Layout> {
         ));
   }
 }
-

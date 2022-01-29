@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:crawl_course_3/admin/offer/offer.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -24,9 +25,14 @@ class LocalUser {
 
   List<String> get listOfSessions => _listOfSessions;
 
-  set listOfSessions(List<String> value) {
-    _listOfSessions = value;
+  void addSessionToList(List<String> value) {
+    for(String _newValue in value){
+      if(!_listOfSessions.contains(_newValue)){
+        _listOfSessions.add(_newValue);
+      }
+    }
   }
+
 
 
   List<String> get completedSessions => _completedSessions;
@@ -34,13 +40,6 @@ class LocalUser {
   get password => _password;
   set password(value) {
     _password = value;
-  }
-
-  void addSessionsToAssigned(String s, List<dynamic> lessons){
-    assignedCourses.putIfAbsent(s, () => lessons);
-    for(String x in assignedCourses.keys){
-      _listOfSessions.add(x);
-    }
   }
 
   void markSessionAsDone(String sessionKey){
@@ -59,6 +58,8 @@ class LocalUser {
       throw NullThrownError();
     }
   }
+
+
 
   List<String> getNextSessions(){
     List<String> test = [];
@@ -162,5 +163,9 @@ class LocalUser {
       _x.add(sessionTitle);
     }
     return _x;
+  }
+
+  void assignToCourse(Offer _offer) {
+    _ref.child('users').child(_userAuth2).child('assigned_sessions').set(_offer.listOfSessions);
   }
 }
