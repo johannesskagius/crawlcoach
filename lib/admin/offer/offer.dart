@@ -1,5 +1,4 @@
 
-import 'package:crawl_course_3/session/session.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
@@ -20,10 +19,10 @@ class Offer{
   Map<String, dynamic> toJson() => {
     'name' : _name,
     'price': _price,
-    'sessions': _listOfSessions,
+    'session': _listOfSessions,
   };
 }
 
 Offer _offerFromJson(dynamic json){
-  return Offer(json['name'] as String, json['price'] as String, json['sessions'] as List<dynamic>);
+  return Offer(json['name'] as String, json['price'] as String, json['session'] as List<dynamic>);
 }

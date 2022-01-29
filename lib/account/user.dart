@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:crawl_course_3/session/session.dart';
@@ -12,7 +11,8 @@ class LocalUser {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   Map<String, List<dynamic>> assignedCourses ={};
   List<String> _listOfSessions=[];
-  static const String _GOTUSER = 'USER_CRED';
+  List<String> _completedSessions=[];
+  static const String _gotUser = 'USER_CRED';
 
   Map<String, dynamic> toJson() => {
         '_firstName': _firstName,
@@ -20,6 +20,16 @@ class LocalUser {
         '_email': _email,
         '_userAuth2': _userAuth2,
       };
+
+
+  List<String> get listOfSessions => _listOfSessions;
+
+  set listOfSessions(List<String> value) {
+    _listOfSessions = value;
+  }
+
+
+  List<String> get completedSessions => _completedSessions;
 
   get password => _password;
   set password(value) {
@@ -32,6 +42,12 @@ class LocalUser {
       _listOfSessions.add(x);
     }
   }
+
+  void markSessionAsDone(String sessionKey){
+    _ref.child('users').child(_userAuth2).child('done_sessions').child(sessionKey).set(true);
+    _listOfSessions.add(sessionKey);
+  }
+
 
   Future<Session> getNextSession() async{
     _listOfSessions.elementAt(0);
@@ -52,7 +68,7 @@ class LocalUser {
   static Future<LocalUser?> getLocalUser() async{
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      LocalUser _local = LocalUser.fromJson(jsonDecode(sharedPreferences.getString(_GOTUSER)!));
+      LocalUser _local = LocalUser.fromJson(jsonDecode(sharedPreferences.getString(_gotUser)!));
       return _local;
     } catch (e) {
       print(e);
@@ -72,7 +88,7 @@ class LocalUser {
 
   static _resetLastUser() async{
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
-    _sharedPreferences.remove(_GOTUSER);
+    _sharedPreferences.remove(_gotUser);
   }
 
 
@@ -135,5 +151,16 @@ class LocalUser {
 
   set userAuth2(String value) {
     _userAuth2 = value;
+  }
+  
+  Future<List<String>> completedSession() async {
+    DatabaseReference _ref = FirebaseDatabase.instance.ref();
+    List<String> _x = [];
+    DataSnapshot _data = await _ref.child('users').child(_userAuth2).child('done_sessions').get();
+    for(DataSnapshot snapshot in _data.children){
+      final String sessionTitle = snapshot.key.toString();
+      _x.add(sessionTitle);
+    }
+    return _x;
   }
 }

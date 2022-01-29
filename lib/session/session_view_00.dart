@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 class Session00 extends StatefulWidget {
   const Session00({Key? key, required this.session}) : super(key: key);
   final Session session;
+
   @override
   State<Session00> createState() => _Session00State();
 }
@@ -39,10 +40,10 @@ class _Session00State extends State<Session00> {
         pageSnapping: true,
         controller: pControll,
         children: [
-          Session01(session: widget.session), //Video
+          Session01(session: widget.session), //Video //TODO change #widget.session to private
           Session02(session: widget.session), //Exercises
           Session03(session: widget.session),//TODO Session03, fix the design
-          Session04(session: widget.session),//TODO Session04, Done session
+          Session04(widget.session),//TODO Session04, Done session
         ],
         onPageChanged: (value){
           _changeTitle(value);

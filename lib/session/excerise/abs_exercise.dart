@@ -32,6 +32,11 @@ class Exercise {
   String get perk1 => _perk1;
   get perk2 => _perk2;
   get perk3 => _perk3;
+
+  @override
+  String toString() {
+    return 'Exercise{_title: $_title, _subTitle: $_subTitle}';
+  }
 }
 
 Exercise _exerciseFromJson(dynamic json) {

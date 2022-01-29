@@ -1,11 +1,7 @@
-import 'dart:convert';
-
-import 'package:crawl_course_3/session/session.dart';
 import 'package:crawl_course_3/account/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -15,98 +11,90 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final _localUser = LocalUser.getLocalUser();
-  String test = ' not';
+  Session _nextSession = Session('loading', '', <dynamic>[], '');
 
-  //change to load next session,
-  Future<Session> getEntrySessions() async {
-    DatabaseReference _ref = FirebaseDatabase.instance.ref();
+  //Todo should be moved
+  void getEntrySessionsKies() async {
     List<String> _startingSessions = [];
-
-    DataSnapshot _sessionKeys = await _ref.child('courses').child('test').child('sessions').get();
-
-    for(DataSnapshot _snap in _sessionKeys.children){
-      final String _session = _snap.value.toString();
-      if(!_startingSessions.contains(_session)){
-        _startingSessions.add(_session);
+    LocalUser? _local = await LocalUser.getLocalUser();
+    List<String> _completed = await _local!.completedSession();
+    
+    DatabaseReference _ref = FirebaseDatabase.instance.ref();
+    _ref
+        .child('courses')
+        .child('test')
+        .child('session')
+        .onValue
+        .listen((event) async {
+      for (DataSnapshot _snap in event.snapshot.children) {
+        final String _session = _snap.value.toString();
+        //Check if user already done session
+        if (!_completed.contains(_session)) {
+          // && !_doneSessions.contains(_session)
+          _startingSessions.add(_session);
+        }
       }
-    }
-
-    DataSnapshot singleSession = await _ref.child('sessions').child(_startingSessions.elementAt(0)).get();
-    //final String fromSnapshot = singleSession.value;
-
-    Session nextSession = Session.fromJson(singleSession.value);
-    return nextSession;
+      DataSnapshot x = await _ref
+          .child('sessions')
+          .child(_startingSessions.elementAt(0))
+          .get();
+      setState(() {
+        _nextSession = Session.fromJson(x.value);
+      });
+    });
   }
 
-
+  @override
+  void initState() {
+    getEntrySessionsKies();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height-AppBar().preferredSize.height;
+    final _height =
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
 
-
-
-    @override
-    void initState() {
-      getEntrySessions();
-      super.initState();
-    }
-
     return Scaffold(
-      body: SizedBox(
-        height: _height,
-        width: _width,
-        child: FutureBuilder(future: getEntrySessions(),
-          builder: (BuildContext context, AsyncSnapshot<Session> snapshot) {
-          late Widget test;
-            //String _userName='';
-            if(snapshot.hasData && snapshot.data != null){
-              test = SessionPreview(snapshot.requireData);
-          }else{
-              test = Text('test');
-            }
-            return Center(
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      SizedBox(
-                        height: _height*0.9,
-                        child: Container(   //Background
-                          color: Colors.grey,
-                        ),
+        body: SizedBox(
+            height: _height,
+            width: _width,
+            child: Center(
+                child: Column(
+              children: [
+                Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    SizedBox(
+                      height: _height * 0.9,
+                      child: Container(
+                        //Background
+                        color: Colors.grey,
                       ),
-                      Column(               //QUOTE
-                        children: [
-                          SizedBox(
-                            height: _height*0.2,
-                            width: _width*.8,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: const Text(
-                                'Today is your opportunity to build the tomorrow you want',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontStyle: FontStyle.italic,
-                                ),
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: _height * 0.2,
+                          width: _width * .8,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: const Text(
+                              'Today is your opportunity to build the tomorrow you want',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontStyle: FontStyle.italic,
                               ),
                             ),
                           ),
-                          test,
-                        ],
-                      ),
-
-                    ],
-                  ),
-                ],
-              )
-            );
-          },
-        )
-      ),
-    );
+                        ),
+                        SessionPreview(_nextSession)
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ))));
   }
 }

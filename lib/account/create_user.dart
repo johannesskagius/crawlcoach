@@ -1,10 +1,8 @@
-import 'dart:convert';
 
 import 'package:crawl_course_3/account/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class CreateUser extends StatefulWidget {
   const CreateUser({Key? key}) : super(key: key);
@@ -14,41 +12,21 @@ class CreateUser extends StatefulWidget {
 }
 
 class _CreateUserState extends State<CreateUser> {
-  LocalUser? _localUser;
-  String _fName = '';
-  String _lName = '';
-  String _email = '';
   @override
   void initState() {
-    getUserData();
     super.initState();
   }
 
-  void getUserData() async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
-    void _updateStrings() {
-      setState(() {
-        _fName = _localUser!.firstName;
-        _email = _localUser!.email;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    DatabaseReference database = FirebaseDatabase.instance.ref();
-
     final _formKey = GlobalKey<FormState>();
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
-    String _imgSource = 'assets/human.jpeg';
 
     List<TextEditingController> _txtEditList =
         List.generate(3, (index) => TextEditingController());
-    _txtEditList.elementAt(0).text = _fName;
-    _txtEditList.elementAt(1).text = _lName;
-    _txtEditList.elementAt(2).text = _email;
+
 
     Future<void> _createUser() async {
       final FirebaseAuth _auth = FirebaseAuth.instance;

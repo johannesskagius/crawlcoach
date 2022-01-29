@@ -14,7 +14,6 @@ class About extends StatefulWidget {
 class _AboutState extends State<About> {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   List<Offer> _listOfOffers= [];
-  List<bool> _listSelected = [];
 
   @override
   void initState() {
@@ -36,7 +35,6 @@ class _AboutState extends State<About> {
   }
 
   void markPressed(){
-    _listSelected = List.generate(_listOfOffers.length, (index) => false);
     setState(() {
 
     });
@@ -44,10 +42,6 @@ class _AboutState extends State<About> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height - AppBar().preferredSize.height;
-    final _width = MediaQuery.of(context).size.width;
-
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('about'),

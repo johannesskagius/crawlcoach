@@ -1,22 +1,16 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:crawl_course_3/admin/offer/add_offer.dart';
-import 'package:crawl_course_3/session/session.dart';
-import 'package:crawl_course_3/session/session_view_00.dart';
 import 'package:crawl_course_3/settings.dart';
 import 'package:crawl_course_3/account/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'about.dart';
 import 'admin/add_exercises_admin.dart';
 import 'admin/add_session/add_session.dart';
 import 'admin/admin.dart';
-import 'admin/offer/buy_offer.dart';
 import 'home.dart';
 
 void main() async {
@@ -59,6 +53,7 @@ class _LayoutState extends State<Layout> {
   Future<bool> _activateListener() async {
     try {
       final _localUser = await LocalUser.getLocalUser();
+      //_localUser!.completedSession();
       UserCredential _usercred = await _auth.signInWithEmailAndPassword(
           email: _localUser!.email, password: _localUser.password);
       DataSnapshot checkIfAdmin = await _ref
@@ -108,8 +103,8 @@ class _LayoutState extends State<Layout> {
         body: Center(
           child: PageView(
             controller: pControll,
-            pageSnapping: true,
             onPageChanged: _onPageChanged,
+            pageSnapping: true,
             children: const [
               Home(),
               About(),
@@ -145,7 +140,3 @@ class _LayoutState extends State<Layout> {
   }
 }
 
-//BottomNavigationBar(
-//                 items: const [
-
-//                 ],
