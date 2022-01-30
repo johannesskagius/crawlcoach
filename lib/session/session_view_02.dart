@@ -14,15 +14,16 @@ class Session02 extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<List<Exercise>> _getListOfExercises() async {
       List<Exercise> _listWithWantedExercises = [];
+      List<String> _listWithWantedExerciseKeys = [];
       DatabaseReference _ref = FirebaseDatabase.instance.ref();
       //Get keys from session
-      List<String> exerciseKeyList = session.exercises;
-      print(exerciseKeyList);
+      List<dynamic> exerciseKeyList = session.exercises;
       for (dynamic exerciseKey in exerciseKeyList) {
-        DataSnapshot exerciseSnap =
-            await _ref.child('exercises').child(exerciseKey).get();
-        Exercise _exercise = Exercise.fromJson(exerciseSnap.value);
-        _listWithWantedExercises.add(_exercise);
+        if(!_listWithWantedExerciseKeys.contains(exerciseKey.toString())){
+          DataSnapshot exerciseSnap = await _ref.child('exercises').child(exerciseKey).get();
+          Exercise _exercise = Exercise.fromJson(exerciseSnap.value);
+          _listWithWantedExercises.add(_exercise);
+        }
       }
       return _listWithWantedExercises;
     }

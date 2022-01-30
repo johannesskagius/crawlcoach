@@ -1,6 +1,6 @@
 
 import 'package:crawl_course_3/account/user.dart';
-import 'package:crawl_course_3/account/user_settings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'account/create_user.dart';
@@ -62,45 +62,52 @@ class SignedIn extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            GestureDetector(
-              onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => UserSettings(_localUser)));},
-              child: Table(
-                columnWidths: <int, TableColumnWidth>{
-                  0: FixedColumnWidth(_width * 0.3),
-                  //0:FlexColumnWidth(),
-                  //0: IntrinsicColumnWidth(),
-                  1: const FlexColumnWidth(),
-                },
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: <TableRow>[
-                  TableRow(children: [
-                    _textContainer(_rowHeight, 'Name: '),
-                    _textContainer(_rowHeight, _localUser!.firstName),
-                  ]),
-                  TableRow(children: [
-                    _textContainer(_rowHeight, 'Email: '),
-                    _textContainer(_rowHeight, _localUser!.email),
-                  ]),
-                  TableRow(children: [
-                    _textContainer(_rowHeight, 'Courses on: '),
-                    _textContainer(_rowHeight, '2'),
-                  ]),
-                  TableRow(children: [
-                    _textContainer(_rowHeight, 'Sessions to do: '),
-                    _textContainer(_rowHeight, '10'),
-                  ]),
-                  TableRow(children: [
-                    _textContainer(_rowHeight, 'Sessions done: '),
-                    _textContainer(_rowHeight, '10'),
-                  ]),
-                ],
-              ),
+            Table(
+              columnWidths: <int, TableColumnWidth>{
+                0: FixedColumnWidth(_width * 0.3),
+                //0:FlexColumnWidth(),
+                //0: IntrinsicColumnWidth(),
+                1: const FlexColumnWidth(),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: <TableRow>[
+                TableRow(children: [
+                  _textContainer(_rowHeight, 'USER ID: '),
+                  _textContainer(_rowHeight, _localUser!.userAuth2),
+                ]),
+                TableRow(children: [
+                  _textContainer(_rowHeight, 'Name: '),
+                  _textContainer(_rowHeight, _localUser!.firstName),
+                ]),
+                TableRow(children: [
+                  _textContainer(_rowHeight, 'Email: '),
+                  _textContainer(_rowHeight, _localUser!.email),
+                ]),
+                TableRow(children: [
+                  _textContainer(_rowHeight, 'Courses on: '),
+                  _textContainer(_rowHeight, '2'),
+                ]),
+                TableRow(children: [
+                  _textContainer(_rowHeight, 'Sessions to do: '),
+                  _textContainer(_rowHeight, '10'),
+                ]),
+                TableRow(children: [
+                  _textContainer(_rowHeight, 'Sessions done: '),
+                  _textContainer(_rowHeight, '10'),
+                ]),
+              ],
             ),
             Center(
               child: OutlinedButton(onPressed: () {
                 LocalUser.logOutUser();
               },
               child: Text('Sign out'),)
+            ),
+            Center(
+                child: CupertinoButton(onPressed: () {
+                  LocalUser.logOutUser();
+                },
+                  child: Text('Sign out'),)
             ),
           ],
         ),

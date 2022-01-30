@@ -22,7 +22,7 @@ class Exercise {
     'perk1': _perk1,
     'perk2': _perk2,
     'perk3': _perk3,
-    'description': description,
+    'description': _description,
   };
 
   List<dynamic> get description => _description;
