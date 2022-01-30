@@ -5,7 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseSummary extends StatelessWidget {
-  ExerciseSummary(this._exercise, {Key? key}) : super(key: key);
+  const ExerciseSummary(this._exercise, {Key? key}) : super(key: key);
   final Exercise _exercise;
 
   @override
@@ -15,7 +15,7 @@ class ExerciseSummary extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercise summary'),
+        title: const Text('Exercise summary'),
       ),
       body: SizedBox(
         width: _width,

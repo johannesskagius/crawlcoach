@@ -4,8 +4,8 @@ import 'package:video_player/video_player.dart';
 
 
 class Session01 extends StatefulWidget {
-  const Session01({Key? key, required this.session}) : super(key: key);
-  final Session session;
+  const Session01(this._session, {Key? key}) : super(key: key);
+  final Session _session;
 
   @override
   State<Session01> createState() => _Session01State();
@@ -18,7 +18,7 @@ class _Session01State extends State<Session01> {
   @override
   void initState() {
     //_controller = VideoPlayerController.asset('assets/videos/crawl_intro.mp4');
-    _controller = VideoPlayerController.network(widget.session.videoUrl);
+    _controller = VideoPlayerController.network(widget._session.videoUrl);
     _initializeVideoPlayerFuture = _controller.initialize();
     super.initState();
   }

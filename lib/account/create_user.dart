@@ -1,6 +1,9 @@
 
+import 'dart:io';
+
 import 'package:crawl_course_3/account/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
@@ -65,7 +68,7 @@ class _CreateUserState extends State<CreateUser> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create user'),
+        title: const Text('Create user'),
       ),
       body: SizedBox(
         height: _height,
@@ -135,13 +138,17 @@ class _CreateUserState extends State<CreateUser> {
                           }
                         },
                       ),
-                      ElevatedButton(
+                      Platform.isIOS ? CupertinoButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               _createUser();
                             }
                           },
-                          child: const Text('create user')),
+                          child: const Text('create user')): ElevatedButton(onPressed: (){
+                            if(_formKey.currentState!.validate()){
+                              _createUser();
+                            }
+                      }, child: const Text('create user')),
                     ],
                   ),
                 ),

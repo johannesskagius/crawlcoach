@@ -8,7 +8,7 @@ class Admin extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Crawl coach admin'),
+        title: const Text('Crawl coach admin'),
       ),
       body: Center(
         child: Column(

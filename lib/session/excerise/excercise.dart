@@ -7,8 +7,6 @@ class ExerciseViewPort extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _height =
-        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     double _width = MediaQuery.of(context).size.width;
 
     return Scaffold(

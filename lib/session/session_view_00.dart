@@ -1,7 +1,6 @@
 import 'package:crawl_course_3/session/session.dart';
-import 'package:crawl_course_3/session/session_view_02.dart';
-import 'package:crawl_course_3/session/session_view_03.dart';
 import 'package:crawl_course_3/session/session_view_01.dart';
+import 'package:crawl_course_3/session/session_view_02.dart';
 import 'package:crawl_course_3/session/session_view_04.dart';
 import 'package:flutter/material.dart';
 
@@ -40,10 +39,9 @@ class _Session00State extends State<Session00> {
         pageSnapping: true,
         controller: pControll,
         children: [
-          Session01(session: widget.session), //Video //TODO change #widget.session to private
-          Session02(session: widget.session), //Exercises
-          Session03(session: widget.session),//TODO Session03, fix the design
-          Session04(widget.session),//TODO Session04, Done session
+          Session01(widget.session), //Video
+          Session02(widget.session), //Exercises as list,
+          Session04(widget.session),//
         ],
         onPageChanged: (value){
           _changeTitle(value);

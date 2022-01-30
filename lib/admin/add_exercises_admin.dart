@@ -1,7 +1,5 @@
 
 
-import 'dart:convert';
-
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -156,7 +154,7 @@ class AddExercise extends StatelessWidget {
                             controller.clear();
                           }
                         }
-                      }, child: Text('Add exercise')),
+                      }, child: const Text('Add exercise')),
                     ],
                   ),
                 );

@@ -1,5 +1,4 @@
 
-import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +65,7 @@ class _ChooseSessionsState extends State<ChooseSessions> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add exercises'),
+        title: const Text('Add exercises'),
       ),
       body: SizedBox(
         height: _height,
@@ -96,7 +95,7 @@ class _ChooseSessionsState extends State<ChooseSessions> {
                 children: [
                   ElevatedButton(onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => OfferSummary(Offer(widget._name, widget._desc, _chosens))));
-                  }, child: Text('Go to summary'),),
+                  }, child: const Text('Go to summary'),),
                   FloatingActionButton(
                       onPressed: (){
                         //TODO implement functions

@@ -58,11 +58,10 @@ class _SessionExercisesState extends State<SessionExercises> {
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
-    final List<bool> _listSelected = [];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add exercises'),
+        title: const Text('Add exercises'),
       ),
       body: SizedBox(
         height: _height,
@@ -94,7 +93,7 @@ class _SessionExercisesState extends State<SessionExercises> {
                 children: [
                   ElevatedButton(onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => SessionsSummary(Session(widget._name, widget._desc,_chosens,''))));
-                  }, child: Text('Go to summary'),),
+                  }, child: const Text('Go to summary'),),
                   FloatingActionButton(
                       onPressed: (){
                         //TODO implement functions

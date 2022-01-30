@@ -1,5 +1,4 @@
 import 'package:crawl_course_3/admin/offer/offer.dart';
-import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +9,8 @@ class OfferSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height - AppBar().preferredSize.height;
+    final _height =
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -25,21 +25,21 @@ class OfferSummary extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Name: '),
+                const Text('Name: '),
                 Text(_offer.name),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Desc: '),
+                const Text('Desc: '),
                 Text(_offer.price),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Nr och exercises: '),
+                const Text('Nr och exercises: '),
                 Text(_offer.listOfSessions.length.toString()),
               ],
             ),

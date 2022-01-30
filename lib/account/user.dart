@@ -170,7 +170,7 @@ class LocalUser {
         .child('users')
         .child(_userAuth2)
         .child('_firstName')
-        .update(this.toJson());
+        .update(toJson());
   }
 
   static Future<LocalUser?> getLocalUser() async {

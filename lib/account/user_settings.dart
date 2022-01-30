@@ -2,8 +2,8 @@ import 'package:crawl_course_3/account/user.dart';
 import 'package:flutter/material.dart';
 
 class UserSettings extends StatelessWidget {
-  UserSettings(this._localUser, {Key? key}) : super(key: key);
-  LocalUser? _localUser;
+  const UserSettings(this._localUser, {Key? key}) : super(key: key);
+  final LocalUser _localUser;
 
   @override
   Widget build(BuildContext context) {
@@ -89,17 +89,17 @@ class UserSettings extends StatelessWidget {
                         ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                if (_localUser!.firstName ==
+                                if (_localUser.firstName ==
                                     _txtEditList.elementAt(0).value.text) {
                                   //update name,
                                   String _name = _txtEditList.elementAt(0).value.text;
-                                  _localUser!.firstName;
+                                  _localUser.firstName;
                                 }
-                                if (_localUser!.email !=
+                                if (_localUser.email !=
                                     _txtEditList.elementAt(1).value.text) {
                                   //Update email
                                 }
-                                if (_localUser!.password !=
+                                if (_localUser.password !=
                                     _txtEditList.elementAt(2).value.text) {
                                   //Update password
                                 }

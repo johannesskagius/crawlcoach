@@ -12,7 +12,7 @@ class BuyOffer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Buy'),
+        title: const Text('Buy'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -20,21 +20,21 @@ class BuyOffer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('Course name: '),
+              const Text('Course name: '),
               Text(_offer.name),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('Price: '),
+              const Text('Price: '),
               Text(_offer.price),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('Number of sessions: '),
+              const Text('Number of sessions: '),
               Text(_offer.listOfSessions.length.toString()),
             ],
           ),
@@ -42,7 +42,7 @@ class BuyOffer extends StatelessWidget {
             LocalUser? _local = await LocalUser.getLocalUser();
             //Add sessions to the userprofile
             _local!.assignToCourse(_offer);
-          }, child: Text('buy'))
+          }, child: const Text('buy'))
         ],
       ),
     );

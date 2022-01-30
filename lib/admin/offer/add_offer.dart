@@ -90,7 +90,7 @@ class SessionGeneral extends StatelessWidget {
                                 _txtEditList.elementAt(1).value.text)));
                   }
                 },
-                child: Text('Pick sessions')),
+                child: const Text('Pick sessions')),
           ],
         ),
       ),

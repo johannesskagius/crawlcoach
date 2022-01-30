@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'excerise/excercise.dart';
 
 class Session02 extends StatelessWidget {
-  const Session02({Key? key, required this.session}) : super(key: key);
-  final Session session;
+  const Session02(this._session, {Key? key, required}) : super(key: key);
+  final Session _session;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class Session02 extends StatelessWidget {
       List<String> _listWithWantedExerciseKeys = [];
       DatabaseReference _ref = FirebaseDatabase.instance.ref();
       //Get keys from session
-      List<dynamic> exerciseKeyList = session.exercises;
+      List<dynamic> exerciseKeyList = _session.exercises;
       for (dynamic exerciseKey in exerciseKeyList) {
         if(!_listWithWantedExerciseKeys.contains(exerciseKey.toString())){
           DataSnapshot exerciseSnap = await _ref.child('exercises').child(exerciseKey).get();

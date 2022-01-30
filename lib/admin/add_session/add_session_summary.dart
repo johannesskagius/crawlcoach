@@ -25,21 +25,21 @@ class SessionsSummary extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Name: '),
+                const Text('Name: '),
                 Text(_session.sessionName),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Desc: '),
+                const Text('Desc: '),
                 Text(_session.desc),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Nr och exercises: '),
+                const Text('Nr och exercises: '),
                 Text(_session.exercises.length.toString()),
               ],
             ),

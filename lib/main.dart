@@ -49,9 +49,10 @@ class _LayoutState extends State<Layout> {
   final PageController pControll = PageController();
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  bool isManager = false;
   int _selected = 0;
-  List<String> _sessions = [];
+
+  final List<String> _sessions = [];
 
   Future<bool> _activateListener() async {
     try {
@@ -72,6 +73,28 @@ class _LayoutState extends State<Layout> {
       //Download anonymous user
       if (e == Exception) {}
       return Future<bool>.value(false);
+    }
+  }
+
+  Future<void> _isManager() async {
+    try {
+      final _localUser = await LocalUser.getLocalUser();
+      UserCredential _usercred = await _auth.signInWithEmailAndPassword(
+          email: _localUser!.email, password: _localUser.password);
+      DataSnapshot checkIfAdmin = await _ref
+          .child('admins')
+          .child(_usercred.user!.uid)
+          .child('isadmin')
+          .get();
+      if (checkIfAdmin.value.toString() == 'true') {
+        setState(() {
+          isManager = true;
+        });
+      }
+    } catch (e) {
+      //Download anonymous user
+      if (e == Exception) {}
+      //return Future<bool>.value(false);
     }
   }
 
@@ -96,6 +119,7 @@ class _LayoutState extends State<Layout> {
 
   @override
   void initState() {
+    _isManager();
     _setListenToUserSessions();
     super.initState();
   }
@@ -129,29 +153,35 @@ class _LayoutState extends State<Layout> {
             ],
           ),
         ),
-        bottomSheet: FutureBuilder(
-          future: _activateListener(),
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            List<BottomNavigationBarItem> _navigationList = [
-              const BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined), label: 'Home'),
-              const BottomNavigationBarItem(
-                  icon: Icon(Icons.run_circle_outlined), label: 'Courses'),
-              const BottomNavigationBarItem(
-                  icon: Icon(Icons.settings_outlined), label: 'Settings'),
-            ];
-            if (snapshot.hasData && snapshot.data == true) {
-              _navigationList.add(const BottomNavigationBarItem(
-                  icon: Icon(Icons.admin_panel_settings_outlined),
-                  label: 'Admin'));
-            }
-            return BottomNavigationBar(
-                items: _navigationList,
-                currentIndex: _selected,
-                showSelectedLabels: true,
-                selectedItemColor: Colors.greenAccent,
-                onTap: _onTapped);
-          },
-        ));
+        bottomSheet: BottomNavigationBar(
+          currentIndex: _selected,
+          items: isManager ? manager : standard,
+          showSelectedLabels: true,
+          selectedItemColor: Colors.greenAccent,
+          onTap: _onTapped,
+        ),
+    );
   }
 }
+
+
+const List<BottomNavigationBarItem> standard = [
+      BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined), label: 'Home'),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.run_circle_outlined), label: 'Courses'),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.settings_outlined), label: 'Settings'),
+    ];
+
+const List<BottomNavigationBarItem> manager = [
+  BottomNavigationBarItem(
+      icon: Icon(Icons.home_outlined), label: 'Home'),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.run_circle_outlined), label: 'Courses'),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.settings_outlined), label: 'Settings'),
+  BottomNavigationBarItem(
+            icon: Icon(Icons.admin_panel_settings_outlined),
+            label: 'Admin'),
+];

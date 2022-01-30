@@ -1,6 +1,4 @@
-import 'dart:convert';
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'add_session_choose_exercises.dart';
@@ -78,7 +76,7 @@ class SessionGeneral extends StatelessWidget {
                                 _txtEditList.elementAt(1).value.text)));
                   }
                 },
-                child: Text('Show exercises')),
+                child: const Text('Show exercises')),
           ],
         ),
       ),
