@@ -16,7 +16,8 @@ class Session02 extends StatelessWidget {
       List<Exercise> _listWithWantedExercises = [];
       DatabaseReference _ref = FirebaseDatabase.instance.ref();
       //Get keys from session
-      List<dynamic> exerciseKeyList = session.exercises;
+      List<String> exerciseKeyList = session.exercises;
+      print(exerciseKeyList);
       for (dynamic exerciseKey in exerciseKeyList) {
         DataSnapshot exerciseSnap =
             await _ref.child('exercises').child(exerciseKey).get();

@@ -102,12 +102,10 @@ class _LayoutState extends State<Layout> {
 
   @override
   Widget build(BuildContext context) {
-
     void _onTapped(int index) {
       setState(() {
         pControll.animateToPage(index,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeIn);
+            duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
       });
     }
 
