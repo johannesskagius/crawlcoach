@@ -57,6 +57,9 @@ class _HomeState extends State<Home> {
     final _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Crawl Coach'),
+      ),
         body: SizedBox(
             height: _height,
             width: _width,

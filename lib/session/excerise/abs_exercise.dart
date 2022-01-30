@@ -1,11 +1,9 @@
-import 'dart:convert';
+
 import 'dart:core';
-import 'dart:core';
-import 'package:json_annotation/json_annotation.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class Exercise {
@@ -38,6 +36,7 @@ class Exercise {
     return 'Exercise{_title: $_title, _subTitle: $_subTitle}';
   }
 }
+
 
 Exercise _exerciseFromJson(dynamic json) {
   return Exercise(

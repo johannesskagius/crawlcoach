@@ -1,16 +1,17 @@
 import 'dart:async';
+
+import 'package:crawl_course_3/account/user.dart';
 import 'package:crawl_course_3/admin/offer/add_offer.dart';
 import 'package:crawl_course_3/settings.dart';
-import 'package:crawl_course_3/account/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import 'about.dart';
 import 'admin/add_exercises_admin.dart';
 import 'admin/add_session/add_session.dart';
 import 'admin/admin.dart';
+import 'courses.dart';
 import 'home.dart';
 
 void main() async {
@@ -48,8 +49,8 @@ class _LayoutState extends State<Layout> {
   final PageController pControll = PageController();
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   int _selected = 0;
-  LocalUser? _localUser;
   List<String> _sessions = [];
 
   Future<bool> _activateListener() async {
@@ -105,8 +106,8 @@ class _LayoutState extends State<Layout> {
     void _onTapped(int index) {
       setState(() {
         pControll.animateToPage(index,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.fastLinearToSlowEaseIn);
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeIn);
       });
     }
 
@@ -117,9 +118,6 @@ class _LayoutState extends State<Layout> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Crawl Coach'),
-        ),
         body: Center(
           child: PageView(
             controller: pControll,
@@ -127,7 +125,7 @@ class _LayoutState extends State<Layout> {
             pageSnapping: true,
             children: const [
               Home(),
-              About(),
+              Courses(),
               Settings(),
               Admin(),
             ],
@@ -140,7 +138,7 @@ class _LayoutState extends State<Layout> {
               const BottomNavigationBarItem(
                   icon: Icon(Icons.home_outlined), label: 'Home'),
               const BottomNavigationBarItem(
-                  icon: Icon(Icons.run_circle_outlined), label: 'Swim'),
+                  icon: Icon(Icons.run_circle_outlined), label: 'Courses'),
               const BottomNavigationBarItem(
                   icon: Icon(Icons.settings_outlined), label: 'Settings'),
             ];

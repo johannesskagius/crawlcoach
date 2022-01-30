@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
 import 'package:crawl_course_3/session/session.dart';
@@ -13,14 +12,11 @@ class Session02 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //List<String> exercisesIDS = session.exercises; //TODO Excercises should be collected from server and displayed.
-
     Future<List<Exercise>> _getListOfExercises() async {
       List<Exercise> _listWithWantedExercises = [];
       DatabaseReference _ref = FirebaseDatabase.instance.ref();
       //Get keys from session
       List<dynamic> exerciseKeyList = session.exercises;
-
       for (dynamic exerciseKey in exerciseKeyList) {
         DataSnapshot exerciseSnap =
             await _ref.child('exercises').child(exerciseKey).get();
