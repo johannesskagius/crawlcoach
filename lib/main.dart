@@ -8,10 +8,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import 'account/my_courses.dart';
 import 'admin/add_exercises_admin.dart';
 import 'admin/add_session/add_session.dart';
 import 'admin/admin.dart';
-import 'courses.dart';
 import 'home.dart';
 import 'store.dart';
 

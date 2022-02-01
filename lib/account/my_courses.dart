@@ -1,10 +1,8 @@
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import 'admin/offer/buy_offer.dart';
-import 'admin/offer/offer.dart';
-
+import '../admin/offer/buy_offer.dart';
+import '../admin/offer/offer.dart';
 
 //todo change to my courses use silvergrid / Silver list!
 class MyCourses extends StatefulWidget {
@@ -45,7 +43,7 @@ class _MyCoursesState extends State<MyCourses> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SliverAppBar(
       appBar: AppBar(
         title: const Text('Courses'),
       ),

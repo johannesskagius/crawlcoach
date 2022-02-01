@@ -10,11 +10,11 @@ class Store extends StatefulWidget {
   State<Store> createState() => _StoreState();
 }
 
-class _StoreState extends State<Store> {
-  Future<List<Offer>> getOffers() async {
-    return Offer.getOffers();
-  }
+Future<List<Offer>> _getOffers() async {
+  return Offer.getOffers();
+}
 
+class _StoreState extends State<Store> {
   @override
   Widget build(BuildContext context) {
     List<GestureDetector> _list = [];
@@ -23,7 +23,7 @@ class _StoreState extends State<Store> {
         title: const Text('Store'),
       ),
       body: FutureBuilder(
-        future: getOffers(),
+        future: _getOffers(),
         builder: (BuildContext context, AsyncSnapshot<List<Offer>> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             List<Offer> _offers = snapshot.data!;
