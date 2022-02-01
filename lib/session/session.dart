@@ -55,6 +55,14 @@ class Session {
         .set(stats.toString());
   }
 
+  static void getSessionStats() async {
+    DatabaseReference _ref = FirebaseDatabase.instance.ref();
+    DataSnapshot _snap = await _ref.child('session_stats').get();
+    for (DataSnapshot _data in _snap.children) {
+      print(_data.value.toString());
+    }
+  }
+
   @override
   String toString() {
     return 'Session{_sessionName: $sessionName, _desc: $desc}';
