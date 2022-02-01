@@ -1,8 +1,19 @@
 
 import 'package:flutter/material.dart';
 
-class Admin extends StatelessWidget {
+
+class Admin extends StatefulWidget {
   const Admin({Key? key}) : super(key: key);
+
+  @override
+  State<Admin> createState() => _AdminState();
+}
+
+class _AdminState extends State<Admin> {
+  void onValueListen(){
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +25,11 @@ class Admin extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(onPressed: (){
-              Navigator.pushNamed(context, '/addoffer');
-            }, child: const Text('Add Offer')),
+            SizedBox(
+              child: ElevatedButton(onPressed: (){
+                Navigator.pushNamed(context, '/addoffer');
+              }, child: const Text('Add Offer')),
+            ),
             ElevatedButton(onPressed: (){
               Navigator.pushNamed(context, '/addsession');
             }, child: const Text('Add Session')),
@@ -29,3 +42,10 @@ class Admin extends StatelessWidget {
     );
   }
 }
+
+
+// BarChart _getBarchart(){
+//   return BarChart(
+//
+//   );
+// }

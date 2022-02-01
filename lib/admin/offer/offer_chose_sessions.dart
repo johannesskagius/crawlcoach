@@ -21,31 +21,30 @@ class _ChooseSessionsState extends State<ChooseSessions> {
 
   List<String> _chosens = [];
   int _nrChosen = 0;
-  List<Session> _exercises = [];
+  List<Session> _sessions = [];
 
   void _activateListener() async{
-    List<Session> _ex = [];
-
+    List<Session> _downloadedSessions = [];
     _ref.child('sessions').onValue.listen((event) {
-      Map<String, List<dynamic>> test = {};
       for(var element in event.snapshot.children){
         Object? test = element.value;
+        print(element.key);
         try{
-          _ex.add(Session.fromJson(test));
+          _downloadedSessions.add(Session.fromJson(test));
         }catch(e){
           print(e);
         }
       }
 
       setState(() {
-        _exercises = _ex;
+        _sessions = _downloadedSessions;
       });
     });
   }
 
   void increment(int index){
-    if(!_chosens.contains(_exercises.elementAt(index).sessionName)){
-      _chosens.add(_exercises.elementAt(index).desc);
+    if(!_chosens.contains(_sessions.elementAt(index).sessionName)){
+      _chosens.add(_sessions.elementAt(index).sessionName);
       setState(() {
         _nrChosen++;
       });
@@ -75,14 +74,14 @@ class _ChooseSessionsState extends State<ChooseSessions> {
             SizedBox(
               height: _height,
               child: ListView.builder(
-                itemCount: _exercises.length,
+                itemCount: _sessions.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                     child: ListTile(
                       onTap: ()=> increment(index),
                       leading: Text(index.toString()),
-                      title: Text(_exercises.elementAt(index).sessionName),
-                      trailing: Text(_exercises.elementAt(index).desc),
+                      title: Text(_sessions.elementAt(index).sessionName),
+                      trailing: Text(_sessions.elementAt(index).desc),
                     ),
                   );
                 },

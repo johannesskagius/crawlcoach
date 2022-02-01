@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import 'admin/offer/buy_offer.dart';
 import 'admin/offer/offer.dart';
 
-class Courses extends StatefulWidget {
-  const Courses({Key? key}) : super(key: key);
+
+//todo change to my courses use silvergrid / Silver list!
+class MyCourses extends StatefulWidget {
+  const MyCourses({Key? key}) : super(key: key);
 
   @override
-  State<Courses> createState() => _CoursesState();
+  State<MyCourses> createState() => _MyCoursesState();
 }
 
-class _CoursesState extends State<Courses> {
+class _MyCoursesState extends State<MyCourses> {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   List<Offer> _listOfOffers= [];
 

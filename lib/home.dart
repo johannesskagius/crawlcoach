@@ -2,6 +2,7 @@ import 'package:crawl_course_3/account/user.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -10,9 +11,10 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-
 class _HomeState extends State<Home> {
   Session _nextSession = Session('loading', '', <dynamic>[], '');
+  final asset = 'assets/videos/IMG_4498_HD.mp4';
+  VideoPlayerController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class _HomeState extends State<Home> {
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
 
+    
     return Scaffold(
         appBar: AppBar(
           title: const Text('Crawl Coach'),
@@ -36,11 +39,14 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       height: _height * 0.9,
                       child: Container(
-                        //Background
-                        color: Colors.grey,
+                        child: controller!.value.isInitialized ? AspectRatio(
+                          aspectRatio: controller!.value.aspectRatio,
+                          child: VideoPlayer(controller!),
+                        ): const CircularProgressIndicator(),
                       ),
                     ),
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
                           height: _height * 0.2,
@@ -56,7 +62,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
-                        SessionPreview(_nextSession)
+                        Container(alignment: Alignment.bottomCenter,child: SessionPreview(_nextSession))
                       ],
                     ),
                   ],
@@ -90,14 +96,30 @@ class _HomeState extends State<Home> {
           .child(_startingSessions.elementAt(0))
           .get();
       setState(() {
-        _nextSession = Session.fromJson(x.value);
+        try{
+          _nextSession = Session.fromJson(x.value);
+        }catch(e){
+         print('home: $e');
+        }
       });
     });
   }
 
   @override
+  void dispose() {
+    controller!.value.position;
+    controller!.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
-    getEntrySessionsKies();
     super.initState();
+    getEntrySessionsKies();
+    controller = VideoPlayerController.asset(asset)
+      ..addListener(() => setState(() {}))
+      ..setLooping(true)
+      ..initialize().then((_) => controller!.play())
+    ..setVolume(0);
   }
 }

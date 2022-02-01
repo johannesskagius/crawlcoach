@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:crawl_course_3/account/user.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -81,6 +82,9 @@ class SignedIn extends StatelessWidget {
                   ))
                 : const ElevatedButton(
                     onPressed: LocalUser.logOutUser, child: Text('Sign out')),
+
+            Text('How can this get better?'),
+            testFlightForm(_localUser!),
           ],
         ),
       ),
@@ -110,4 +114,66 @@ class _SettingsState extends State<Settings> {
   void initState() {
     super.initState();
   }
+}
+
+
+Container testFlightForm(LocalUser _local) {
+  final _formKey = GlobalKey<FormState>();
+  final List<TextEditingController> _controllers = List.generate(2, (index) => TextEditingController());
+  _controllers.elementAt(0).text = 'Titel';
+  _controllers.elementAt(0).text = 'Tips';
+  final _textStyle = TextStyle(color: Colors.white);
+  return Container(
+    decoration: BoxDecoration(
+      border: Border.all(
+        width: 1,
+        color: Colors.black
+      )
+    ),
+    child: Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            margin: const EdgeInsets.all(4),
+            child: CupertinoTextField(
+              keyboardType: TextInputType.text,
+              controller: _controllers.elementAt(0),
+              style: _textStyle,
+              autofocus: true,
+              maxLines: 2,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(4),
+            child: CupertinoTextField(
+              keyboardType: TextInputType.multiline,
+              controller: _controllers.elementAt(1),
+              autofocus: true,
+              style: _textStyle,
+              autocorrect: false,
+              minLines: 1,
+              maxLines: 4,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(4),
+            child: CupertinoButton.filled(child: Text('Send tip'), onPressed: () async {
+              DatabaseReference _ref = FirebaseDatabase.instance.ref();
+              String _title = _controllers.elementAt(0).value.text;
+              String _tip = _controllers.elementAt(1).value.text;
+              try {
+                Map<String, List<String>> _array = {};
+                List<String> _test = [_title, _tip];
+                _array.putIfAbsent(_local.userAuth2, () => _test);
+                _ref.child('improvement').update(_array);
+              } catch (e) {
+                print(e);
+              }
+            }),
+          ),
+        ],
+    )),
+  );
 }

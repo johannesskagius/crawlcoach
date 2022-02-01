@@ -42,6 +42,7 @@ class BuyOffer extends StatelessWidget {
             LocalUser? _local = await LocalUser.getLocalUser();
             //Add sessions to the userprofile
             _local!.assignToCourse(_offer);
+            Navigator.pop(context);
           }, child: const Text('buy'))
         ],
       ),

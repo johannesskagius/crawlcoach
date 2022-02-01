@@ -13,6 +13,7 @@ import 'admin/add_session/add_session.dart';
 import 'admin/admin.dart';
 import 'courses.dart';
 import 'home.dart';
+import 'store.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -140,17 +141,20 @@ class _LayoutState extends State<Layout> {
     }
 
     return Scaffold(
-        body: Center(
-          child: PageView(
-            controller: pControll,
-            onPageChanged: _onPageChanged,
-            pageSnapping: true,
-            children: const [
-              Home(),
-              Courses(),
-              Settings(),
-              Admin(),
-            ],
+        body: Container(
+          child: Center(
+            child: PageView(
+              controller: pControll,
+              onPageChanged: _onPageChanged,
+              pageSnapping: true,
+              children: const [
+                Home(),
+                MyCourses(),
+                Store(),
+                Settings(),
+                Admin(),
+              ],
+            ),
           ),
         ),
         bottomSheet: BottomNavigationBar(
@@ -168,8 +172,10 @@ class _LayoutState extends State<Layout> {
 const List<BottomNavigationBarItem> standard = [
       BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined), label: 'Home'),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.my_library_add_outlined), label: 'Courses'),
       BottomNavigationBarItem(
-          icon: Icon(Icons.run_circle_outlined), label: 'Courses'),
+          icon: Icon(Icons.shop_outlined), label: 'Store'),
       BottomNavigationBarItem(
           icon: Icon(Icons.settings_outlined), label: 'Settings'),
     ];
@@ -178,7 +184,9 @@ const List<BottomNavigationBarItem> manager = [
   BottomNavigationBarItem(
       icon: Icon(Icons.home_outlined), label: 'Home'),
   BottomNavigationBarItem(
-      icon: Icon(Icons.run_circle_outlined), label: 'Courses'),
+      icon: Icon(Icons.my_library_add_outlined), label: 'Courses'),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.shop_outlined), label: 'Store'),
   BottomNavigationBarItem(
       icon: Icon(Icons.settings_outlined), label: 'Settings'),
   BottomNavigationBarItem(
