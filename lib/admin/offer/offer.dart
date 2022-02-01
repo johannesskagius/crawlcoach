@@ -1,28 +1,48 @@
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
-class Offer{
-  final List<dynamic> _listOfSessions;
-  final String _price;
-  final String _name;
-  Offer(this._name, this._price, this._listOfSessions);
+class Offer {
+  final List<Object?> listOfSessions;
+  final String price;
+  final String name;
 
-  String get name => _name;
+  Offer(
+      {required this.name, required this.listOfSessions, required this.price});
 
-  String get price => _price;
-
-  List<dynamic> get listOfSessions => _listOfSessions;
-
-  factory Offer.fromJson(dynamic json) => _offerFromJson(json);
+  final testJson = {
+    "test2": {
+      "name": "Test course",
+      "price": "10sek",
+      "sessions": ["intro 1", "intro 2", "intro 3"]
+    }
+  };
 
   Map<String, dynamic> toJson() => {
-    'name' : _name,
-    'price': _price,
-    'session': _listOfSessions,
-  };
+        'name': name,
+        'price': price,
+        'session': listOfSessions,
+      };
+
+  static Future<List<Offer>> getOffers() async {
+    DatabaseReference _ref = FirebaseDatabase.instance.ref();
+    DataSnapshot? _snapshot = await _ref.child('courses').get();
+    List<Offer> _getOffers = [];
+
+    for (DataSnapshot snap in _snapshot.children) {
+      late Map<Object?, dynamic> object = snap.value as Map<Object?, dynamic>;
+        final course = Offer.fromJson(object); //error here
+        _getOffers.add(course);
+    }
+    return _getOffers;
+  }
+  factory Offer.fromJson(Map<Object?, dynamic> json) => _offerFromJson(json);
 }
 
-Offer _offerFromJson(dynamic json){
-  return Offer(json['name'] as String, json['price'] as String, json['session'] as List<dynamic>);
+Offer _offerFromJson(Map<Object?, dynamic> json) {
+  return Offer(
+      name: json['name'],
+      price: json['price'],
+      listOfSessions: json['session']);
 }

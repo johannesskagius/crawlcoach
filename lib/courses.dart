@@ -1,3 +1,4 @@
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -27,8 +28,8 @@ class _MyCoursesState extends State<MyCourses> {
     List<Offer> _ex = [];
     _ref.child('courses').onValue.listen((event) {
       for(var element in event.snapshot.children){
-        Object? objOffer = element.value;
-        _ex.add(Offer.fromJson(objOffer));
+        String? objOffer = element.value.toString();
+        //_ex.add(Offer.fromJson(jsonDecode(objOffer)));
       }
       setState(() {
         _listOfOffers = _ex;

@@ -93,7 +93,7 @@ class _ChooseSessionsState extends State<ChooseSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => OfferSummary(Offer(widget._name, widget._desc, _chosens))));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => OfferSummary(Offer(name: widget._name, listOfSessions: _chosens, price: widget._desc))));
                   }, child: const Text('Go to summary'),),
                   FloatingActionButton(
                       onPressed: (){
