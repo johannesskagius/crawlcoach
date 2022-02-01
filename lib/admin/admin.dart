@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-
 
 class Admin extends StatefulWidget {
   const Admin({Key? key}) : super(key: key);
@@ -10,11 +8,6 @@ class Admin extends StatefulWidget {
 }
 
 class _AdminState extends State<Admin> {
-  void onValueListen(){
-
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,23 +19,30 @@ class _AdminState extends State<Admin> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(
-              child: ElevatedButton(onPressed: (){
-                Navigator.pushNamed(context, '/addoffer');
-              }, child: const Text('Add Offer')),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/addoffer');
+                  },
+                  child: const Text('Add Offer')),
             ),
-            ElevatedButton(onPressed: (){
-              Navigator.pushNamed(context, '/addsession');
-            }, child: const Text('Add Session')),
-            ElevatedButton(onPressed: (){
-              Navigator.pushNamed(context, '/addexercise');
-            }, child: const Text('Add exercise')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/addsession');
+                },
+                child: const Text('Add Session')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/addexercise');
+                },
+                child: const Text('Add exercise')),
           ],
         ),
       ),
     );
   }
-}
 
+  void onValueListen() {}
+}
 
 // BarChart _getBarchart(){
 //   return BarChart(

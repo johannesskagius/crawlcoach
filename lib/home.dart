@@ -12,7 +12,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Session _nextSession = Session('loading', '', <dynamic>[], '');
+  Session _nextSession = Session(
+      desc: 'Loading', videoUrl: '', sessionName: 'Loading', exercises: []);
   final asset = 'assets/videos/IMG_4498_HD.mp4';
   VideoPlayerController? controller;
 
@@ -22,7 +23,6 @@ class _HomeState extends State<Home> {
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
 
-    
     return Scaffold(
         appBar: AppBar(
           title: const Text('Crawl Coach'),

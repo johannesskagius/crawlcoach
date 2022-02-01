@@ -34,12 +34,21 @@ class ExerciseViewPort extends StatelessWidget {
                   Text(exercise.perk3)
                 ],
               ),
-              Expanded(child: ListView.builder(itemCount: exercise.description.length, itemBuilder: (BuildContext context, int index) {
-                return Explained(number: index.toString(), description: exercise.description.elementAt(index), width: _width,);
-              },))
+              Expanded(
+                  child: ListView.builder(
+                itemCount: exercise.description.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Explained(
+                    number: index.toString(),
+                    description:
+                        exercise.description.elementAt(index).toString(),
+                    //TODO find a better way
+                    width: _width,
+                  );
+                },
+              ))
             ],
           ),
         ));
   }
 }
-

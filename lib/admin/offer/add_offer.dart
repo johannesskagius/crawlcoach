@@ -82,7 +82,7 @@ class SessionGeneral extends StatelessWidget {
             ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ChooseSessions(

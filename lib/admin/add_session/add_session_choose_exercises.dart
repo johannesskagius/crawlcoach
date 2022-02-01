@@ -75,12 +75,12 @@ class _SessionExercisesState extends State<SessionExercises> {
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                     child: ListTile(
-                      onTap: (){
+                      onTap: () {
                         increment(index);
                       },
                       leading: Text(index.toString()),
                       title: Text(_exercises.elementAt(index).title),
-                      trailing: Text(_exercises.elementAt(index).subTitle!),
+                      trailing: Text(_exercises.elementAt(index).subTitle),
                     ),
                   );
                 },
@@ -92,8 +92,15 @@ class _SessionExercisesState extends State<SessionExercises> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SessionsSummary(Session(widget._name, widget._desc,_chosens,''))));
-                  }, child: const Text('Go to summary'),),
+                    Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SessionsSummary(Session(
+                                  sessionName: widget._name,
+                                  desc: widget._desc,
+                                  exercises: _chosens,
+                                  videoUrl: ''))));
+                    }, child: const Text('Go to summary'),),
                   FloatingActionButton(
                       onPressed: (){
                         //TODO implement functions

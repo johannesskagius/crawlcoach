@@ -1,5 +1,3 @@
-
-
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,8 +9,8 @@ class AddExercise extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final List<TextEditingController> _txtEditList = List.generate(6, (index) => TextEditingController());
+    final List<TextEditingController> _txtEditList =
+        List.generate(6, (index) => TextEditingController());
 
     _txtEditList.elementAt(0).text = 'Pull ups';
     _txtEditList.elementAt(1).text = 'Strengthen';
@@ -32,9 +30,9 @@ class AddExercise extends StatelessWidget {
       ),
       body: Center(
         child: SizedBox(
-          width: _width*0.9,
+          width: _width * 0.9,
           child: Scrollable(
-            physics: const ScrollPhysics(),
+              physics: const ScrollPhysics(),
               viewportBuilder: (BuildContext context, ViewportOffset position) {
                 return Form(
                   key: _formKey,
@@ -46,12 +44,13 @@ class AddExercise extends StatelessWidget {
                         autofocus: true,
                         controller: _txtEditList.elementAt(0),
                         decoration: const InputDecoration(
-                            labelText: 'title', hintText: 'minimum 3 characters'),
+                            labelText: 'title',
+                            hintText: 'minimum 3 characters'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'please enter a title';
                           }
-                          if (value.length <2 && value.length > 10) {
+                          if (value.length < 2 && value.length > 10) {
                             return 'please enter a correct email';
                           }
                         },
@@ -78,12 +77,13 @@ class AddExercise extends StatelessWidget {
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(2),
                         decoration: const InputDecoration(
-                            labelText: 'Perk 1', hintText: 'one word, max 10 characher'),
+                            labelText: 'Perk 1',
+                            hintText: 'one word, max 10 characher'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'please enter a perk';
                           }
-                          if (value.length > 10 ) {
+                          if (value.length > 10) {
                             return 'Too many letters';
                           }
                         },
@@ -94,7 +94,8 @@ class AddExercise extends StatelessWidget {
                         controller: _txtEditList.elementAt(3),
                         autofocus: true,
                         decoration: const InputDecoration(
-                            labelText: 'Perk 2', hintText: 'one word, max 10 characher'),
+                            labelText: 'Perk 2',
+                            hintText: 'one word, max 10 characher'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'please enter a perk';
@@ -110,7 +111,8 @@ class AddExercise extends StatelessWidget {
                         controller: _txtEditList.elementAt(4),
                         autofocus: true,
                         decoration: const InputDecoration(
-                            labelText: 'Perk 3', hintText: 'one word, max 10 characher'),
+                            labelText: 'Perk 3',
+                            hintText: 'one word, max 10 characher'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'please enter a perk';
@@ -126,9 +128,12 @@ class AddExercise extends StatelessWidget {
                         controller: _txtEditList.elementAt(5),
                         autofocus: true,
                         minLines: 1,
-                        maxLines: 10, //TODO doesn't work
+                        maxLines: 10,
+                        //TODO doesn't work
                         decoration: const InputDecoration(
-                            labelText: 'Bullet point', hintText: 'Write bullet points to the exercise separate with comma (,)'),
+                            labelText: 'Bullet point',
+                            hintText:
+                                'Write bullet points to the exercise separate with comma (,)'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'please enter a description of the exercise';
@@ -138,31 +143,41 @@ class AddExercise extends StatelessWidget {
                           }
                         },
                       ),
-                      ElevatedButton(onPressed: () async {
-                        if(_formKey.currentState!.validate()){
-                          Exercise _ex = Exercise(
-                              _txtEditList.elementAt(0).value.text,
-                              _txtEditList.elementAt(1).value.text,
-                              _txtEditList.elementAt(2).value.text,
-                              _txtEditList.elementAt(3).value.text,
-                              _txtEditList.elementAt(4).value.text,
-                              _txtEditList.elementAt(5).value.text.split(',')
-                          );
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ExerciseSummary(_ex)));
+                      ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              Exercise _ex = Exercise(
+                                  title: _txtEditList.elementAt(0).value.text,
+                                  subTitle:
+                                      _txtEditList.elementAt(1).value.text,
+                                  perk1: _txtEditList.elementAt(2).value.text,
+                                  perk2: _txtEditList.elementAt(3).value.text,
+                                  perk3: _txtEditList.elementAt(4).value.text,
+                                  description: _txtEditList
+                                      .elementAt(5)
+                                      .value
+                                      .text
+                                      .split(','));
 
-                          for(TextEditingController controller in _txtEditList){
-                            controller.clear();
-                          }
-                        }
-                      }, child: const Text('Add exercise')),
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ExerciseSummary(_ex)));
+
+                              for (TextEditingController controller
+                                  in _txtEditList) {
+                                controller.clear();
+                              }
+                            }
+                          },
+                          child: const Text('Add exercise')),
                     ],
                   ),
                 );
-              }
-          ),
+              }),
         ),
       ),
     );
   }
 }
-

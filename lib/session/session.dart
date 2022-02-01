@@ -6,35 +6,33 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class Session {
-  final String _sessionName;
-  final String _desc;
-  final String _videoUrl;
-  final List<dynamic> _exercises;
+  final String sessionName;
+  final String desc;
+  final String videoUrl;
+  final List<Object?> exercises;
 
-  Session(this._sessionName, this._desc, this._exercises, this._videoUrl);
+  Session(
+      {required this.sessionName,
+      required this.desc,
+      required this.exercises,
+      required this.videoUrl});
 
   Map<String, dynamic> toJson() => {
-        'title': _sessionName,
-        'subTitle': _desc,
+        'title': sessionName,
+        'subTitle': desc,
         'video_url': '',
-        'exercises': _exercises,
+        'exercises': exercises,
       };
 
   factory Session.fromJson(dynamic json) => _sessionFromJson(json);
 
-  String get desc => _desc;
-  String get sessionName => _sessionName;
-  List<dynamic> get exercises => _exercises;
-  String get videoUrl => _videoUrl;
-
   static Future<Session> getSession() async {
     DatabaseReference _ref = FirebaseDatabase.instance.ref();
     LocalUser? _x = await LocalUser.getLocalUser();
-    print(_x!.userAuth2);
     try {
       DataSnapshot x = await _ref
           .child('users')
-          .child(_x.userAuth2)
+          .child(_x!.userAuth2)
           .child('intro_sessions')
           .get();
       print(x.toString());
@@ -47,21 +45,28 @@ class Session {
     throw NullThrownError();
   }
 
-  Future<void> pushSessionStats(List<double> stats, String s, String userID) async {
+  Future<void> pushSessionStats(
+      List<double> stats, String s, String userID) async {
     final DatabaseReference _ref = FirebaseDatabase.instance.ref();
-    await _ref.child('session_stats').child(s).child(userID).set(stats.toString());
+    await _ref
+        .child('session_stats')
+        .child(s)
+        .child(userID)
+        .set(stats.toString());
   }
 
   @override
   String toString() {
-    return 'Session{_sessionName: $_sessionName, _desc: $_desc}';
+    return 'Session{_sessionName: $sessionName, _desc: $desc}';
   }
 }
 
-
 Session _sessionFromJson(dynamic json) {
-  return Session(json['title'] as String, json['subTitle'] as String,
-      json['exercises'] as List<dynamic>, json['subTitle'] as String);
+  return Session(
+      sessionName: json['title'],
+      desc: json['subTitle'],
+      exercises: json['exercises'],
+      videoUrl: '');
 }
 
 class SessionPreview extends StatelessWidget {
