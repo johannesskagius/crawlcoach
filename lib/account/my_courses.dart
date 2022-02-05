@@ -68,12 +68,13 @@ List<Widget> _sliverList(Map<Object?, List<Object?>> _map) {
       ..add(SliverFixedExtentList(
         itemExtent: 50.0,
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          return Container(
-            alignment: Alignment.center,
-            color: Colors.lightBlue[100 * (index % 9)],
-            child: Text('list item $index'),
+          return Card(
+            child: ListTile(
+              title:
+                  Text(_map.values.elementAt(_i).elementAt(index).toString()),
+            ),
           );
-        }, childCount: _map.values.length),
+        }, childCount: _map.values.elementAt(_i).length),
       ));
   }
   return _widgets;
