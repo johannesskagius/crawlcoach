@@ -139,29 +139,34 @@ class _LayoutState extends State<Layout> {
     }
 
     return Scaffold(
-        body: Container(
-          child: Center(
-            child: PageView(
-              controller: pControll,
-              onPageChanged: _onPageChanged,
-              pageSnapping: true,
-              children: const [
-                Home(),
-                MyCourses(),
-                Store(),
-                Settings(),
-                Admin(),
-              ],
-            ),
-          ),
+      body: Center(
+        child: PageView(
+          controller: pControll,
+          onPageChanged: _onPageChanged,
+          pageSnapping: true,
+          children: isManager
+              ? const [
+                  Home(),
+                  MyCourses(),
+                  Store(),
+                  Settings(),
+                  Admin(),
+                ]
+              : const [
+                  Home(),
+                  MyCourses(),
+                  Store(),
+                  Settings(),
+                ],
         ),
-        bottomSheet: BottomNavigationBar(
-          currentIndex: _selected,
-          items: isManager ? manager : standard,
-          showSelectedLabels: true,
-          selectedItemColor: Colors.greenAccent,
-          onTap: _onTapped,
-        ),
+      ),
+      bottomSheet: BottomNavigationBar(
+        currentIndex: _selected,
+        items: isManager ? manager : standard,
+        showSelectedLabels: true,
+        selectedItemColor: Colors.greenAccent,
+        onTap: _onTapped,
+      ),
     );
   }
 }
