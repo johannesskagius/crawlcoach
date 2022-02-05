@@ -19,56 +19,42 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final _height =
-        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
-    final _width = MediaQuery.of(context).size.width;
-
     return Scaffold(
         appBar: AppBar(
           title: const Text('Crawl Coach'),
         ),
-        body: SizedBox(
-            height: _height,
-            width: _width,
-            child: Center(
-                child: Column(
+        body: Center(
+            child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Container(
+              child: controller!.value.isInitialized
+                  ? AspectRatio(
+                      aspectRatio: controller!.value.aspectRatio,
+                      child: VideoPlayer(controller!),
+                    )
+                  : const CircularProgressIndicator(),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    SizedBox(
-                      height: _height * 0.9,
-                      child: Container(
-                        child: controller!.value.isInitialized ? AspectRatio(
-                          aspectRatio: controller!.value.aspectRatio,
-                          child: VideoPlayer(controller!),
-                        ): const CircularProgressIndicator(),
-                      ),
+                Container(
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Today is your opportunity to build the tomorrow you want',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic,
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          height: _height * 0.2,
-                          width: _width * .8,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'Today is your opportunity to build the tomorrow you want',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(alignment: Alignment.bottomCenter,child: SessionPreview(_nextSession))
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
+                Container(
+                    alignment: Alignment.bottomCenter,
+                    child: SessionPreview(_nextSession))
               ],
-            ))));
+            ),
+          ],
+        )));
   }
 
   void getEntrySessionsKies() async {
@@ -107,7 +93,6 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    controller!.value.position;
     controller!.dispose();
     super.dispose();
   }
@@ -115,7 +100,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    getEntrySessionsKies();
+    //getEntrySessionsKies();
     controller = VideoPlayerController.asset(asset)
       ..addListener(() => setState(() {}))
       ..setLooping(true)

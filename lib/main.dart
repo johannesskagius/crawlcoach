@@ -53,8 +53,6 @@ class _LayoutState extends State<Layout> {
   bool isManager = false;
   int _selected = 0;
 
-  final List<String> _sessions = [];
-
   Future<bool> _activateListener() async {
     try {
       final _localUser = await LocalUser.getLocalUser();
@@ -101,21 +99,21 @@ class _LayoutState extends State<Layout> {
 
   void _setListenToUserSessions() async {
     final _local = await LocalUser.getLocalUser();
-    _ref
-        .child('users')
-        .child(_local!.userAuth2)
-        .child('assigned_sessions')
-        .onValue
-        .listen((event) async {
-      for (DataSnapshot _snapshot in event.snapshot.children) {
-        final String _sessionKey = _snapshot.value.toString();
-        _sessions.add(_sessionKey);
-      }
-      setState(() {
-        _sessions;
-        _local.addSessionToList(_sessions);
-      });
-    });
+    // _ref
+    //     .child('users')
+    //     .child(_local!.userAuth2)
+    //     .child('assigned_sessions')
+    //     .onValue
+    //     .listen((event) async {
+    //   for (DataSnapshot _snapshot in event.snapshot.children) {
+    //     final String _sessionKey = _snapshot.value.toString();
+    //     _sessions.add(_sessionKey);
+    //   }
+    //   setState(() {
+    //     _sessions;
+    //     _local.addSessionToList(_sessions);
+    //   });
+    // });
   }
 
   @override
