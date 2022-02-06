@@ -34,7 +34,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Crawl Coach'),
+          title: const Text(
+            'Crawl Coach',
+            style: TextStyle(color: Colors.greenAccent),
+          ),
         ),
         body: Center(
             child: Stack(

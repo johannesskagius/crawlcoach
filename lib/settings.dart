@@ -34,7 +34,8 @@ class SignedIn extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title:
+            const Text('Settings', style: TextStyle(color: Colors.greenAccent)),
       ),
       body: Container(
         margin: const EdgeInsets.all(8),

@@ -83,6 +83,7 @@ class SessionPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.grey.withOpacity(0.5),
       child: ListTile(
         onTap: () {
           Navigator.push(

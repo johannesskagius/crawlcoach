@@ -26,6 +26,11 @@ class _MyCoursesState extends State<MyCourses> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void markPressed() {
     setState(() {});
   }
@@ -53,14 +58,24 @@ class _MyCoursesState extends State<MyCourses> {
 List<Widget> _sliverList(Map<Object?, List<Object?>> _map) {
   List<Widget> _widgets = [];
   _widgets.add(const SliverAppBar(
-    title: Text('My courses'),
+    flexibleSpace: FlexibleSpaceBar(
+      title: Text('My courses', style: TextStyle(color: Colors.greenAccent)),
+    ),
     expandedHeight: 50,
     floating: true,
   ));
   for (int _i = 0; _i < _map.keys.length; _i++) {
     _widgets
       ..add(SliverAppBar(
-        title: Text(_map.keys.elementAt(_i).toString()),
+        flexibleSpace: FlexibleSpaceBar(
+          title: Text(_map.keys.elementAt(_i).toString()),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.more_vert_outlined),
+            onPressed: () {},
+          )
+        ],
         expandedHeight: 50,
         floating: true,
       ))

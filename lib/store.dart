@@ -31,7 +31,10 @@ class _StoreState extends State<Store> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Store'),
+        title: const Text(
+          'Store',
+          style: TextStyle(color: Colors.greenAccent),
+        ),
       ),
       body: FutureBuilder(
         future: _getOffers(),
