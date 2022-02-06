@@ -48,7 +48,8 @@ class SessionsSummary extends StatelessWidget {
       ),
       bottomSheet: ElevatedButton(
         onPressed: () {
-          _ref.child('sessions').child(_session.sessionName).set(_session.toJson());
+          //_ref.child('sessions').child(_session.sessionName).set(_session.toJson());
+          Session.sessionRef.child(_session.sessionName).set(_session.toJson());
           Navigator.pop(context);
         },
         child: const Text('To Server'),

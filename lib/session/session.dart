@@ -6,8 +6,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class Session {
-  static final DatabaseReference _sessionRef =
-      FirebaseDatabase.instance.ref().child('courses');
+  static final DatabaseReference sessionRef =
+      FirebaseDatabase.instance.ref().child('sessions');
   final String sessionName;
   final String desc;
   final String videoUrl;
@@ -37,7 +37,6 @@ class Session {
           .child(_x!.userAuth2)
           .child('intro_sessions')
           .get();
-      print(x.toString());
       if (x.value == "false") {
         print('here');
       }
