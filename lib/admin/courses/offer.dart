@@ -9,23 +9,20 @@ class Offer {
   final List<Object?> listOfSessions;
   final String price;
   final String name;
+  final String desc;
 
   Offer(
-      {required this.name, required this.listOfSessions, required this.price});
-
-  final testJson = {
-    "test2": {
-      "name": "Test course",
-      "price": "10sek",
-      "sessions": ["intro 1", "intro 2", "intro 3"]
-    }
-  };
+      {required this.name,
+      required this.listOfSessions,
+      required this.price,
+      required this.desc});
 
   Map<String, dynamic> toJson() => {
-    'name': name,
-    'price': price,
-    'session': listOfSessions,
-  };
+        'name': name,
+        'description': desc,
+        'price': price,
+        'session': listOfSessions,
+      };
 
   static Future<List<Offer>> getOffers() async {
     DataSnapshot? _snapshot = await courseRef.get();
@@ -46,5 +43,6 @@ Offer _offerFromJson(Map<Object?, dynamic> json) {
   return Offer(
       name: json['name'],
       price: json['price'],
-      listOfSessions: json['session']);
+      listOfSessions: json['session'],
+      desc: json['description']);
 }

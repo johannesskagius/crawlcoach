@@ -52,13 +52,17 @@ class _MyCoursesState extends State<MyCourses> {
 
 List<Widget> _sliverList(Map<Object?, List<Object?>> _map) {
   List<Widget> _widgets = [];
-
+  _widgets.add(const SliverAppBar(
+    title: Text('My courses'),
+    expandedHeight: 50,
+    floating: true,
+  ));
   for (int _i = 0; _i < _map.keys.length; _i++) {
     _widgets
       ..add(SliverAppBar(
         title: Text(_map.keys.elementAt(_i).toString()),
         expandedHeight: 50,
-        pinned: true,
+        floating: true,
       ))
       ..add(SliverFixedExtentList(
         itemExtent: 50.0,

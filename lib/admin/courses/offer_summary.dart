@@ -49,7 +49,10 @@ class OfferSummary extends StatelessWidget {
       ),
       bottomSheet: ElevatedButton(
         onPressed: () {
-          _ref.child('courses').child(_offer.name).set(_offer.toJson());
+          _ref
+              .child('courses')
+              .child(_offer.name.toString())
+              .set(_offer.toJson());
           Navigator.pop(context);
         },
         child: const Text('To Server'),

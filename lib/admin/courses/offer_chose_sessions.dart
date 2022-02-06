@@ -6,8 +6,9 @@ import 'offer.dart';
 import 'offer_summary.dart';
 
 class ChooseSessions extends StatefulWidget {
-  const ChooseSessions(this._name, this._desc, {Key? key}) : super(key: key);
-  final String _name, _desc;
+  const ChooseSessions(this._name, this._price, this._desc, {Key? key})
+      : super(key: key);
+  final String _name, _price, _desc;
 
   @override
   _ChooseSessionsState createState() => _ChooseSessionsState();
@@ -96,7 +97,8 @@ class _ChooseSessionsState extends State<ChooseSessions> {
                               builder: (context) => OfferSummary(Offer(
                                   name: widget._name,
                                   listOfSessions: _chosens,
-                                  price: widget._desc))));
+                                  price: widget._price,
+                                  desc: widget._desc))));
                     },
                     child: const Text('Go to summary'),
                   ),

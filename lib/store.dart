@@ -10,36 +10,43 @@ class Store extends StatefulWidget {
   State<Store> createState() => _StoreState();
 }
 
-Future<List<Offer>> _getOffers() async {
-  return Offer.getOffers();
-}
 
 class _StoreState extends State<Store> {
+  Future<List<GestureDetector>> _getOffers() async {
+    List<GestureDetector> _offerItem = [];
+    List<Offer> offersList = await Offer.getOffers();
+    for (Offer offer in offersList) {
+      _offerItem.add(_gridItem(context, offer));
+    }
+    return _offerItem;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getOffers();
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<GestureDetector> _list = [];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Store'),
       ),
       body: FutureBuilder(
         future: _getOffers(),
-        builder: (BuildContext context, AsyncSnapshot<List<Offer>> snapshot) {
-          if (snapshot.hasData && snapshot.data != null) {
-            List<Offer> _offers = snapshot.data!;
-            for (Offer _offer in _offers) {
-              _list.add(_gridItem(context, _offer));
-            }
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            return GridView.count(
+              padding: const EdgeInsets.all(20),
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              crossAxisCount: 2,
+              children: snapshot.data,
+            );
           } else {
-            const CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
-          return GridView.count(
-            padding: const EdgeInsets.all(20),
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
-            crossAxisCount: 2,
-            children: _list,
-          );
         },
       ),
     );
@@ -52,19 +59,42 @@ GestureDetector _gridItem(BuildContext context, Offer _offer) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => BuyOffer(_offer)));
     },
-    child: Container(
-      color: Colors.red,
-      alignment: Alignment.center,
+    child: Card(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(_offer.name,),
-          Text(_offer.price),
-          Text(_offer.listOfSessions.length.toString()),
+          Center(
+            child: Text(
+              _offer.name,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 15,
+              ),
+            ),
+          ),
+          Table(
+            columnWidths: const <int, TableColumnWidth>{
+              0: IntrinsicColumnWidth(),
+              1: FlexColumnWidth(),
+            },
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: <TableRow>[
+              TableRow(children: [
+                _textContainer('Sessions: '),
+                _textContainer(_offer.listOfSessions.length.toString()),
+              ]),
+              TableRow(children: [
+                _textContainer('Price: '),
+                _textContainer(_offer.price),
+              ]),
+            ],
+          ),
         ],
       ),
     ),
   );
 }
 
-
+Container _textContainer(String s) {
+  return Container(alignment: Alignment.centerLeft, child: Text(s));
+}

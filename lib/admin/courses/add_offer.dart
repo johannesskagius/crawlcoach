@@ -87,7 +87,8 @@ class SessionGeneral extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) => ChooseSessions(
                                 _txtEditList.elementAt(0).value.text,
-                                _txtEditList.elementAt(1).value.text)));
+                                _txtEditList.elementAt(1).value.text,
+                                _txtEditList.elementAt(2).value.text)));
                   }
                 },
                 child: const Text('Pick sessions')),
