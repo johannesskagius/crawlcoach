@@ -63,6 +63,7 @@ class LocalUser {
         .child('users')
         .child(_userAuth2)
         .child('assigned_sessions')
+        .child(_offer.name)
         .set(_offer.listOfSessions);
   }
 
