@@ -36,10 +36,10 @@ class Offer {
     return _getOffers;
   }
 
-  factory Offer.fromJson(Map<Object?, dynamic> json) => _offerFromJson(json);
+  factory Offer.fromJson(dynamic json) => _offerFromJson(json);
 }
 
-Offer _offerFromJson(Map<Object?, dynamic> json) {
+Offer _offerFromJson(dynamic json) {
   return Offer(
       name: json['name'],
       price: json['price'],

@@ -12,7 +12,8 @@ class _AdminState extends State<Admin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crawl coach admin'),
+        title: const Text('Crawl coach admin',
+            style: TextStyle(color: Colors.greenAccent)),
       ),
       body: Center(
         child: Column(

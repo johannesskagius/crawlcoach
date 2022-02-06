@@ -99,3 +99,31 @@ class SessionPreview extends StatelessWidget {
     );
   }
 }
+
+class SessionPreviewNoSession extends StatelessWidget {
+  const SessionPreviewNoSession(this._sessionName, {Key? key})
+      : super(key: key);
+  final String _sessionName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.grey.withOpacity(0.5),
+      child: ListTile(
+        onTap: () async {
+          DataSnapshot _snap =
+              await Session.sessionRef.child(_sessionName).get();
+          Session session = Session.fromJson(_snap.value);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Session00(
+                        session: session,
+                      )));
+        },
+        title: Text(_sessionName),
+        trailing: const Icon(Icons.navigate_next_outlined),
+      ),
+    );
+  }
+}

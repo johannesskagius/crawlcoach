@@ -1,4 +1,6 @@
 import 'package:crawl_course_3/account/user.dart';
+import 'package:crawl_course_3/admin/courses/course_info.dart';
+import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +18,7 @@ class _MyCoursesState extends State<MyCourses> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      slivers: _sliverList(_assigned),
+      slivers: _sliverList(context, _assigned),
     );
   }
 
@@ -55,7 +57,8 @@ class _MyCoursesState extends State<MyCourses> {
   }
 }
 
-List<Widget> _sliverList(Map<Object?, List<Object?>> _map) {
+List<Widget> _sliverList(
+    BuildContext context, Map<Object?, List<Object?>> _map) {
   List<Widget> _widgets = [];
   _widgets.add(const SliverAppBar(
     flexibleSpace: FlexibleSpaceBar(
@@ -65,31 +68,34 @@ List<Widget> _sliverList(Map<Object?, List<Object?>> _map) {
     floating: true,
   ));
   for (int _i = 0; _i < _map.keys.length; _i++) {
+    String _courseName = _map.keys.elementAt(_i).toString();
     _widgets
       ..add(SliverAppBar(
         flexibleSpace: FlexibleSpaceBar(
-          title: Text(_map.keys.elementAt(_i).toString()),
+          title: Text(_courseName),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert_outlined),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CourseInfo(
+                            courseName: _courseName,
+                          )));
+            },
           )
-        ],
-        expandedHeight: 50,
-        floating: true,
-      ))
-      ..add(SliverFixedExtentList(
-        itemExtent: 50.0,
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          return Card(
-            child: ListTile(
-              title:
-                  Text(_map.values.elementAt(_i).elementAt(index).toString()),
-            ),
-          );
+      ],
+      expandedHeight: 50,
+      floating: true,
+    ))..add(SliverFixedExtentList(
+      itemExtent: 50.0,
+      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        return SessionPreviewNoSession(
+              _map.values.elementAt(_i).elementAt(index).toString());
         }, childCount: _map.values.elementAt(_i).length),
-      ));
+    ));
   }
   return _widgets;
 }
