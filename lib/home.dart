@@ -15,6 +15,7 @@ class _HomeState extends State<Home> {
   Session _nextSession = Session(
       desc: 'Loading', videoUrl: '', sessionName: 'Loading', exercises: []);
   final asset = 'assets/videos/IMG_4498_HD.mp4';
+  List<Container> _previews = [];
   VideoPlayerController? controller;
 
   @override
@@ -48,47 +49,13 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-                Container(
-                    alignment: Alignment.bottomCenter,
-                    child: SessionPreview(_nextSession))
+                Column(
+                  children: _previews,
+                ),
               ],
             ),
           ],
         )));
-  }
-
-  void getEntrySessionsKies() async {
-    List<String> _startingSessions = [];
-    LocalUser? _local = await LocalUser.getLocalUser();
-    List<String> _completed = await _local!.completedSession();
-
-    DatabaseReference _ref = FirebaseDatabase.instance.ref();
-    _ref
-        .child('users')
-        .child(_local.userAuth2)
-        .child('assigned_sessions')
-        .onValue
-        .listen((event) async {
-      for (DataSnapshot _snap in event.snapshot.children) {
-        final String _session = _snap.value.toString();
-        //Check if user already done session
-        if (!_completed.contains(_session)) {
-          // && !_doneSessions.contains(_session)
-          _startingSessions.add(_session);
-        }
-      }
-      DataSnapshot x = await _ref
-          .child('sessions')
-          .child(_startingSessions.elementAt(0))
-          .get();
-      setState(() {
-        try{
-          _nextSession = Session.fromJson(x.value);
-        }catch(e){
-         print('home: $e');
-        }
-      });
-    });
   }
 
   @override
@@ -100,11 +67,44 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    //getEntrySessionsKies();
+    //_coursesAssigned();
     controller = VideoPlayerController.asset(asset)
       ..addListener(() => setState(() {}))
       ..setLooping(true)
       ..initialize().then((_) => controller!.play())
-    ..setVolume(0);
+      ..setVolume(0);
   }
+}
+
+Future<List<Container>> _coursesAssigned() async {
+  final _local = await LocalUser.getLocalUser();
+  final _userRef = FirebaseDatabase.instance
+      .ref()
+      .child('users')
+      .child(_local!.userAuth2)
+      .child('assigned_sessions');
+  final _sessionRef = FirebaseDatabase.instance.ref().child('sessions');
+  final _courseRef = FirebaseDatabase.instance.ref().child('courses');
+  List<Container> nextInAssigned = [];
+  List<String> _courseNames = [];
+
+  //Get assigned courses,
+  // DataSnapshot _assigned = await _userRef.get();
+  // for(DataSnapshot _courseName in _assigned.children){
+  //     if(!_courseNames.contains(_courseName.toString())){
+  //       _courseNames.add(_courseName.key.toString());
+  //     }
+  // }
+  //print(_courseNames);
+
+  // //Get first session in assigned course
+  // List<Session> _sessions = [];
+  // for(String _sessionKey in _courseNames){
+  //   DataSnapshot _sessionSnap = await _courseRef.child(_sessionKey).get();
+  //
+  //   //final _session = Session.fromJson(_sessionSnap);
+  //   //print(_sessionSnap.value.toString());
+  // }
+
+  return nextInAssigned;
 }
