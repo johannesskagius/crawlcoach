@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:crawl_course_3/account/user.dart';
-import 'package:crawl_course_3/admin/offer/add_offer.dart';
 import 'package:crawl_course_3/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +11,7 @@ import 'account/my_courses.dart';
 import 'admin/add_exercises_admin.dart';
 import 'admin/add_session/add_session.dart';
 import 'admin/admin.dart';
+import 'admin/courses/add_offer.dart';
 import 'home.dart';
 import 'store.dart';
 

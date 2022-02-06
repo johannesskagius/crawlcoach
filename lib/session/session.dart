@@ -6,6 +6,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class Session {
+  static final DatabaseReference _sessionRef =
+      FirebaseDatabase.instance.ref().child('courses');
   final String sessionName;
   final String desc;
   final String videoUrl;
@@ -18,11 +20,11 @@ class Session {
       required this.videoUrl});
 
   Map<String, dynamic> toJson() => {
-        'title': sessionName,
-        'subTitle': desc,
-        'video_url': '',
-        'exercises': exercises,
-      };
+    'title': sessionName,
+    'subTitle': desc,
+    'video_url': '',
+    'exercises': exercises,
+  };
 
   factory Session.fromJson(dynamic json) => _sessionFromJson(json);
 
@@ -45,8 +47,7 @@ class Session {
     throw NullThrownError();
   }
 
-  Future<void> pushSessionStats(
-      List<double> stats, String s, String userID) async {
+  Future<void> pushSessionStats(List<double> stats, String s, String userID) async {
     final DatabaseReference _ref = FirebaseDatabase.instance.ref();
     await _ref
         .child('session_stats')

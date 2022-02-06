@@ -1,6 +1,7 @@
-import 'package:crawl_course_3/admin/offer/offer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+import 'offer.dart';
 
 class OfferSummary extends StatelessWidget {
   OfferSummary(this._offer, {Key? key}) : super(key: key);

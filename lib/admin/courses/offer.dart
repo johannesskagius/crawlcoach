@@ -4,6 +4,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class Offer {
+  static final DatabaseReference courseRef =
+      FirebaseDatabase.instance.ref().child('courses');
   final List<Object?> listOfSessions;
   final String price;
   final String name;
@@ -20,23 +22,23 @@ class Offer {
   };
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'price': price,
-        'session': listOfSessions,
-      };
+    'name': name,
+    'price': price,
+    'session': listOfSessions,
+  };
 
   static Future<List<Offer>> getOffers() async {
-    DatabaseReference _ref = FirebaseDatabase.instance.ref();
-    DataSnapshot? _snapshot = await _ref.child('courses').get();
+    DataSnapshot? _snapshot = await courseRef.get();
     List<Offer> _getOffers = [];
 
     for (DataSnapshot snap in _snapshot.children) {
       late Map<Object?, dynamic> object = snap.value as Map<Object?, dynamic>;
-        final course = Offer.fromJson(object); //error here
-        _getOffers.add(course);
+      final course = Offer.fromJson(object); //error here
+      _getOffers.add(course);
     }
     return _getOffers;
   }
+
   factory Offer.fromJson(Map<Object?, dynamic> json) => _offerFromJson(json);
 }
 
