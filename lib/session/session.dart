@@ -80,7 +80,6 @@ Session _sessionFromJson(dynamic json) {
 class SessionPreview extends StatelessWidget {
   const SessionPreview(this._session, {Key? key}) : super(key: key);
   final Session _session;
-
   @override
   Widget build(BuildContext context) {
     return Card(

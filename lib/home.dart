@@ -4,6 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import 'admin/courses/offer.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -15,8 +17,18 @@ class _HomeState extends State<Home> {
   Session _nextSession = Session(
       desc: 'Loading', videoUrl: '', sessionName: 'Loading', exercises: []);
   final asset = 'assets/videos/IMG_4498_HD.mp4';
-  List<Container> _previews = [];
+  List<SessionPreview> _previews = [];
   VideoPlayerController? controller;
+
+  void setPreviews(List<Session> listOfSessions) {
+    List<SessionPreview> nextInAssigned = [];
+    for (Session session in listOfSessions) {
+      nextInAssigned.add(SessionPreview(session));
+    }
+    setState(() {
+      _previews = nextInAssigned;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +70,49 @@ class _HomeState extends State<Home> {
         )));
   }
 
+  Future<void> _coursesAssigned() async {
+    final _local = await LocalUser.getLocalUser();
+    final _userRef = FirebaseDatabase.instance
+        .ref()
+        .child('users')
+        .child(_local!.userAuth2)
+        .child('assigned_sessions');
+
+    List<String> _courseNames = [];
+//  Get assigned courses,
+    DataSnapshot _assigned = await _userRef.get();
+    for (DataSnapshot _courseName in _assigned.children) {
+      if (!_courseNames.contains(_courseName.toString())) {
+        _courseNames.add(_courseName.key.toString());
+      }
+    }
+    //Get first sessions in assigned course
+    List<Object?> _sessionKeys = [];
+    for (Object _sessionKey in _courseNames) {
+      DataSnapshot _sessionSnap = await Offer.courseRef
+          .child(_sessionKey.toString())
+          .child('session')
+          .get();
+      for (DataSnapshot _snapshot in _sessionSnap.children) {
+        if (!_sessionKeys.contains(_snapshot.toString())) {
+          _sessionKeys.add(_snapshot.value);
+          break;
+        }
+      }
+    }
+
+    //print(_sessionKeys);
+
+    List<Session> _listOfSessions = [];
+    for (Object? object in _sessionKeys) {
+      DataSnapshot _sessionData =
+          await Session.sessionRef.child(object.toString()).get();
+      Session s = Session.fromJson(_sessionData.value);
+      _listOfSessions.add(s);
+    }
+    setPreviews(_listOfSessions);
+  }
+
   @override
   void dispose() {
     controller!.dispose();
@@ -67,7 +122,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    //_coursesAssigned();
+    _coursesAssigned();
     controller = VideoPlayerController.asset(asset)
       ..addListener(() => setState(() {}))
       ..setLooping(true)
@@ -76,35 +131,3 @@ class _HomeState extends State<Home> {
   }
 }
 
-Future<List<Container>> _coursesAssigned() async {
-  final _local = await LocalUser.getLocalUser();
-  final _userRef = FirebaseDatabase.instance
-      .ref()
-      .child('users')
-      .child(_local!.userAuth2)
-      .child('assigned_sessions');
-  final _sessionRef = FirebaseDatabase.instance.ref().child('sessions');
-  final _courseRef = FirebaseDatabase.instance.ref().child('courses');
-  List<Container> nextInAssigned = [];
-  List<String> _courseNames = [];
-
-  //Get assigned courses,
-  // DataSnapshot _assigned = await _userRef.get();
-  // for(DataSnapshot _courseName in _assigned.children){
-  //     if(!_courseNames.contains(_courseName.toString())){
-  //       _courseNames.add(_courseName.key.toString());
-  //     }
-  // }
-  //print(_courseNames);
-
-  // //Get first session in assigned course
-  // List<Session> _sessions = [];
-  // for(String _sessionKey in _courseNames){
-  //   DataSnapshot _sessionSnap = await _courseRef.child(_sessionKey).get();
-  //
-  //   //final _session = Session.fromJson(_sessionSnap);
-  //   //print(_sessionSnap.value.toString());
-  // }
-
-  return nextInAssigned;
-}
