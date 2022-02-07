@@ -8,11 +8,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalUser {
   static const String _gotUser = 'USER_CRED';
+  static final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   String _firstName, _password, _email, _userAuth2;
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   Map<String, List<dynamic>> assignedCourses = {};
   List<String> _listOfSessions = [];
   List<String> _completedSessions = [];
+
   LocalUser(this._firstName, this._email, this._password, this._userAuth2);
 
   LocalUser.fromJson(Map<String, dynamic> json)
@@ -35,8 +37,6 @@ class LocalUser {
   set password(value) {
     _password = value;
   }
-
-
 
 
   String get firstName => _firstName;
@@ -191,6 +191,11 @@ class LocalUser {
     }
   }
 
+  static void signInAno() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    _auth.signInAnonymously();
+  }
+
   static void logOutUser() {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     _auth.signOut();
@@ -199,7 +204,11 @@ class LocalUser {
 
   static _resetLastUser() async {
     SharedPreferences _sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
     _sharedPreferences.remove(_gotUser);
   }
 }
+
+// void createUser(AuthorizationCredentialAppleID _credential) async {
+//   firebaseAuth.signInWithCustomToken(_credential.authorizationCode);
+// }

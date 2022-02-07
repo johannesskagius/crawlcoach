@@ -53,33 +53,11 @@ class _LayoutState extends State<Layout> {
   bool isManager = false;
   int _selected = 0;
 
-  Future<bool> _activateListener() async {
-    try {
-      final _localUser = await LocalUser.getLocalUser();
-      UserCredential _usercred = await _auth.signInWithEmailAndPassword(
-          email: _localUser!.email, password: _localUser.password);
-      DataSnapshot checkIfAdmin = await _ref
-          .child('admins')
-          .child(_usercred.user!.uid)
-          .child('isadmin')
-          .get();
-      if (checkIfAdmin.value.toString() == 'true') {
-        return Future<bool>.value(true);
-      } else {
-        return Future<bool>.value(false);
-      }
-    } catch (e) {
-      //Download anonymous user
-      if (e == Exception) {}
-      return Future<bool>.value(false);
-    }
-  }
-
   Future<void> _isManager() async {
-    try {
       final _localUser = await LocalUser.getLocalUser();
+    if (_localUser != null) {
       UserCredential _usercred = await _auth.signInWithEmailAndPassword(
-          email: _localUser!.email, password: _localUser.password);
+          email: _localUser.email, password: _localUser.password);
       DataSnapshot checkIfAdmin = await _ref
           .child('admins')
           .child(_usercred.user!.uid)
@@ -90,36 +68,14 @@ class _LayoutState extends State<Layout> {
           isManager = true;
         });
       }
-    } catch (e) {
-      //Download anonymous user
-      if (e == Exception) {}
-      //return Future<bool>.value(false);
+    } else {
+      LocalUser.signInAno();
     }
-  }
-
-  void _setListenToUserSessions() async {
-    final _local = await LocalUser.getLocalUser();
-    // _ref
-    //     .child('users')
-    //     .child(_local!.userAuth2)
-    //     .child('assigned_sessions')
-    //     .onValue
-    //     .listen((event) async {
-    //   for (DataSnapshot _snapshot in event.snapshot.children) {
-    //     final String _sessionKey = _snapshot.value.toString();
-    //     _sessions.add(_sessionKey);
-    //   }
-    //   setState(() {
-    //     _sessions;
-    //     _local.addSessionToList(_sessions);
-    //   });
-    // });
   }
 
   @override
   void initState() {
     _isManager();
-    _setListenToUserSessions();
     super.initState();
   }
 
@@ -133,6 +89,7 @@ class _LayoutState extends State<Layout> {
     }
 
     void _onPageChanged(int index) {
+      WidgetsBinding.instance?.focusManager.primaryFocus?.unfocus();
       setState(() {
         _selected = index;
       });

@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Crawl Coach',
+            '21th Swim',
             style: TextStyle(color: Colors.greenAccent),
           ),
         ),
@@ -75,44 +75,46 @@ class _HomeState extends State<Home> {
 
   Future<void> _coursesAssigned() async {
     final _local = await LocalUser.getLocalUser();
-    final _userRef = FirebaseDatabase.instance
-        .ref()
-        .child('users')
-        .child(_local!.userAuth2)
-        .child('assigned_sessions');
+    if (_local != null) {
+      final _userRef = FirebaseDatabase.instance
+          .ref()
+          .child('users')
+          .child(_local.userAuth2)
+          .child('assigned_sessions');
 
-    List<String> _courseNames = [];
+      List<String> _courseNames = [];
 //  Get assigned courses,
-    DataSnapshot _assigned = await _userRef.get();
-    for (DataSnapshot _courseName in _assigned.children) {
-      if (!_courseNames.contains(_courseName.toString())) {
-        _courseNames.add(_courseName.key.toString());
-      }
-    }
-    //Get first sessions in assigned course
-    List<Object?> _sessionKeys = [];
-    for (Object _sessionKey in _courseNames) {
-      DataSnapshot _sessionSnap = await Offer.courseRef
-          .child(_sessionKey.toString())
-          .child('session')
-          .get();
-      for (DataSnapshot _snapshot in _sessionSnap.children) {
-        if (!_sessionKeys.contains(_snapshot.toString())) {
-          _sessionKeys.add(_snapshot.value);
-          break;
+      DataSnapshot _assigned = await _userRef.get();
+      for (DataSnapshot _courseName in _assigned.children) {
+        if (!_courseNames.contains(_courseName.toString())) {
+          _courseNames.add(_courseName.key.toString());
         }
       }
-    }
+      //Get first sessions in assigned course
+      List<Object?> _sessionKeys = [];
+      for (Object _sessionKey in _courseNames) {
+        DataSnapshot _sessionSnap = await Offer.courseRef
+            .child(_sessionKey.toString())
+            .child('session')
+            .get();
+        for (DataSnapshot _snapshot in _sessionSnap.children) {
+          if (!_sessionKeys.contains(_snapshot.toString())) {
+            _sessionKeys.add(_snapshot.value);
+            break;
+          }
+        }
+      }
 
-    //print(_sessionKeys);
-    List<Session> _listOfSessions = [];
-    for (Object? object in _sessionKeys) {
-      DataSnapshot _sessionData =
-          await Session.sessionRef.child(object.toString()).get();
-      Session s = Session.fromJson(_sessionData.value);
-      _listOfSessions.add(s);
+      //print(_sessionKeys);
+      List<Session> _listOfSessions = [];
+      for (Object? object in _sessionKeys) {
+        DataSnapshot _sessionData =
+            await Session.sessionRef.child(object.toString()).get();
+        Session s = Session.fromJson(_sessionData.value);
+        _listOfSessions.add(s);
+      }
+      setPreviews(_listOfSessions);
     }
-    setPreviews(_listOfSessions);
   }
 
   @override
