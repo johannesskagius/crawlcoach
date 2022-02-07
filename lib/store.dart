@@ -41,9 +41,9 @@ class _StoreState extends State<Store> {
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             return GridView.count(
-              padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20,
+              padding: const EdgeInsets.all(1),
+              // crossAxisSpacing: 1,
+              // mainAxisSpacing: 1,
               crossAxisCount: 2,
               children: snapshot.data,
             );
