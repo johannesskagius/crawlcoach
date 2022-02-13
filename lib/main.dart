@@ -73,6 +73,8 @@ class _LayoutState extends State<Layout> {
     }
   }
 
+  Future<void> hasAccount() async {}
+
   @override
   void initState() {
     _isManager();

@@ -5,8 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'account/create_user.dart';
-
+import 'account/not_logged_user.dart';
 
 Container _textContainer(double _height, String s) {
   return Container(
@@ -105,7 +104,7 @@ class _SettingsState extends State<Settings> {
         if (snapshot.hasData) {
           return SignedIn(snapshot.data);
         } else {
-          return const CreateUser();
+          return const NotLoggedUser();
         }
       },
     );

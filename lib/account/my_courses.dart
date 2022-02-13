@@ -42,7 +42,6 @@ class _MyCoursesState extends State<MyCourses> {
     final _databaseRef =
         _ref.child('users').child(_local!.userAuth2).child('assigned_sessions');
     Map<Object?, List<Object?>> _ex = {};
-
     _databaseRef.onValue.listen((event) {
       for (DataSnapshot _courseName in event.snapshot.children) {
         if (!_ex.containsKey(_courseName)) {

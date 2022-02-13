@@ -131,7 +131,6 @@ class LocalUser {
 
   void syncToServer() async {
     try {
-      //Create user json on firebase
       await _ref
           .child('users')
           .child(_userAuth2)
