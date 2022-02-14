@@ -30,36 +30,6 @@ class _NotLoggedUserState extends State<NotLoggedUser> {
   Widget build(BuildContext context) {
     final pControll = PageController();
 
-    Future<void> _createUser() async {
-      String _userAuth2 = '';
-      User? user;
-      try {
-        user = (await LocalUser.firebaseAuth.createUserWithEmailAndPassword(
-                email: _txtEditList.elementAt(1).value.text,
-                password: _txtEditList.elementAt(2).value.text))
-            .user;
-        _userAuth2 = user!.uid;
-      } catch (error) {
-        switch (error) {
-          //TODO fix the error codes. we want different things to happen depending the response from the server.
-          case 'email-already-exists': //Går aldrig in här.
-            print('This email is already in use');
-            break;
-          default:
-            print(error.toString());
-        }
-      }
-      if (user != null && _userAuth2 != '') {
-        LocalUser _newLocalUser = LocalUser(
-            _txtEditList.elementAt(0).value.text, //Firstname
-            _txtEditList.elementAt(1).value.text, //Email
-            _txtEditList.elementAt(2).value.text, //Password
-            _userAuth2); //userID
-        _newLocalUser.saveToSharedPreferences();
-        _newLocalUser.syncToServer();
-      }
-    }
-
     void _onPageChanged(int index) {
       setState(() {
         _title = _titles.elementAt(index);
@@ -94,9 +64,10 @@ class LogInUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<TextEditingController> _txtEditList =
+    List<TextEditingController> _txtEditList =
         List.generate(2, (index) => TextEditingController());
-
+    _txtEditList.elementAt(0).text = 'test@gmail.com';
+    _txtEditList.elementAt(1).text = 'test12';
     return Container(
       margin: const EdgeInsets.all(8),
       child: Form(
@@ -108,9 +79,8 @@ class LogInUser extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  await LocalUser.firebaseAuth.signInWithEmailAndPassword(
-                      email: _txtEditList.elementAt(0).value.text,
-                      password: _txtEditList.elementAt(1).value.text);
+                  _signInUSer(_txtEditList.elementAt(0).value.text,
+                      _txtEditList.elementAt(1).value.text);
                 }
               },
               child: const Text('Log in'),
@@ -119,6 +89,15 @@ class LogInUser extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _signInUSer(String text, String text2) async {
+    try {
+      UserCredential _userCred = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: text, password: text2);
+    } catch (e) {
+      print(e);
+    }
   }
 }
 
@@ -138,6 +117,15 @@ class CreateUser extends StatelessWidget {
           children: [
             _emailForm(_txtEditList.elementAt(0)),
             _passwordForm(_txtEditList.elementAt(1)),
+            ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  _createUser(_txtEditList.elementAt(0).value.text,
+                      _txtEditList.elementAt(1).value.text);
+                }
+              },
+              child: const Text('Create user'),
+            )
           ],
         ),
       ),
@@ -186,4 +174,31 @@ TextFormField _passwordForm(TextEditingController _controller) {
       }
     },
   );
+}
+
+Future<void> _createUser(String email, String password) async {
+  String _userAuth2 = '';
+  User? user;
+
+  try {
+    UserCredential userCredential = await LocalUser.firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password);
+  } catch (error) {
+    switch (error) {
+      //TODO fix the error codes. we want different things to happen depending the response from the server.
+      case 'email-already-exists': //Går aldrig in här.
+        print('This email is already in use');
+        break;
+      default:
+        print(error.toString());
+    }
+  }
+  if (user != null && _userAuth2 != '') {
+    LocalUser _newLocalUser = LocalUser(
+        email, //Email
+        password, //Password
+        _userAuth2); //userID
+    _newLocalUser.saveToSharedPreferences();
+    _newLocalUser.syncToServer();
+  }
 }

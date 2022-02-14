@@ -53,10 +53,6 @@ class SignedIn extends StatelessWidget {
                   _textContainer(_rowHeight, _localUser!.userAuth2),
                 ]),
                 TableRow(children: [
-                  _textContainer(_rowHeight, 'Name: '),
-                  _textContainer(_rowHeight, _localUser!.firstName),
-                ]),
-                TableRow(children: [
                   _textContainer(_rowHeight, 'Email: '),
                   _textContainer(_rowHeight, _localUser!.email),
                 ]),
@@ -82,8 +78,7 @@ class SignedIn extends StatelessWidget {
                   ))
                 : const ElevatedButton(
                     onPressed: LocalUser.logOutUser, child: Text('Sign out')),
-
-            Text('How can this get better?'),
+            const Text('How can this get better?'),
             testFlightForm(_localUser!),
           ],
         ),
@@ -141,7 +136,6 @@ Container testFlightForm(LocalUser _local) {
               keyboardType: TextInputType.text,
               controller: _controllers.elementAt(0),
               style: _textStyle,
-              autofocus: true,
               maxLines: 2,
             ),
           ),
@@ -150,7 +144,6 @@ Container testFlightForm(LocalUser _local) {
             child: CupertinoTextField(
               keyboardType: TextInputType.multiline,
               controller: _controllers.elementAt(1),
-              autofocus: true,
               style: _textStyle,
               autocorrect: false,
               minLines: 1,

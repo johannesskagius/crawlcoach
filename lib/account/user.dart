@@ -9,17 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocalUser {
   static const String _gotUser = 'USER_CRED';
   static final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  String _firstName, _password, _email, _userAuth2;
+  String _password, _email, _userAuth2;
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   Map<String, List<dynamic>> assignedCourses = {};
   List<String> _listOfSessions = [];
   List<String> _completedSessions = [];
 
-  LocalUser(this._firstName, this._email, this._password, this._userAuth2);
+  LocalUser(this._email, this._password, this._userAuth2);
 
   LocalUser.fromJson(Map<String, dynamic> json)
-      : _firstName = json['_firstName'],
-        _password = json['_password'],
+      : _password = json['_password'],
         _email = json['_email'],
         _userAuth2 = json['_userAuth2'];
 
@@ -38,11 +37,6 @@ class LocalUser {
     _password = value;
   }
 
-
-  String get firstName => _firstName;
-  set firstName(String value) {
-    _firstName = value;
-  }
 
   String get userAuth2 => _userAuth2;
 
@@ -154,7 +148,6 @@ class LocalUser {
   }
 
   Map<String, dynamic> toJson() => {
-    '_firstName': _firstName,
     '_password': _password,
     '_email': _email,
     '_userAuth2': _userAuth2,
@@ -162,14 +155,13 @@ class LocalUser {
 
   @override
   String toString() {
-    return '_User{_firstName: $_firstName, _email: $_email}';
+    return 'email: $_email';
   }
 
   void updateUserName() async {
     _ref
         .child('users')
         .child(_userAuth2)
-        .child('_firstName')
         .update(toJson());
   }
 
@@ -199,6 +191,7 @@ class LocalUser {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     _auth.signOut();
     _resetLastUser();
+    _auth.signInAnonymously();
   }
 
   static _resetLastUser() async {
@@ -207,7 +200,3 @@ class LocalUser {
     _sharedPreferences.remove(_gotUser);
   }
 }
-
-// void createUser(AuthorizationCredentialAppleID _credential) async {
-//   firebaseAuth.signInWithCustomToken(_credential.authorizationCode);
-// }

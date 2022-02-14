@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'account/my_courses.dart';
 import 'admin/add_exercises_admin.dart';
@@ -72,8 +73,6 @@ class _LayoutState extends State<Layout> {
       LocalUser.signInAno();
     }
   }
-
-  Future<void> hasAccount() async {}
 
   @override
   void initState() {

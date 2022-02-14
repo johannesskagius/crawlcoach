@@ -86,26 +86,6 @@ class UserSettings extends StatelessWidget {
                             }
                           },
                         ),
-                        ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                if (_localUser.firstName ==
-                                    _txtEditList.elementAt(0).value.text) {
-                                  //update name,
-                                  String _name = _txtEditList.elementAt(0).value.text;
-                                  _localUser.firstName;
-                                }
-                                if (_localUser.email !=
-                                    _txtEditList.elementAt(1).value.text) {
-                                  //Update email
-                                }
-                                if (_localUser.password !=
-                                    _txtEditList.elementAt(2).value.text) {
-                                  //Update password
-                                }
-                              }
-                            },
-                            child: const Text('create user')),
                       ],
                     ),
                   ),
