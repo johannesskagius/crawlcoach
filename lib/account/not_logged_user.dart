@@ -1,62 +1,6 @@
-import 'package:crawl_course_3/account/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-class NotLoggedUser extends StatefulWidget {
-  const NotLoggedUser({Key? key}) : super(key: key);
-
-  @override
-  State<NotLoggedUser> createState() => _NotLoggedUserState();
-}
-
-class _NotLoggedUserState extends State<NotLoggedUser> {
-  final List<TextEditingController> _txtEditList =
-      List.generate(3, (index) => TextEditingController());
-  List<String> _titles = ['Log in', 'Create user'];
-  String _title = 'Log in';
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final pControll = PageController();
-
-    void _onPageChanged(int index) {
-      setState(() {
-        _title = _titles.elementAt(index);
-      });
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
-      ),
-      body: Stack(
-        children: [
-          PageView(
-            scrollDirection: Axis.vertical,
-            controller: pControll,
-            onPageChanged: _onPageChanged,
-            pageSnapping: true,
-            children: [
-              LogInUser(),
-              CreateUser(),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
 
 class LogInUser extends StatelessWidget {
   LogInUser({Key? key}) : super(key: key);
@@ -79,7 +23,7 @@ class LogInUser extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  _signInUSer(_txtEditList.elementAt(0).value.text,
+                  _signInUser(_txtEditList.elementAt(0).value.text,
                       _txtEditList.elementAt(1).value.text);
                 }
               },
@@ -91,12 +35,10 @@ class LogInUser extends StatelessWidget {
     );
   }
 
-  void _signInUSer(String text, String text2) async {
-    try {
-      UserCredential _userCred = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: text, password: text2);
-    } catch (e) {
-      print(e);
+  _signInUser(String email, String pss) async {
+    bool loggedIn = await User2.signInUser(email, pss);
+    if (loggedIn) {
+      //reload;
     }
   }
 }
@@ -109,6 +51,8 @@ class CreateUser extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
         List.generate(2, (index) => TextEditingController());
+    _txtEditList.elementAt(0).text = 'test@gmail.com';
+    _txtEditList.elementAt(1).text = 'test12';
     return Container(
       margin: const EdgeInsets.all(8),
       child: Form(
@@ -119,9 +63,19 @@ class CreateUser extends StatelessWidget {
             _passwordForm(_txtEditList.elementAt(1)),
             ElevatedButton(
               onPressed: () async {
+                String? reply = '';
                 if (_formKey.currentState!.validate()) {
-                  _createUser(_txtEditList.elementAt(0).value.text,
+                  reply = await User2.createUser(
+                      _txtEditList.elementAt(0).value.text,
                       _txtEditList.elementAt(1).value.text);
+                }
+                if (reply == '') {
+                  //reload;
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          _alertDialog(reply!, context));
                 }
               },
               child: const Text('Create user'),
@@ -131,6 +85,30 @@ class CreateUser extends StatelessWidget {
       ),
     );
   }
+
+  void sendAlert(String reply, BuildContext context) {
+    AlertDialog(
+      title: const Text('Error'),
+      content: Text(reply),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(context, 'Cancel'),
+            child: const Text('OK'))
+      ],
+    );
+  }
+}
+
+AlertDialog _alertDialog(String reply, BuildContext context) {
+  return AlertDialog(
+    title: const Text('Error'),
+    content: Text(reply),
+    actions: [
+      TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancel'),
+          child: const Text('OK'))
+    ],
+  );
 }
 
 TextFormField _emailForm(TextEditingController _controller) {
@@ -174,31 +152,4 @@ TextFormField _passwordForm(TextEditingController _controller) {
       }
     },
   );
-}
-
-Future<void> _createUser(String email, String password) async {
-  String _userAuth2 = '';
-  User? user;
-
-  try {
-    UserCredential userCredential = await LocalUser.firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: password);
-  } catch (error) {
-    switch (error) {
-      //TODO fix the error codes. we want different things to happen depending the response from the server.
-      case 'email-already-exists': //Går aldrig in här.
-        print('This email is already in use');
-        break;
-      default:
-        print(error.toString());
-    }
-  }
-  if (user != null && _userAuth2 != '') {
-    LocalUser _newLocalUser = LocalUser(
-        email, //Email
-        password, //Password
-        _userAuth2); //userID
-    _newLocalUser.saveToSharedPreferences();
-    _newLocalUser.syncToServer();
-  }
 }

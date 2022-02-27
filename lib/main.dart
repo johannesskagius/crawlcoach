@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:crawl_course_3/account/user.dart';
-import 'package:crawl_course_3/settings.dart';
+import 'package:crawl_course_3/settings2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -48,14 +48,14 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
-  final PageController pControll = PageController();
+  final PageController pControl = PageController();
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isManager = false;
   int _selected = 0;
 
   Future<void> _isManager() async {
-      final _localUser = await LocalUser.getLocalUser();
+    final _localUser = await LocalUser.getLocalUser();
     if (_localUser != null) {
       UserCredential _usercred = await _auth.signInWithEmailAndPassword(
           email: _localUser.email, password: _localUser.password);
@@ -82,9 +82,9 @@ class _LayoutState extends State<Layout> {
 
   @override
   Widget build(BuildContext context) {
-    void _onTapped(int index) {
+    void onTapped(int index) {
       setState(() {
-        pControll.animateToPage(index,
+        pControl.animateToPage(index,
             duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
       });
     }
@@ -99,7 +99,7 @@ class _LayoutState extends State<Layout> {
     return Scaffold(
       body: Center(
         child: PageView(
-          controller: pControll,
+          controller: pControl,
           onPageChanged: _onPageChanged,
           pageSnapping: true,
           children: isManager
@@ -107,14 +107,14 @@ class _LayoutState extends State<Layout> {
                   Home(),
                   MyCourses(),
                   Store(),
-                  Settings(),
+                  Settings2(),
                   Admin(),
                 ]
               : const [
                   Home(),
                   MyCourses(),
                   Store(),
-                  Settings(),
+                  Settings2(),
                 ],
         ),
       ),
@@ -123,7 +123,7 @@ class _LayoutState extends State<Layout> {
         items: isManager ? manager : standard,
         showSelectedLabels: true,
         selectedItemColor: Colors.greenAccent,
-        onTap: _onTapped,
+        onTap: onTapped,
       ),
     );
   }

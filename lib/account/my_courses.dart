@@ -1,8 +1,9 @@
-import 'package:crawl_course_3/account/user.dart';
 import 'package:crawl_course_3/admin/courses/course_info.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+import 'user2.dart';
 
 class MyCourses extends StatefulWidget {
   const MyCourses({Key? key}) : super(key: key);
@@ -38,9 +39,9 @@ class _MyCoursesState extends State<MyCourses> {
   }
 
   Future<void> _activateListener() async {
-    LocalUser? _local = await LocalUser.getLocalUser();
+    User2? _local = await User2.getLocalUser();
     final _databaseRef =
-        _ref.child('users').child(_local!.userAuth2).child('assigned_sessions');
+        _ref.child('users').child(_local!.userAuth).child('assigned_sessions');
     Map<Object?, List<Object?>> _ex = {};
     _databaseRef.onValue.listen((event) {
       for (DataSnapshot _courseName in event.snapshot.children) {

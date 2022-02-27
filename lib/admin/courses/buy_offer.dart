@@ -1,4 +1,4 @@
-import 'package:crawl_course_3/account/user.dart';
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:flutter/material.dart';
 
 import 'offer.dart';
@@ -39,11 +39,12 @@ class BuyOffer extends StatelessWidget {
             ],
           ),
           ElevatedButton(onPressed: () async {
-            LocalUser? _local = await LocalUser.getLocalUser();
-            //Add sessions to the userprofile
-            _local!.assignToCourse(_offer);
-            Navigator.pop(context);
-          }, child: const Text('buy'))
+            User2? _local = await User2.getLocalUser();
+                //Add sessions to the userprofile
+                _local!.assignToCourse(_offer);
+                User2.assignToOffer(_offer);
+                Navigator.pop(context);
+              }, child: const Text('buy'))
         ],
       ),
     );

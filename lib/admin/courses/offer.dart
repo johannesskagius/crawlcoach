@@ -27,7 +27,6 @@ class Offer {
   static Future<List<Offer>> getOffers() async {
     DataSnapshot? _snapshot = await courseRef.get();
     List<Offer> _getOffers = [];
-
     for (DataSnapshot snap in _snapshot.children) {
       late Map<Object?, dynamic> object = snap.value as Map<Object?, dynamic>;
       final course = Offer.fromJson(object); //error here

@@ -1,9 +1,9 @@
-import 'package:crawl_course_3/account/user.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import 'account/user2.dart';
 import 'admin/courses/offer.dart';
 
 class Home extends StatefulWidget {
@@ -14,8 +14,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Session _nextSession = Session(
-      desc: 'Loading', videoUrl: '', sessionName: 'Loading', exercises: []);
   final asset = 'assets/videos/IMG_4498_HD.mp4';
   List<SessionPreview> _previews = [];
   VideoPlayerController? controller;
@@ -74,12 +72,12 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _coursesAssigned() async {
-    final _local = await LocalUser.getLocalUser();
+    final _local = await User2.getLocalUser();
     if (_local != null) {
       final _userRef = FirebaseDatabase.instance
           .ref()
           .child('users')
-          .child(_local.userAuth2)
+          .child(_local.userAuth)
           .child('assigned_sessions');
 
       List<String> _courseNames = [];
