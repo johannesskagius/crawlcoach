@@ -7,7 +7,6 @@ class OfferSummary extends StatelessWidget {
   OfferSummary(this._offer, {Key? key}) : super(key: key);
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   final Offer _offer;
-
   @override
   Widget build(BuildContext context) {
     final _height =

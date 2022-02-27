@@ -102,7 +102,6 @@ class _HomeState extends State<Home> {
           }
         }
       }
-
       //print(_sessionKeys);
       List<Session> _listOfSessions = [];
       for (Object? object in _sessionKeys) {

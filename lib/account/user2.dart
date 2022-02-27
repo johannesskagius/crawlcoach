@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:crawl_course_3/admin/courses/offer.dart';
+import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +28,22 @@ class User2 {
       print(e.message);
       return e.message;
     }
+  }
+
+  void markSessionDone(Session _session) async {
+    DatabaseReference _sessionRef = _ref.child('users').child(userAuth);
+    DataSnapshot snap =
+        await _sessionRef.child('assigned_sessions').child('Test').get();
+
+    //Offer offer = snap.children.toList();
+    List<Offer> offers = [];
+    for (DataSnapshot data in snap.children) {
+      print(data.value);
+      offers.add(Offer.fromJson(data.value));
+    }
+
+    //_sessionRef.child('assigned_sessions').set(notDoneSessions);
+    //_sessionRef.child('completed_sessions').child(_session.sessionName);
   }
 
   static Future<User2?> getLocalUser() async {
@@ -68,7 +85,7 @@ class User2 {
         .child(userAuth)
         .child('assigned_sessions')
         .child(_offer.name)
-        .set(_offer.listOfSessions);
+        .set(_offer.toJson());
   }
 
   Map<String, dynamic> toJson() => {
@@ -89,7 +106,7 @@ class User2 {
         .child('1')
         .child('assigned_sessions')
         .child(_offer.name)
-        .set(_offer.listOfSessions);
+        .set(_offer.toJson());
   }
 
   void sendTip(List<String> test) {
