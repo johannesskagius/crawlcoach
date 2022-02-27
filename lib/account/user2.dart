@@ -125,4 +125,19 @@ class User2 {
     }
     return false;
   }
+
+  static Future<bool> signIn() async {
+    User2? user2 = await getLocalUser();
+    if (user2 != null) {
+      signInUser(user2._email, user2._password);
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> isManager() async {
+    User2? user2 = await getLocalUser();
+    return _ref.child('admins').child(user2!.userAuth).child('isadmin').get()
+        as bool;
+  }
 }

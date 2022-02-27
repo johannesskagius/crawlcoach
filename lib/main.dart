@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:crawl_course_3/account/user.dart';
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/settings2.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -49,34 +47,24 @@ class Layout extends StatefulWidget {
 
 class _LayoutState extends State<Layout> {
   final PageController pControl = PageController();
-  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isManager = false;
   int _selected = 0;
 
-  Future<void> _isManager() async {
-    final _localUser = await LocalUser.getLocalUser();
-    if (_localUser != null) {
-      UserCredential _usercred = await _auth.signInWithEmailAndPassword(
-          email: _localUser.email, password: _localUser.password);
-      DataSnapshot checkIfAdmin = await _ref
-          .child('admins')
-          .child(_usercred.user!.uid)
-          .child('isadmin')
-          .get();
-      if (checkIfAdmin.value.toString() == 'true') {
+  Future<void> _getUserInfo() async {
+    bool loggedIn = await User2.signIn();
+    if (loggedIn) {
+      //check if manager
+      if (await User2.isManager()) {
         setState(() {
           isManager = true;
         });
       }
-    } else {
-      LocalUser.signInAno();
     }
   }
 
   @override
   void initState() {
-    _isManager();
+    _getUserInfo();
     super.initState();
   }
 
