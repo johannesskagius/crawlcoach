@@ -11,7 +11,7 @@ class User2 {
   static final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   static final String _localUser = "USER_CRED";
   String _email, _password, userAuth;
-  int currentTip = 0;
+  int _currentTip = 0;
 
   User2(this._email, this._password, this.userAuth);
 
@@ -30,20 +30,32 @@ class User2 {
     }
   }
 
+  String get email => _email;
+
+  set email(String value) {
+    _email = value;
+  }
+
   void markSessionDone(Session _session) async {
     DatabaseReference _sessionRef = _ref.child('users').child(userAuth);
+    _sessionRef.child('c_sessions').push().set(_session.sessionName);
     DataSnapshot snap =
         await _sessionRef.child('assigned_sessions').child('Test').get();
-
-    //Offer offer = snap.children.toList();
-    List<Offer> offers = [];
     for (DataSnapshot data in snap.children) {
-      print(data.value);
-      offers.add(Offer.fromJson(data.value));
+      Offer _offer = Offer.fromJson(data.value);
+      List<Object?> newSessions = [];
+      for (Object? x in _offer.listOfSessions) {
+        if (x != _session.sessionName) {
+          newSessions.add(x);
+        }
+      }
+      Offer _offer2 = Offer(
+          name: _offer.name,
+          listOfSessions: newSessions,
+          price: _offer.price,
+          desc: _offer.desc);
+      assignToCourse(_offer2);
     }
-
-    //_sessionRef.child('assigned_sessions').set(notDoneSessions);
-    //_sessionRef.child('completed_sessions').child(_session.sessionName);
   }
 
   static Future<User2?> getLocalUser() async {
@@ -83,7 +95,7 @@ class User2 {
     _ref
         .child('users')
         .child(userAuth)
-        .child('assigned_sessions')
+        .child('a_sessions')
         .child(_offer.name)
         .set(_offer.toJson());
   }
@@ -113,9 +125,9 @@ class User2 {
     _ref
         .child('improvement')
         .child(userAuth)
-        .child(currentTip.toString())
+        .child(_currentTip.toString())
         .set(test);
-    currentTip++;
+    _currentTip++;
   }
 
   static void logOutUser() {
@@ -154,7 +166,22 @@ class User2 {
 
   static Future<bool> isManager() async {
     User2? user2 = await getLocalUser();
-    return _ref.child('admins').child(user2!.userAuth).child('isadmin').get()
-        as bool;
+    DataSnapshot snap = await _ref
+        .child('admins')
+        .child(user2!.userAuth)
+        .child('isadmin')
+        .get();
+    bool isManager = snap.value as bool;
+    return isManager;
+  }
+
+  Future<String> getNrOfAssignedCourses() async {
+    DataSnapshot data = await _ref
+        .child('users')
+        .child(userAuth)
+        .child('assigned_sessions')
+        .get();
+    String s = data.children.length.toString();
+    return s;
   }
 }

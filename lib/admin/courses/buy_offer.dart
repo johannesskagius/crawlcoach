@@ -7,7 +7,6 @@ class BuyOffer extends StatelessWidget {
   const BuyOffer(this._offer, {Key? key}) : super(key: key);
   final Offer _offer;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

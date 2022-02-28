@@ -64,7 +64,7 @@ class _MyCoursesState extends State<MyCourses> {
     //DatabaseReference  _ref = FirebaseDatabase.instance.ref();
     User2? _local = await User2.getLocalUser();
     final _databaseRef =
-        _ref.child('users').child(_local!.userAuth).child('assigned_sessions');
+        _ref.child('users').child(_local!.userAuth).child('a_sessions');
 
     List<Offer> _offers = [];
     _databaseRef.onValue.listen((event) {

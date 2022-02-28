@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
           .ref()
           .child('users')
           .child(_local.userAuth)
-          .child('assigned_sessions');
+          .child('a_sessions');
 
       List<String> _courseNames = [];
 //  Get assigned courses,

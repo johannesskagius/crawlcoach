@@ -20,9 +20,7 @@ class AddExercise extends StatelessWidget {
     _txtEditList.elementAt(5).text = 'Hang on a bar, pull yourself up';
 
     final _formKey = GlobalKey<FormState>();
-    final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
-    final PageController _pControll = PageController();
 
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +39,6 @@ class AddExercise extends StatelessWidget {
                       TextFormField(
                         keyboardType: TextInputType.name,
                         autovalidateMode: AutovalidateMode.always,
-                        autofocus: true,
                         controller: _txtEditList.elementAt(0),
                         decoration: const InputDecoration(
                             labelText: 'title',
@@ -57,7 +54,6 @@ class AddExercise extends StatelessWidget {
                       ),
                       TextFormField(
                         keyboardType: TextInputType.name,
-                        autofocus: true,
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(1),
                         decoration: const InputDecoration(
@@ -73,7 +69,6 @@ class AddExercise extends StatelessWidget {
                       ),
                       TextFormField(
                         keyboardType: TextInputType.text,
-                        autofocus: true,
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(2),
                         decoration: const InputDecoration(
@@ -92,7 +87,6 @@ class AddExercise extends StatelessWidget {
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(3),
-                        autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Perk 2',
                             hintText: 'one word, max 10 characher'),
@@ -109,7 +103,6 @@ class AddExercise extends StatelessWidget {
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(4),
-                        autofocus: true,
                         decoration: const InputDecoration(
                             labelText: 'Perk 3',
                             hintText: 'one word, max 10 characher'),
@@ -126,7 +119,6 @@ class AddExercise extends StatelessWidget {
                         keyboardType: TextInputType.multiline,
                         autovalidateMode: AutovalidateMode.always,
                         controller: _txtEditList.elementAt(5),
-                        autofocus: true,
                         minLines: 1,
                         maxLines: 10,
                         //TODO doesn't work
