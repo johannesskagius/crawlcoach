@@ -39,32 +39,8 @@ class SessionGeneral extends StatelessWidget {
         key: _formKey,
         child: Column(
           children: [
-            TextFormField(
-              keyboardType: TextInputType.text,
-              autovalidateMode: AutovalidateMode.always,
-              controller: _txtEditList.elementAt(0),
-              decoration: const InputDecoration(
-                  hintText: 'Intro crawl', labelText: 'Session name'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Session name';
-                }
-              },
-            ),
-            TextFormField(
-              keyboardType: TextInputType.multiline,
-              autovalidateMode: AutovalidateMode.always,
-              minLines: 1,
-              maxLines: 4,
-              controller: _txtEditList.elementAt(1),
-              decoration: const InputDecoration(
-                  hintText: 'Describe it', labelText: 'Description'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'error';
-                }
-              },
-            ),
+            _sessionName(_txtEditList),
+            _desc(_txtEditList),
             ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -80,6 +56,39 @@ class SessionGeneral extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  TextFormField _desc(List<TextEditingController> _txtEditList) {
+    return TextFormField(
+      keyboardType: TextInputType.multiline,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      minLines: 1,
+      maxLines: 4,
+      controller: _txtEditList.elementAt(1),
+      decoration: const InputDecoration(
+          hintText: 'Describe it', labelText: 'Description'),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'error';
+        }
+      },
+    );
+  }
+
+  TextFormField _sessionName(List<TextEditingController> _txtEditList) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autofocus: true,
+      controller: _txtEditList.elementAt(0),
+      decoration: const InputDecoration(
+          hintText: 'Intro crawl', labelText: 'Session name'),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Session name';
+        }
+      },
     );
   }
 }
