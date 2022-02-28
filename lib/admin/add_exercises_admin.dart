@@ -11,165 +11,129 @@ class AddExercise extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
         List.generate(6, (index) => TextEditingController());
-
-    _txtEditList.elementAt(0).text = 'Pull ups';
-    _txtEditList.elementAt(1).text = 'Strengthen';
-    _txtEditList.elementAt(2).text = 'Lats';
-    _txtEditList.elementAt(3).text = 'Back';
-    _txtEditList.elementAt(4).text = 'Strength';
-    _txtEditList.elementAt(5).text = 'Hang on a bar, pull yourself up';
-
+    // _txtEditList.elementAt(0).text = 'Pull ups';
+    // _txtEditList.elementAt(1).text = 'Strengthen';
+    // _txtEditList.elementAt(2).text = 'Lats';
+    // _txtEditList.elementAt(3).text = 'Back';
+    // _txtEditList.elementAt(4).text = 'Strength';
+    // _txtEditList.elementAt(5).text = 'Hang on a bar, pull yourself up';
     final _formKey = GlobalKey<FormState>();
-    final _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Exercise'),
       ),
-      body: Center(
-        child: SizedBox(
-          width: _width * 0.9,
-          child: Scrollable(
-              physics: const ScrollPhysics(),
-              viewportBuilder: (BuildContext context, ViewportOffset position) {
-                return Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        keyboardType: TextInputType.name,
-                        autovalidateMode: AutovalidateMode.always,
-                        controller: _txtEditList.elementAt(0),
-                        decoration: const InputDecoration(
-                            labelText: 'title',
-                            hintText: 'minimum 3 characters'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter a title';
-                          }
-                          if (value.length < 2 && value.length > 10) {
-                            return 'please enter a correct email';
-                          }
-                        },
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.name,
-                        autovalidateMode: AutovalidateMode.always,
-                        controller: _txtEditList.elementAt(1),
-                        decoration: const InputDecoration(
-                            labelText: 'Focuspoint', hintText: 'focus point'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter a subtitle';
-                          }
-                          if (value.length > 10) {
-                            return 'less than 10 characters';
-                          }
-                        },
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.always,
-                        controller: _txtEditList.elementAt(2),
-                        decoration: const InputDecoration(
-                            labelText: 'Perk 1',
-                            hintText: 'one word, max 10 characher'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter a perk';
-                          }
-                          if (value.length > 10) {
-                            return 'Too many letters';
-                          }
-                        },
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.always,
-                        controller: _txtEditList.elementAt(3),
-                        decoration: const InputDecoration(
-                            labelText: 'Perk 2',
-                            hintText: 'one word, max 10 characher'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter a perk';
-                          }
-                          if (value.length > 10) {
-                            return 'Too many letters';
-                          }
-                        },
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.always,
-                        controller: _txtEditList.elementAt(4),
-                        decoration: const InputDecoration(
-                            labelText: 'Perk 3',
-                            hintText: 'one word, max 10 characher'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter a perk';
-                          }
-                          if (value.length > 10) {
-                            return 'Too many letters';
-                          }
-                        },
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.multiline,
-                        autovalidateMode: AutovalidateMode.always,
-                        controller: _txtEditList.elementAt(5),
-                        minLines: 1,
-                        maxLines: 10,
-                        //TODO doesn't work
-                        decoration: const InputDecoration(
-                            labelText: 'Bullet point',
-                            hintText:
-                                'Write bullet points to the exercise separate with comma (,)'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter a description of the exercise';
-                          }
-                          if (value.length < 10) {
-                            return 'please enter a correct email';
-                          }
-                        },
-                      ),
-                      ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              Exercise _ex = Exercise(
-                                  title: _txtEditList.elementAt(0).value.text,
-                                  subTitle:
-                                      _txtEditList.elementAt(1).value.text,
-                                  perk1: _txtEditList.elementAt(2).value.text,
-                                  perk2: _txtEditList.elementAt(3).value.text,
-                                  perk3: _txtEditList.elementAt(4).value.text,
-                                  description: _txtEditList
-                                      .elementAt(5)
-                                      .value
-                                      .text
-                                      .split(','));
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        margin: const EdgeInsets.all(8),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              _exName(_txtEditList.elementAt(0)),
+              _focusPoint(_txtEditList.elementAt(1)),
+              _perk(_txtEditList.elementAt(2)),
+              _perk(_txtEditList.elementAt(3)),
+              _perk(_txtEditList.elementAt(4)),
+              TextFormField(
+                keyboardType: TextInputType.multiline,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                controller: _txtEditList.elementAt(5),
+                minLines: 1,
+                maxLines: 10,
+                decoration: const InputDecoration(
+                    labelText: 'Bullet point',
+                    hintText:
+                        'Write bullet points to the exercise separate with comma (,)'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'please enter a description of the exercise';
+                  }
+                  if (value.length < 10) {
+                    return 'please enter a correct email';
+                  }
+                },
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      Exercise _ex = Exercise(
+                          title: _txtEditList.elementAt(0).value.text,
+                          subTitle: _txtEditList.elementAt(1).value.text,
+                          perk1: _txtEditList.elementAt(2).value.text,
+                          perk2: _txtEditList.elementAt(3).value.text,
+                          perk3: _txtEditList.elementAt(4).value.text,
+                          description:
+                              _txtEditList.elementAt(5).value.text.split(','));
 
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ExerciseSummary(_ex)));
-
-                              for (TextEditingController controller
-                                  in _txtEditList) {
-                                controller.clear();
-                              }
-                            }
-                          },
-                          child: const Text('Add exercise')),
-                    ],
-                  ),
-                );
-              }),
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ExerciseSummary(_ex)));
+                      for (TextEditingController controller in _txtEditList) {
+                        controller.clear();
+                      }
+                    }
+                  },
+                  child: const Text('Add exercise')),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  TextFormField _perk(TextEditingController _txtEditList) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: _txtEditList,
+      decoration: const InputDecoration(
+          labelText: 'perk', hintText: 'one word, max 10 characher'),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'please enter a perk';
+        }
+        if (value.length > 10) {
+          return 'Too many letters';
+        }
+      },
+    );
+  }
+
+  TextFormField _focusPoint(TextEditingController controller) {
+    return TextFormField(
+      keyboardType: TextInputType.name,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: controller,
+      decoration: const InputDecoration(
+          labelText: 'Focuspoint', hintText: 'focus point'),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'please enter a subtitle';
+        }
+        if (value.length > 10) {
+          return 'less than 10 characters';
+        }
+      },
+    );
+  }
+}
+
+TextFormField _exName(TextEditingController _controller) {
+  return TextFormField(
+    keyboardType: TextInputType.name,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+    controller: _controller,
+    decoration: const InputDecoration(
+        labelText: 'title', hintText: 'minimum 3 characters'),
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'please enter a title';
+      }
+      if (value.length < 2 && value.length > 10) {
+        return 'please enter a correct email';
+      }
+    },
+  );
 }

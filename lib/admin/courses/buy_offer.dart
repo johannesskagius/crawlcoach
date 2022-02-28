@@ -37,13 +37,14 @@ class BuyOffer extends StatelessWidget {
               Text(_offer.listOfSessions.length.toString()),
             ],
           ),
-          ElevatedButton(onPressed: () async {
-            User2? _local = await User2.getLocalUser();
+          ElevatedButton(
+              onPressed: () async {
+                User2? _local = await User2.getLocalUser();
                 //Add sessions to the userprofile
                 _local!.assignToCourse(_offer);
-                //User2.assignToOffer(_offer);
                 Navigator.pop(context);
-              }, child: const Text('buy'))
+              },
+              child: const Text('buy'))
         ],
       ),
     );
