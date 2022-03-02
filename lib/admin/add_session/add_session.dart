@@ -34,7 +34,8 @@ class SessionGeneral extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
         List.generate(2, (index) => TextEditingController());
-    return Center(
+    return Container(
+      margin: const EdgeInsets.all(8),
       child: Form(
         key: _formKey,
         child: Column(

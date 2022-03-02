@@ -19,10 +19,26 @@ class _Settings2State extends State<Settings2> {
   final pControll = PageController();
   User2? user2;
   bool hasLoggedIn = false;
+  List<Widget> _widgets = [];
 
   @override
   void initState() {
+    checkIfAnonymous();
     super.initState();
+  }
+
+  void checkIfAnonymous() async {
+    User2.firebaseAuth.userChanges().listen((event) async {
+      if (User2.firebaseAuth.currentUser == null ||
+          User2.firebaseAuth.currentUser!.isAnonymous) {
+        _widgets = notLoggedIn();
+      } else {
+        String? email = await event!.email;
+        final user = User2(email!, 'test12', event.uid);
+        _widgets = loggedIn(user);
+      }
+      setState(() {});
+    });
   }
 
   void _onPageChanged(int index) {
@@ -41,31 +57,17 @@ class _Settings2State extends State<Settings2> {
       appBar: AppBar(
         title: Text(_title),
       ),
-      body: FutureBuilder(
-        future: User2.getLocalUser(),
-        builder: (BuildContext context, AsyncSnapshot<User2?> snapshot) {
-          List<Widget> _widgets = [];
-          if (snapshot.hasData) {
-            hasLoggedIn = true;
-            final user2 = snapshot.data;
-            _widgets = loggedIn(user2!);
-          } else {
-            _widgets = notLoggedIn();
-          }
-          return Stack(
-            children: [
-              PageView(
-                scrollDirection: Axis.vertical,
-                controller: pControll,
-                onPageChanged: _onPageChanged,
-                pageSnapping: true,
-                children: _widgets,
-              ),
-            ],
-          );
-        },
-      ),
-    );
+        body: Stack(
+          children: [
+            PageView(
+              scrollDirection: Axis.vertical,
+              controller: pControll,
+              onPageChanged: _onPageChanged,
+              pageSnapping: true,
+              children: _widgets,
+            ),
+          ],
+        ));
   }
 }
 

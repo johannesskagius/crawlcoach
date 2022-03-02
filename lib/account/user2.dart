@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:crawl_course_3/admin/courses/offer.dart';
@@ -40,7 +41,7 @@ class User2 {
     DatabaseReference _sessionRef = _ref.child('users').child(userAuth);
     _sessionRef.child('c_sessions').push().set(_session.sessionName);
     DataSnapshot snap =
-        await _sessionRef.child('assigned_sessions').child('Test').get();
+    await _sessionRef.child('assigned_sessions').child('Test').get();
     for (DataSnapshot data in snap.children) {
       Offer _offer = Offer.fromJson(data.value);
       List<Object?> newSessions = [];
@@ -60,10 +61,10 @@ class User2 {
 
   static Future<User2?> getLocalUser() async {
     final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
+    await SharedPreferences.getInstance();
     try {
       User2 _local =
-          User2.fromJson(jsonDecode(sharedPreferences.getString(_localUser)!));
+      User2.fromJson(jsonDecode(sharedPreferences.getString(_localUser)!));
       return _local;
     } catch (e) {
       print(e);
@@ -83,7 +84,7 @@ class User2 {
   void _saveToSharedPreferences() async {
     try {
       SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
+      await SharedPreferences.getInstance();
       String json = jsonEncode(toJson());
       await sharedPreferences.setString(_localUser, json + '\n');
     } catch (e) {
@@ -101,10 +102,10 @@ class User2 {
   }
 
   Map<String, dynamic> toJson() => {
-        '_password': _password,
-        '_email': _email,
-        '_userAuth': userAuth,
-      };
+    '_password': _password,
+    '_email': _email,
+    '_userAuth': userAuth,
+  };
 
   void _syncToServer() {
     _ref.child('users').child(userAuth).set('1');
@@ -138,7 +139,7 @@ class User2 {
 
   static _resetLastUser() async {
     SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
+    await SharedPreferences.getInstance();
     _sharedPreferences.remove(_localUser);
   }
 
