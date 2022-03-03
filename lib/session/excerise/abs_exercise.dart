@@ -6,11 +6,14 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class Exercise {
+  static final DatabaseReference exerciseRef =
+      FirebaseDatabase.instance.ref().child('exercises');
   final String title, subTitle;
   final String perk1, perk2, perk3;
+  String? url;
   final List<Object?> description;
 
-  Exercise(
+  Exercise(this.url,
       {required this.title,
       required this.subTitle,
       required this.perk1,
@@ -20,12 +23,14 @@ class Exercise {
 
   factory Exercise.fromJson(dynamic json) => _exerciseFromJson(json);
 
-  Map<Object, dynamic> toJson() => {
+  Map<Object, dynamic> toJson() =>
+      {
         'title': title,
         'subTitle': subTitle,
         'perk1': perk1,
         'perk2': perk2,
         'perk3': perk3,
+        'url': url,
         'description': description,
       };
 
@@ -36,7 +41,7 @@ class Exercise {
 }
 
 Exercise _exerciseFromJson(dynamic json) {
-  return Exercise(
+  return Exercise(json['url'],
       title: json['title'],
       subTitle: json['subTitle'],
       perk1: json['perk1'],
@@ -59,6 +64,7 @@ class Explained extends StatelessWidget {
       : super(key: key);
   final String number, description;
   final double width;
+
   @override
   Widget build(BuildContext context) {
     return Container(

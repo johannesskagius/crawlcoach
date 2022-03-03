@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:crawl_course_3/account/user2.dart';
+import 'package:crawl_course_3/session/excerise/view_exercises.dart';
 import 'package:crawl_course_3/settings2.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/addsession': (context) => const AddSession(),
         '/addoffer': (context) => const AddOffer(),
         '/addexercise': (context) => const AddExercise(),
+        '/viewexercises': (context) => const ViewExercises(),
       },
       theme:
           ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),
