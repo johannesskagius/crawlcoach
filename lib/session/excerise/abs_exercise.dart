@@ -1,13 +1,16 @@
 import 'dart:core';
 
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class Exercise {
-  static final DatabaseReference exerciseRef =
-      FirebaseDatabase.instance.ref().child('exercises');
+  static final DatabaseReference exerciseRefUser =
+      FirebaseDatabase.instance.ref().child('exercises').child('userMade');
+  static final DatabaseReference exerciseRefStandard =
+      FirebaseDatabase.instance.ref().child('exercises').child('standard');
   final String title, subTitle;
   final String perk1, perk2, perk3;
   String? url;
@@ -23,8 +26,7 @@ class Exercise {
 
   factory Exercise.fromJson(dynamic json) => _exerciseFromJson(json);
 
-  Map<Object, dynamic> toJson() =>
-      {
+  Map<Object, dynamic> toJson() => {
         'title': title,
         'subTitle': subTitle,
         'perk1': perk1,
@@ -38,6 +40,10 @@ class Exercise {
   String toString() {
     return 'Exercise{_title: $title, _subTitle: $subTitle}';
   }
+
+  void uploadExercise(User2 user) async {
+    exerciseRefUser.child(user.userAuth).child(title).set(toJson());
+  }
 }
 
 Exercise _exerciseFromJson(dynamic json) {
@@ -48,11 +54,6 @@ Exercise _exerciseFromJson(dynamic json) {
       perk2: json['perk2'],
       perk3: json['perk3'],
       description: json['description']);
-}
-
-Future<void> loadToFireBase(Exercise exercise) async {
-  final DatabaseReference database = FirebaseDatabase.instance.ref('exercises');
-  database.push();
 }
 
 class Explained extends StatelessWidget {

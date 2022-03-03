@@ -1,16 +1,12 @@
-
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
 import 'package:crawl_course_3/session/session.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'add_session_summary.dart';
 
-
-
 class SessionExercises extends StatefulWidget {
   SessionExercises(this._name, this._desc, {Key? key}) : super(key: key);
-  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   final String _name, _desc;
 
   @override
@@ -18,29 +14,40 @@ class SessionExercises extends StatefulWidget {
 }
 
 class _SessionExercisesState extends State<SessionExercises> {
-  List<String> _chosens = [];
+  final List<String> _chosens = [];
   int _nrChosen = 0;
-  List<Exercise> _exercises = [];
+  final List<Exercise> _exercises = [];
 
-  void _activateListener(){
+  void getOwnExercises() async {
+    User2? user2 = await User2.getLocalUser();
     List<Exercise> _ex = [];
-    widget._ref.child('exercises').onValue.listen((event) {
+    Exercise.exerciseRefUser.child(user2!.userAuth).onValue.listen((event) {
       for (var element in event.snapshot.children) {
         Object? test = element.value;
-        try {
-          _ex.add(Exercise.fromJson(test));
-        } catch (e) {
-          print('test');
-        }
+        _ex.add(Exercise.fromJson(test));
       }
       setState(() {
-        _exercises = _ex;
+        _exercises.addAll(_ex);
       });
     });
   }
 
-  void increment(int index){
-    if(!_chosens.contains(_exercises.elementAt(index).title)){
+  void getStandardExercises() async {
+    List<Exercise> _ex = [];
+    Exercise.exerciseRefStandard.onValue.listen((event) {
+      for (var element in event.snapshot.children) {
+        Object? test = element.value;
+        print(test);
+        _ex.add(Exercise.fromJson(test));
+      }
+      setState(() {
+        _exercises.addAll(_ex);
+      });
+    });
+  }
+
+  void increment(int index) {
+    if (!_chosens.contains(_exercises.elementAt(index).title)) {
       _chosens.add(_exercises.elementAt(index).title);
       setState(() {
         _nrChosen++;
@@ -50,13 +57,15 @@ class _SessionExercisesState extends State<SessionExercises> {
 
   @override
   void initState() {
-    _activateListener();
+    getOwnExercises(); //TODO set possible to filter exercises
+    getStandardExercises();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height - AppBar().preferredSize.height;
+    final _height =
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -66,7 +75,7 @@ class _SessionExercisesState extends State<SessionExercises> {
       body: SizedBox(
         height: _height,
         width: _width,
-        child:Stack(
+        child: Stack(
           children: [
             SizedBox(
               height: _height,
@@ -91,8 +100,9 @@ class _SessionExercisesState extends State<SessionExercises> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(onPressed: () {
-                    Navigator.pushReplacement(
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => SessionsSummary(Session(
@@ -100,13 +110,14 @@ class _SessionExercisesState extends State<SessionExercises> {
                                   desc: widget._desc,
                                   exercises: _chosens,
                                   videoUrl: ''))));
-                    }, child: const Text('Go to summary'),),
+                    },
+                    child: const Text('Go to summary'),
+                  ),
                   FloatingActionButton(
-                      onPressed: (){
+                      onPressed: () {
                         //TODO implement functions
                       },
-                      child:Text(_nrChosen.toString())
-                  ),
+                      child: Text(_nrChosen.toString())),
                 ],
               ),
             ),

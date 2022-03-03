@@ -1,5 +1,5 @@
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseSummary extends StatelessWidget {
@@ -40,11 +40,10 @@ class ExerciseSummary extends StatelessWidget {
                 ),
                 ElevatedButton(
                     onPressed: () async {
-                      DatabaseReference _refExt =
-                          FirebaseDatabase.instance.ref().child('exercises');
-                      await _refExt
-                          .child(_exercise.title)
-                          .set(_exercise.toJson());
+                      User2? user = await User2.getLocalUser();
+                      if (user != null) {
+                        _exercise.uploadExercise(user);
+                      }
                       Navigator.pop(context);
                     },
                     child: const Text('approve'))
@@ -62,7 +61,7 @@ class ExerciseSummary extends StatelessWidget {
                   child: ListTile(
                     leading: Text(index.toString()),
                     title:
-                        Text(_exercise.description.elementAt(index).toString()),
+                    Text(_exercise.description.elementAt(index).toString()),
                   ),
                 );
               },

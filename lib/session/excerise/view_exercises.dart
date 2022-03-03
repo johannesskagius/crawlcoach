@@ -1,3 +1,4 @@
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,14 @@ class _ViewExercisesState extends State<ViewExercises> {
   List<Exercise> _exercises = [];
 
   void _getExercises() async {
+    User2? user = await User2.getLocalUser();
     List<Exercise> _exer = [];
-    DataSnapshot snapshot = await Exercise.exerciseRef.get();
+    DataSnapshot snapshot =
+        await Exercise.exerciseRefUser.child(user!.userAuth).get();
     for (DataSnapshot data in snapshot.children) {
+      print(data.key.toString());
       _exer.add(Exercise.fromJson(data.value));
     }
-
     setState(() {
       _exercises = _exer;
     });
