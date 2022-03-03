@@ -61,7 +61,7 @@ class ExerciseSummary extends StatelessWidget {
                   child: ListTile(
                     leading: Text(index.toString()),
                     title:
-                    Text(_exercise.description.elementAt(index).toString()),
+                        Text(_exercise.description.elementAt(index).toString()),
                   ),
                 );
               },

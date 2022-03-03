@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'add_session_summary.dart';
 
 class SessionExercises extends StatefulWidget {
-  SessionExercises(this._name, this._desc, {Key? key}) : super(key: key);
+  const SessionExercises(this._name, this._desc, {Key? key}) : super(key: key);
   final String _name, _desc;
 
   @override
@@ -67,7 +67,6 @@ class _SessionExercisesState extends State<SessionExercises> {
     final _height =
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final _width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add exercises'),
