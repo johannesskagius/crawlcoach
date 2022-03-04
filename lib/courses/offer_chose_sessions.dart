@@ -29,7 +29,6 @@ class _ChooseSessionsState extends State<ChooseSessions> {
     final user2 = await User2.getLocalUser();
     _ref.child('sessions').child(user2!.userAuth).onValue.listen((event) {
       for (DataSnapshot element in event.snapshot.children) {
-        print(element.key.toString());
         Object? test = element.value;
         _downloadedSessions.add(Session.fromJson(test));
       }
@@ -41,7 +40,6 @@ class _ChooseSessionsState extends State<ChooseSessions> {
 
   void increment(int index) {
     if (!_chosens.contains(_sessions.elementAt(index).sessionName)) {
-      _chosens.add(_sessions.elementAt(index).sessionName);
       _chosens2[_sessions.elementAt(index).sessionName] = widget._name;
       setState(() {
         _nrChosen++;

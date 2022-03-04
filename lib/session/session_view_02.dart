@@ -8,7 +8,6 @@ import 'excerise/excercise.dart';
 class Session02 extends StatelessWidget {
   const Session02(this._session, this._id, {Key? key, required})
       : super(key: key);
-
   final Session _session;
   final String _id;
 

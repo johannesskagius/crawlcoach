@@ -37,48 +37,14 @@ class User2 {
     _email = value;
   }
 
-  void markSessionDone2(Session _session) async {
+  void markSessionDone(String sessionid, Session _session) async {
     DatabaseReference _sessionRef = _ref.child('users').child(userAuth);
-    _sessionRef.child('c_sessions').push().set(_session.sessionName);
-    DataSnapshot snap =
-        await _sessionRef.child('assigned_sessions').child('Test').get();
-    // for (DataSnapshot data in snap.children) {
-    //   Offer _offer = Offer.fromJson(data.value);
-    //   List<Object?> newSessions = [];
-    //   for (Object? x in _offer.listOfSessions) {
-    //     if (x != _session.sessionName) {
-    //       newSessions.add(x);
-    //     }
-    //   }
-    //   Offer _offer2 = Offer(
-    //       name: _offer.name,
-    //       listOfSessions: newSessions,
-    //       price: _offer.price,
-    //       desc: _offer.desc);
-    //   assignToCourse(_offer2);
-    // }
-  }
-
-  void markSessionDone(Session _session) async {
-    DatabaseReference _sessionRef = _ref.child('users').child(userAuth);
-    _sessionRef.child('c_sessions').push().set(_session.sessionName);
-    DataSnapshot snap =
-        await _sessionRef.child('assigned_sessions').child('Test').get();
-    // for (DataSnapshot data in snap.children) {
-    //   Offer _offer = Offer.fromJson(data.value);
-    //   List<Object?> newSessions = [];
-    //   for (Object? x in _offer.listOfSessions) {
-    //     if (x != _session.sessionName) {
-    //       newSessions.add(x);
-    //     }
-    //   }
-    //   Offer _offer2 = Offer(
-    //       name: _offer.name,
-    //       listOfSessions: newSessions,
-    //       price: _offer.price,
-    //       desc: _offer.desc);
-    //   assignToCourse(_offer2);
-    // }
+    _sessionRef
+        .child('c_sessions')
+        .child(sessionid)
+        .child(_session.sessionName)
+        .set('');
+    //_sessionRef.child('a_sessions').child(path)
   }
 
   static Future<User2?> getLocalUser() async {
@@ -91,9 +57,6 @@ class User2 {
     } catch (e) {
       print(e);
       //TODO When signed anonymosly, you can't create a new account
-      // FirebaseAuth _auth = FirebaseAuth.instance;
-      // _auth.signInAnonymously();
-      //throw Exception;
       return null;
     }
   }

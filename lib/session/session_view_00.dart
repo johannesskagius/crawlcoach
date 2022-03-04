@@ -43,7 +43,7 @@ class _Session00State extends State<Session00> {
         children: [
           Session01(widget.session), //Video
           Session02(widget.session, widget.id), //Exercises as list,
-          Session04(widget.session), //
+          Session04(widget.session, widget.id), //
         ],
         onPageChanged: (value){
           _changeTitle(value);
