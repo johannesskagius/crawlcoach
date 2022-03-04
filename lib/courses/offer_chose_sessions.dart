@@ -92,7 +92,8 @@ class _ChooseSessionsState extends State<ChooseSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      final _user = await User2.getLocalUser();
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -100,7 +101,8 @@ class _ChooseSessionsState extends State<ChooseSessions> {
                                   name: widget._name,
                                   listOfSessions: _chosens2,
                                   price: widget._price,
-                                  desc: widget._desc))));
+                                  desc: widget._desc,
+                                  userID: _user!.userAuth))));
                     },
                     child: const Text('Go to summary'),
                   ),

@@ -1,7 +1,7 @@
+import 'package:crawl_course_3/courses/offer.dart';
 import 'package:flutter/material.dart';
 
-import 'admin/courses/buy_offer.dart';
-import 'admin/courses/offer.dart';
+import 'courses/buy_offer.dart';
 
 class Store extends StatefulWidget {
   const Store({Key? key}) : super(key: key);

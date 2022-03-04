@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:crawl_course_3/admin/courses/offer.dart';
+import 'package:crawl_course_3/courses/offer.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';

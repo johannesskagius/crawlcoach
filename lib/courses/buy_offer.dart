@@ -1,5 +1,5 @@
 import 'package:crawl_course_3/account/user2.dart';
-import 'package:crawl_course_3/admin/courses/offer.dart';
+import 'package:crawl_course_3/courses/offer.dart';
 import 'package:flutter/material.dart';
 
 class BuyOffer extends StatelessWidget {

@@ -6,22 +6,25 @@ import 'package:json_annotation/json_annotation.dart';
 class Offer {
   static final DatabaseReference courseRef =
       FirebaseDatabase.instance.ref().child('courses');
-  final Map<String, Object?> listOfSessions;
+  final Map<Object?, Object?> listOfSessions;
   final String price;
   final String name;
   final String desc;
+  final String userID;
 
   Offer(
       {required this.name,
       required this.listOfSessions,
       required this.price,
-      required this.desc});
+      required this.desc,
+      required this.userID});
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'description': desc,
         'price': price,
         'session': listOfSessions,
+        'userID': userID
       };
 
   static Future<List<Offer>> getOffers() async {
@@ -43,5 +46,6 @@ Offer _offerFromJson(dynamic json) {
       name: json['name'],
       price: json['price'],
       listOfSessions: json['session'],
-      desc: json['description']);
+      desc: json['description'],
+      userID: json['userID']);
 }

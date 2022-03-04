@@ -1,4 +1,5 @@
 import 'package:crawl_course_3/account/user.dart';
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/session_view_00.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -112,8 +113,11 @@ class SessionPreviewNoSession extends StatelessWidget {
       color: Colors.grey.withOpacity(0.5),
       child: ListTile(
         onTap: () async {
-          DataSnapshot _snap =
-              await Session.sessionRef.child(_sessionName).get();
+          final user = await User2.getLocalUser();
+          DataSnapshot _snap = await Session.sessionRef
+              .child(user!.userAuth)
+              .child(_sessionName)
+              .get();
           Session session = Session.fromJson(_snap.value);
           Navigator.push(
               context,

@@ -1,5 +1,5 @@
-import 'package:crawl_course_3/admin/courses/course_info.dart';
-import 'package:crawl_course_3/admin/courses/offer.dart';
+import 'package:crawl_course_3/courses/course_info.dart';
+import 'package:crawl_course_3/courses/offer.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +68,7 @@ class _MyCoursesState extends State<MyCourses> {
     List<Offer> _offers = [];
     _databaseRef.onValue.listen((event) {
       for (DataSnapshot _courseName in event.snapshot.children) {
+        print(_courseName.value.toString());
         _offers.add(Offer.fromJson(_courseName.value));
       }
       setState(() {
@@ -112,8 +113,12 @@ List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
       ..add(SliverFixedExtentList(
         itemExtent: 50.0,
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          return SessionPreviewNoSession(
-              _offers.elementAt(_i).listOfSessions.elementAt(index).toString());
+          return SessionPreviewNoSession(_offers
+              .elementAt(_i)
+              .listOfSessions
+              .keys
+              .elementAt(index)
+              .toString());
         }, childCount: _offers.elementAt(_i).listOfSessions.length),
       ));
   }

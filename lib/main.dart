@@ -13,6 +13,7 @@ import 'admin/add_exercises_admin.dart';
 import 'admin/add_session/add_session.dart';
 import 'admin/add_session/view_sessions.dart';
 import 'admin/admin.dart';
+import 'courses/add_offer.dart';
 import 'home.dart';
 import 'store.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:crawl_course_3/admin/courses/offer.dart';
+import 'package:crawl_course_3/courses/offer.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -42,21 +42,21 @@ class User2 {
     _sessionRef.child('c_sessions').push().set(_session.sessionName);
     DataSnapshot snap =
         await _sessionRef.child('assigned_sessions').child('Test').get();
-    for (DataSnapshot data in snap.children) {
-      Offer _offer = Offer.fromJson(data.value);
-      List<Object?> newSessions = [];
-      for (Object? x in _offer.listOfSessions) {
-        if (x != _session.sessionName) {
-          newSessions.add(x);
-        }
-      }
-      Offer _offer2 = Offer(
-          name: _offer.name,
-          listOfSessions: newSessions,
-          price: _offer.price,
-          desc: _offer.desc);
-      assignToCourse(_offer2);
-    }
+    // for (DataSnapshot data in snap.children) {
+    //   Offer _offer = Offer.fromJson(data.value);
+    //   List<Object?> newSessions = [];
+    //   for (Object? x in _offer.listOfSessions) {
+    //     if (x != _session.sessionName) {
+    //       newSessions.add(x);
+    //     }
+    //   }
+    //   Offer _offer2 = Offer(
+    //       name: _offer.name,
+    //       listOfSessions: newSessions,
+    //       price: _offer.price,
+    //       desc: _offer.desc);
+    //   assignToCourse(_offer2);
+    // }
   }
 
   void markSessionDone(Session _session) async {
@@ -64,21 +64,21 @@ class User2 {
     _sessionRef.child('c_sessions').push().set(_session.sessionName);
     DataSnapshot snap =
         await _sessionRef.child('assigned_sessions').child('Test').get();
-    for (DataSnapshot data in snap.children) {
-      Offer _offer = Offer.fromJson(data.value);
-      List<Object?> newSessions = [];
-      for (Object? x in _offer.listOfSessions) {
-        if (x != _session.sessionName) {
-          newSessions.add(x);
-        }
-      }
-      Offer _offer2 = Offer(
-          name: _offer.name,
-          listOfSessions: newSessions,
-          price: _offer.price,
-          desc: _offer.desc);
-      assignToCourse(_offer2);
-    }
+    // for (DataSnapshot data in snap.children) {
+    //   Offer _offer = Offer.fromJson(data.value);
+    //   List<Object?> newSessions = [];
+    //   for (Object? x in _offer.listOfSessions) {
+    //     if (x != _session.sessionName) {
+    //       newSessions.add(x);
+    //     }
+    //   }
+    //   Offer _offer2 = Offer(
+    //       name: _offer.name,
+    //       listOfSessions: newSessions,
+    //       price: _offer.price,
+    //       desc: _offer.desc);
+    //   assignToCourse(_offer2);
+    // }
   }
 
   static Future<User2?> getLocalUser() async {

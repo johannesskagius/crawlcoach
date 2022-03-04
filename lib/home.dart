@@ -1,10 +1,10 @@
+import 'package:crawl_course_3/courses/offer.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import 'account/user2.dart';
-import 'admin/courses/offer.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -39,42 +39,42 @@ class _HomeState extends State<Home> {
         ),
         body: Center(
             child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Container(
-              child: controller!.value.isInitialized
-                  ? AspectRatio(
-                      aspectRatio: controller!.value.aspectRatio,
-                      child: VideoPlayer(controller!),
-                    )
-                  : const CircularProgressIndicator(),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              alignment: Alignment.topCenter,
               children: [
                 Container(
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Today is your opportunity to build the tomorrow you',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
+                  child: controller!.value.isInitialized
+                      ? AspectRatio(
+                    aspectRatio: controller!.value.aspectRatio,
+                    child: VideoPlayer(controller!),
+                  )
+                      : const CircularProgressIndicator(),
                 ),
                 Column(
-                  children: _previews,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'Today is your opportunity to build the tomorrow you',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                    Column(
+                      children: _previews,
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
-        )));
+            )));
   }
 
   Future<void> _coursesAssigned2() async {
     final _local = await User2.getLocalUser();
     final _userRef =
-        FirebaseDatabase.instance.ref().child('users').child(_local!.userAuth);
+    FirebaseDatabase.instance.ref().child('users').child(_local!.userAuth);
 
     List<String> _courseNames = [];
 //  Get assigned courses,
@@ -135,7 +135,7 @@ class _HomeState extends State<Home> {
       List<Session> _listOfSessions = [];
       for (Object? object in _sessionKeys) {
         DataSnapshot _sessionData =
-            await Session.sessionRef.child(object.toString()).get();
+        await Session.sessionRef.child(object.toString()).get();
         Session s = Session.fromJson(_sessionData.value);
         _listOfSessions.add(s);
       }
