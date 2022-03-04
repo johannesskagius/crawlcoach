@@ -1,4 +1,3 @@
-
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -7,25 +6,28 @@ import 'package:flutter/material.dart';
 import 'excerise/excercise.dart';
 
 class Session02 extends StatelessWidget {
-  const Session02(this._session, {Key? key, required}) : super(key: key);
+  const Session02(this._session, this._id, {Key? key, required})
+      : super(key: key);
+
   final Session _session;
+  final String _id;
 
   @override
   Widget build(BuildContext context) {
     Future<List<Exercise>> _getListOfExercises() async {
-      List<Exercise> _listWithWantedExercises = [];
-      List<String> _listWithWantedExerciseKeys = [];
-      DatabaseReference _ref = FirebaseDatabase.instance.ref();
-      //Get keys from session
-      // List<dynamic> exerciseKeyList = _session.exercises;
-      // for (dynamic exerciseKey in exerciseKeyList) {
-      //   if(!_listWithWantedExerciseKeys.contains(exerciseKey.toString())){
-      //     DataSnapshot exerciseSnap = await _ref.child('exercises').child(exerciseKey).get();
-      //     Exercise _exercise = Exercise.fromJson(exerciseSnap.value);
-      //     _listWithWantedExercises.add(_exercise);
-      //   }
-      // }
-      return _listWithWantedExercises;
+      List<Object?> _exToGet = _session.exercises.keys.toList();
+      DatabaseReference _refUser = Exercise.exerciseRefUser;
+      DatabaseReference _refStandard = Exercise.exerciseRefStandard;
+      List<Exercise> _colEx = [];
+      DataSnapshot _dataInUser;
+      for (Object? exName in _exToGet) {
+        _dataInUser = await _refUser.child(_id).child(exName.toString()).get();
+        if (_dataInUser.value == null) {
+          _dataInUser = await _refStandard.child(exName.toString()).get();
+        }
+        _colEx.add(Exercise.fromJson(_dataInUser.value));
+      }
+      return _colEx;
     }
 
     return FutureBuilder(

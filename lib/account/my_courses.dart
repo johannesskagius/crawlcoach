@@ -98,6 +98,7 @@ List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
           IconButton(
             icon: const Icon(Icons.more_vert_outlined),
             onPressed: () {
+              print('here');
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -113,12 +114,14 @@ List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
       ..add(SliverFixedExtentList(
         itemExtent: 50.0,
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          return SessionPreviewNoSession(_offers
-              .elementAt(_i)
-              .listOfSessions
-              .keys
-              .elementAt(index)
-              .toString());
+          return SessionPreviewNoSession(
+              _offers
+                  .elementAt(_i)
+                  .listOfSessions
+                  .keys
+                  .elementAt(index)
+                  .toString(),
+              _offers.elementAt(_i).userID);
         }, childCount: _offers.elementAt(_i).listOfSessions.length),
       ));
   }

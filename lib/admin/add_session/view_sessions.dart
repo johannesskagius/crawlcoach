@@ -45,12 +45,15 @@ class _ViewSessionsState extends State<ViewSessions> {
           itemBuilder: (BuildContext context, int index) {
             return Card(
               child: ListTile(
-                onTap: () {
+                onTap: () async {
+                  User2? user = await User2.getLocalUser();
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              SessionPreview(_sessions.elementAt(index))));
+                          builder: (context) => SessionPreview(
+                                _sessions.elementAt(index),
+                              )));
                 },
                 leading: Text(
                   index.toString(),

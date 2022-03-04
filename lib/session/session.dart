@@ -87,12 +87,14 @@ class SessionPreview extends StatelessWidget {
     return Card(
       color: Colors.grey.withOpacity(0.5),
       child: ListTile(
-        onTap: () {
+        onTap: () async {
+          final user = await User2.getLocalUser();
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => Session00(
                         session: _session,
+                        id: user!.userAuth,
                       )));
         },
         title: Text(_session.sessionName),
@@ -103,9 +105,10 @@ class SessionPreview extends StatelessWidget {
 }
 
 class SessionPreviewNoSession extends StatelessWidget {
-  const SessionPreviewNoSession(this._sessionName, {Key? key})
+  const SessionPreviewNoSession(this._sessionName, this._sessionKey, {Key? key})
       : super(key: key);
   final String _sessionName;
+  final String _sessionKey;
 
   @override
   Widget build(BuildContext context) {
@@ -113,17 +116,18 @@ class SessionPreviewNoSession extends StatelessWidget {
       color: Colors.grey.withOpacity(0.5),
       child: ListTile(
         onTap: () async {
-          final user = await User2.getLocalUser();
           DataSnapshot _snap = await Session.sessionRef
-              .child(user!.userAuth)
+              .child(_sessionKey)
               .child(_sessionName)
               .get();
           Session session = Session.fromJson(_snap.value);
+          print(session.toString());
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => Session00(
                         session: session,
+                        id: _sessionKey,
                       )));
         },
         title: Text(_sessionName),
