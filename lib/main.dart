@@ -11,8 +11,8 @@ import 'package:flutter/services.dart';
 import 'account/my_courses.dart';
 import 'admin/add_exercises_admin.dart';
 import 'admin/add_session/add_session.dart';
+import 'admin/add_session/view_sessions.dart';
 import 'admin/admin.dart';
-import 'admin/courses/add_offer.dart';
 import 'home.dart';
 import 'store.dart';
 
@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         '/addoffer': (context) => const AddOffer(),
         '/addexercise': (context) => const AddExercise(),
         '/viewexercises': (context) => const ViewExercises(),
+        '/viewSessions': (context) => const ViewSessions(),
       },
       theme:
           ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),

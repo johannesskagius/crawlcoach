@@ -61,7 +61,6 @@ class _MyCoursesState extends State<MyCourses> {
   }
 
   Future<void> _activateListener2() async {
-    //DatabaseReference  _ref = FirebaseDatabase.instance.ref();
     User2? _local = await User2.getLocalUser();
     final _databaseRef =
         _ref.child('users').child(_local!.userAuth).child('a_sessions');

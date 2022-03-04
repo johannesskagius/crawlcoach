@@ -11,7 +11,7 @@ class Session {
   final String sessionName;
   final String desc;
   final String videoUrl;
-  final Map<String, Object?> exercises;
+  final Map<Object?, Object?> exercises;
 
   Session(
       {required this.sessionName,
@@ -63,7 +63,6 @@ class Session {
       print(_data.value.toString());
     }
   }
-
   @override
   String toString() {
     return 'Session{_sessionName: $sessionName, _desc: $desc}';

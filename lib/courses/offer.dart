@@ -6,7 +6,7 @@ import 'package:json_annotation/json_annotation.dart';
 class Offer {
   static final DatabaseReference courseRef =
       FirebaseDatabase.instance.ref().child('courses');
-  final List<Object?> listOfSessions;
+  final Map<String, Object?> listOfSessions;
   final String price;
   final String name;
   final String desc;

@@ -1,3 +1,4 @@
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -18,19 +19,19 @@ class _ChooseSessionsState extends State<ChooseSessions> {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
 
   List<String> _chosens = [];
+  final Map<String, String> _chosens2 = {};
+
   int _nrChosen = 0;
   List<Session> _sessions = [];
 
   void _activateListener() async {
     List<Session> _downloadedSessions = [];
-    _ref.child('sessions').onValue.listen((event) {
-      for (var element in event.snapshot.children) {
+    final user2 = await User2.getLocalUser();
+    _ref.child('sessions').child(user2!.userAuth).onValue.listen((event) {
+      for (DataSnapshot element in event.snapshot.children) {
+        print(element.key.toString());
         Object? test = element.value;
-        try {
-          _downloadedSessions.add(Session.fromJson(test));
-        } catch (e) {
-          print(e);
-        }
+        _downloadedSessions.add(Session.fromJson(test));
       }
       setState(() {
         _sessions = _downloadedSessions;
@@ -41,6 +42,7 @@ class _ChooseSessionsState extends State<ChooseSessions> {
   void increment(int index) {
     if (!_chosens.contains(_sessions.elementAt(index).sessionName)) {
       _chosens.add(_sessions.elementAt(index).sessionName);
+      _chosens2[_sessions.elementAt(index).sessionName] = widget._name;
       setState(() {
         _nrChosen++;
       });
@@ -96,7 +98,7 @@ class _ChooseSessionsState extends State<ChooseSessions> {
                           MaterialPageRoute(
                               builder: (context) => OfferSummary(Offer(
                                   name: widget._name,
-                                  listOfSessions: _chosens,
+                                  listOfSessions: _chosens2,
                                   price: widget._price,
                                   desc: widget._desc))));
                     },

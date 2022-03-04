@@ -43,7 +43,7 @@ class _AdminState extends State<Admin> {
                     child: const Text('Add Session')),
                 ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/addoffer');
+                      Navigator.pushNamed(context, '/viewSessions');
                     },
                     child: const Text('View my offers')),
               ],

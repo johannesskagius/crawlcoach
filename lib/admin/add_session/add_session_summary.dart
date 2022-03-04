@@ -1,3 +1,4 @@
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -47,8 +48,12 @@ class SessionsSummary extends StatelessWidget {
         ),
       ),
       bottomSheet: ElevatedButton(
-        onPressed: () {
-          Session.sessionRef.child(_session.sessionName).set(_session.toJson());
+        onPressed: () async {
+          final user2 = await User2.getLocalUser();
+          Session.sessionRef
+              .child(user2!.userAuth)
+              .child(_session.sessionName)
+              .set(_session.toJson());
           Navigator.pop(context);
         },
         child: const Text('To Server'),
