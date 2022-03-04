@@ -15,6 +15,7 @@ class SessionExercises extends StatefulWidget {
 
 class _SessionExercisesState extends State<SessionExercises> {
   final List<String> _chosens = [];
+  final Map<String, String> _chosens2 = {};
   int _nrChosen = 0;
   final List<Exercise> _exercises = [];
 
@@ -49,6 +50,7 @@ class _SessionExercisesState extends State<SessionExercises> {
   void increment(int index) {
     if (!_chosens.contains(_exercises.elementAt(index).title)) {
       _chosens.add(_exercises.elementAt(index).title);
+      _chosens2[_exercises.elementAt(index).title] = '1';
       setState(() {
         _nrChosen++;
       });
@@ -107,7 +109,7 @@ class _SessionExercisesState extends State<SessionExercises> {
                               builder: (context) => SessionsSummary(Session(
                                   sessionName: widget._name,
                                   desc: widget._desc,
-                                  exercises: _chosens,
+                                  exercises: _chosens2,
                                   videoUrl: ''))));
                     },
                     child: const Text('Go to summary'),

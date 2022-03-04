@@ -24,7 +24,6 @@ class _ViewExercisesState extends State<ViewExercises> {
     DataSnapshot snapshot =
         await Exercise.exerciseRefUser.child(user!.userAuth).get();
     for (DataSnapshot data in snapshot.children) {
-      print(data.key.toString());
       _exer.add(Exercise.fromJson(data.value));
     }
     setState(() {

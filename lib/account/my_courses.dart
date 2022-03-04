@@ -22,7 +22,7 @@ class _MyCoursesState extends State<MyCourses> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       //slivers: _sliverList(context, _assigned),
-      slivers: _sliverList2(context, _assigned2),
+      slivers: _sliverList(context, _assigned2),
     );
   }
 
@@ -78,7 +78,7 @@ class _MyCoursesState extends State<MyCourses> {
   }
 }
 
-List<Widget> _sliverList2(BuildContext context, List<Offer> _offers) {
+List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
   List<Widget> _widgets = [];
   _widgets.add(const SliverAppBar(
     flexibleSpace: FlexibleSpaceBar(
@@ -117,49 +117,6 @@ List<Widget> _sliverList2(BuildContext context, List<Offer> _offers) {
               _offers.elementAt(_i).listOfSessions.elementAt(index).toString());
         }, childCount: _offers.elementAt(_i).listOfSessions.length),
       ));
-  }
-  return _widgets;
-}
-
-List<Widget> _sliverList(
-    BuildContext context, Map<Object?, List<Object?>> _map) {
-  List<Widget> _widgets = [];
-  _widgets.add(const SliverAppBar(
-    flexibleSpace: FlexibleSpaceBar(
-      title: Text('My courses', style: TextStyle(color: Colors.greenAccent)),
-    ),
-    expandedHeight: 50,
-    floating: true,
-  ));
-  for (int _i = 0; _i < _map.keys.length; _i++) {
-    String _courseName = _map.keys.elementAt(_i).toString();
-    _widgets
-      ..add(SliverAppBar(
-        flexibleSpace: FlexibleSpaceBar(
-          title: Text(_courseName),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert_outlined),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CourseInfo(
-                            courseName: _courseName,
-                          )));
-            },
-          )
-      ],
-      expandedHeight: 50,
-      floating: true,
-    ))..add(SliverFixedExtentList(
-      itemExtent: 50.0,
-      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        return SessionPreviewNoSession(
-              _map.values.elementAt(_i).elementAt(index).toString());
-        }, childCount: _map.values.elementAt(_i).length),
-    ));
   }
   return _widgets;
 }

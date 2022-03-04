@@ -71,6 +71,35 @@ class _HomeState extends State<Home> {
         )));
   }
 
+  Future<void> _coursesAssigned2() async {
+    final _local = await User2.getLocalUser();
+    final _userRef =
+        FirebaseDatabase.instance.ref().child('users').child(_local!.userAuth);
+
+    List<String> _courseNames = [];
+//  Get assigned courses,
+    final _assignedCoursesRef = await _userRef.child('a_sessions').get();
+    for (DataSnapshot _coursesName in _assignedCoursesRef.children) {
+      String respons = _coursesName.child('session').value.toString();
+      respons = respons.replaceFirst("[", "").replaceFirst("]", "");
+      _courseNames.addAll(respons.split(', '));
+    }
+    final _removeSessionsRef = await _userRef.child('c_sessions').get();
+    for (DataSnapshot _sessions in _removeSessionsRef.children) {
+      String respons = _sessions.child('session').value.toString();
+      respons = respons.replaceFirst("[", "").replaceFirst("]", "");
+      _courseNames.remove(respons);
+    }
+
+    List<Session> _sessions = [];
+    final _getSessions = await Session.sessionRef.get();
+    for (String value in _courseNames) {
+      final s = await Session.sessionRef.child(value).get();
+      _sessions.add(Session.fromJson(s.value));
+    }
+    setPreviews(_sessions);
+  }
+
   Future<void> _coursesAssigned() async {
     final _local = await User2.getLocalUser();
     if (_local != null) {
@@ -123,7 +152,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _coursesAssigned();
+    _coursesAssigned2();
+    //_coursesAssigned();
     controller = VideoPlayerController.asset(asset)
       ..addListener(() => setState(() {}))
       ..setLooping(true)
@@ -131,4 +161,3 @@ class _HomeState extends State<Home> {
       ..setVolume(0);
   }
 }
-

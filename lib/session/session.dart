@@ -11,7 +11,7 @@ class Session {
   final String sessionName;
   final String desc;
   final String videoUrl;
-  final List<Object?> exercises;
+  final Map<String, Object?> exercises;
 
   Session(
       {required this.sessionName,
@@ -20,11 +20,11 @@ class Session {
       required this.videoUrl});
 
   Map<String, dynamic> toJson() => {
-    'title': sessionName,
-    'subTitle': desc,
-    'video_url': '',
-    'exercises': exercises,
-  };
+        'title': sessionName,
+        'subTitle': desc,
+        'video_url': '',
+        'exercises': exercises,
+      };
 
   factory Session.fromJson(dynamic json) => _sessionFromJson(json);
 
@@ -46,7 +46,8 @@ class Session {
     throw NullThrownError();
   }
 
-  Future<void> pushSessionStats(List<double> stats, String s, String userID) async {
+  Future<void> pushSessionStats(
+      List<double> stats, String s, String userID) async {
     final DatabaseReference _ref = FirebaseDatabase.instance.ref();
     await _ref
         .child('session_stats')
@@ -80,6 +81,7 @@ Session _sessionFromJson(dynamic json) {
 class SessionPreview extends StatelessWidget {
   const SessionPreview(this._session, {Key? key}) : super(key: key);
   final Session _session;
+
   @override
   Widget build(BuildContext context) {
     return Card(
