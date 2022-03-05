@@ -91,7 +91,7 @@ List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
         floating: true,
       ))
       ..add(SliverFixedExtentList(
-        itemExtent: 70.0,
+        itemExtent: 60.0,
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
           return SessionPreviewNoSession(
               _offers

@@ -1,4 +1,5 @@
 import 'package:crawl_course_3/courses/offer.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'courses/buy_offer.dart';
@@ -12,19 +13,29 @@ class Store extends StatefulWidget {
 
 
 class _StoreState extends State<Store> {
-  Future<List<GestureDetector>> _getOffers() async {
-    List<GestureDetector> _offerItem = [];
-    List<Offer> offersList = await Offer.getOffers();
-    for (Offer offer in offersList) {
-      _offerItem.add(_gridItem(context, offer));
-    }
-    return _offerItem;
+  List<GestureDetector> _offers = [];
+
+  Future<void> _listenToOffers() async {
+    Offer.courseRef.onValue.listen((event) {
+      List<GestureDetector> _offerItem = [];
+      for (DataSnapshot _data in event.snapshot.children) {
+        _offerItem.add(_gridItem(context, Offer.fromJson(_data.value)));
+      }
+      setState(() {
+        _offers = _offerItem;
+      });
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    _getOffers();
+    _listenToOffers();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -36,21 +47,12 @@ class _StoreState extends State<Store> {
           style: TextStyle(color: Colors.greenAccent),
         ),
       ),
-      body: FutureBuilder(
-        future: _getOffers(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasData) {
-            return GridView.count(
-              padding: const EdgeInsets.all(1),
-              // crossAxisSpacing: 1,
-              // mainAxisSpacing: 1,
-              crossAxisCount: 2,
-              children: snapshot.data,
-            );
-          } else {
-            return const CircularProgressIndicator();
-          }
-        },
+      body: GridView.count(
+        padding: const EdgeInsets.all(1),
+        // crossAxisSpacing: 1,
+        // mainAxisSpacing: 1,
+        crossAxisCount: 2,
+        children: _offers,
       ),
     );
   }
