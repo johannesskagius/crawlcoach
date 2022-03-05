@@ -73,18 +73,29 @@ class _HomeState extends State<Home> {
         )));
   }
 
-  Future<void> _coursesAssigned() async {
+  Future<void> _coursesAssigned2() async {
     final _local = await User2.getLocalUser();
     final _ref = User2.ref.child(_local!.userAuth).child('a_sessions');
-    DataSnapshot _data = await _ref.get();
     Map<String, List<String>> _nextInAssCourse = {};
-    for (DataSnapshot assignedCourse in _data.children) {
-      List<String> list = [];
-      list.add(assignedCourse.child('session').children.first.key.toString());
-      list.add(assignedCourse.child('userID').value.toString());
-      _nextInAssCourse[assignedCourse.key.toString()] = list;
-    }
-    setPreviews(_nextInAssCourse);
+    List<SessionPreview> nextInAssigned = [];
+
+    _ref.onValue.listen((event) async {
+      for (DataSnapshot _data in event.snapshot.children) {
+        List<String> list = [];
+        list.add(_data.child('session').children.first.key.toString());
+        list.add(_data.child('userID').value.toString());
+        _nextInAssCourse[_data.key.toString()] = list;
+      }
+      for (String session in _nextInAssCourse.keys) {
+        String sName = _nextInAssCourse[session]!.elementAt(0);
+        String sId = _nextInAssCourse[session]!.elementAt(1);
+        final data = await Session.sessionRef.child(sId).child(sName).get();
+        nextInAssigned.add(SessionPreview(Session.fromJson(data.value)));
+      }
+      setState(() {
+        _previews = nextInAssigned;
+      });
+    });
   }
 
   @override
@@ -96,7 +107,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _coursesAssigned();
+    //_coursesAssigned();
+    _coursesAssigned2();
     controller = VideoPlayerController.asset(asset)
       ..addListener(() => setState(() {}))
       ..setLooping(true)
