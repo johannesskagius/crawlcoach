@@ -17,7 +17,7 @@ class _HomeState extends State<Home> {
   List<SessionPreview> _previews = [];
   VideoPlayerController? controller;
 
-  void setPreviews2(Map<String, List<String>> listOfSessions) async {
+  void setPreviews(Map<String, List<String>> listOfSessions) async {
     List<SessionPreview> nextInAssigned = [];
     for (String session in listOfSessions.keys) {
       String sName = listOfSessions[session]!.elementAt(0);
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
       list.add(assignedCourse.child('userID').value.toString());
       _nextInAssCourse[assignedCourse.key.toString()] = list;
     }
-    setPreviews2(_nextInAssCourse);
+    setPreviews(_nextInAssCourse);
   }
 
   @override

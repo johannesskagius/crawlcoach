@@ -29,7 +29,7 @@ class _MyCoursesState extends State<MyCourses> {
   @override
   void initState() {
     //_activateListener();
-    _activateListener2();
+    _activateListener();
     super.initState();
   }
 
@@ -43,24 +43,6 @@ class _MyCoursesState extends State<MyCourses> {
   }
 
   Future<void> _activateListener() async {
-    User2? _local = await User2.getLocalUser();
-    final _databaseRef =
-        _ref.child('users').child(_local!.userAuth).child('assigned_sessions');
-    Map<Object?, List<Object?>> _ex = {};
-    _databaseRef.onValue.listen((event) {
-      for (DataSnapshot _courseName in event.snapshot.children) {
-        if (!_ex.containsKey(_courseName)) {
-          _ex.putIfAbsent(
-              _courseName.key, () => _courseName.value as List<Object?>);
-        }
-      }
-      setState(() {
-        _assigned = _ex;
-      });
-    });
-  }
-
-  Future<void> _activateListener2() async {
     User2? _local = await User2.getLocalUser();
     final _databaseRef =
         _ref.child('users').child(_local!.userAuth).child('a_sessions');
@@ -109,7 +91,7 @@ List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
         floating: true,
       ))
       ..add(SliverFixedExtentList(
-        itemExtent: 50.0,
+        itemExtent: 70.0,
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
           return SessionPreviewNoSession(
               _offers

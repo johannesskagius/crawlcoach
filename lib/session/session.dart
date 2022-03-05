@@ -95,7 +95,7 @@ class SessionPreview extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => Session00(
-                    session: _session,
+                        session: _session,
                         id: user!.userAuth,
                         offerName: _offerName,
                       )));
@@ -119,7 +119,7 @@ class SessionPreviewNoSession extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.grey.withOpacity(0.5),
+      clipBehavior: Clip.antiAlias,
       child: ListTile(
         onTap: () async {
           DataSnapshot _snap = await Session.sessionRef
@@ -127,17 +127,21 @@ class SessionPreviewNoSession extends StatelessWidget {
               .child(_sessionName)
               .get();
           Session session = Session.fromJson(_snap.value);
-          print(session.toString());
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => Session00(
-                    session: session,
+                        session: session,
                         id: _sessionKey,
                         offerName: _offerName,
                       )));
         },
-        title: Text(_sessionName),
+        title: Text(
+          _sessionName,
+          style: const TextStyle(
+            fontSize: 20,
+          ),
+        ),
         trailing: const Icon(Icons.navigate_next_outlined),
       ),
     );
