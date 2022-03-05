@@ -5,10 +5,15 @@ import 'package:crawl_course_3/session/session_view_04.dart';
 import 'package:flutter/material.dart';
 
 class Session00 extends StatefulWidget {
-  const Session00({Key? key, required this.session, required this.id})
+  const Session00(
+      {Key? key,
+      required this.session,
+      required this.id,
+      required this.offerName})
       : super(key: key);
   final Session session;
   final String id;
+  final String offerName;
 
   @override
   State<Session00> createState() => _Session00State();
@@ -43,7 +48,7 @@ class _Session00State extends State<Session00> {
         children: [
           Session01(widget.session), //Video
           Session02(widget.session, widget.id), //Exercises as list,
-          Session04(widget.session, widget.id), //
+          Session04(widget.session, widget.id, widget.offerName), //
         ],
         onPageChanged: (value){
           _changeTitle(value);

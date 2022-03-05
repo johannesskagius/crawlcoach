@@ -64,6 +64,7 @@ class Session {
       print(_data.value.toString());
     }
   }
+
   @override
   String toString() {
     return 'Session{_sessionName: $sessionName, _desc: $desc}';
@@ -81,6 +82,7 @@ Session _sessionFromJson(dynamic json) {
 class SessionPreview extends StatelessWidget {
   const SessionPreview(this._session, {Key? key}) : super(key: key);
   final Session _session;
+  final String _offerName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +95,9 @@ class SessionPreview extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => Session00(
-                        session: _session,
+                    session: _session,
                         id: user!.userAuth,
+                        offerName: _offerName,
                       )));
         },
         title: Text(_session.sessionName),
@@ -105,10 +108,13 @@ class SessionPreview extends StatelessWidget {
 }
 
 class SessionPreviewNoSession extends StatelessWidget {
-  const SessionPreviewNoSession(this._sessionName, this._sessionKey, {Key? key})
+  const SessionPreviewNoSession(
+      this._sessionName, this._sessionKey, this._offerName,
+      {Key? key})
       : super(key: key);
   final String _sessionName;
   final String _sessionKey;
+  final String _offerName;
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +132,9 @@ class SessionPreviewNoSession extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => Session00(
-                        session: session,
+                    session: session,
                         id: _sessionKey,
+                        offerName: _offerName,
                       )));
         },
         title: Text(_sessionName),

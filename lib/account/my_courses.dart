@@ -121,7 +121,8 @@ List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
                   .keys
                   .elementAt(index)
                   .toString(),
-              _offers.elementAt(_i).userID);
+              _offers.elementAt(_i).userID,
+              _courseName);
         }, childCount: _offers.elementAt(_i).listOfSessions.length),
       ));
   }

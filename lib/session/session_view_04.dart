@@ -3,9 +3,11 @@ import 'package:crawl_course_3/session/session.dart';
 import 'package:flutter/material.dart';
 
 class Session04 extends StatefulWidget {
-  const Session04(this._session, this._sessionID, {Key? key}) : super(key: key);
+  const Session04(this._session, this._sessionID, this._corseName, {Key? key})
+      : super(key: key);
   final Session _session;
   final String _sessionID;
+  final String _corseName;
 
   @override
   State<Session04> createState() => _Session04State();
@@ -88,7 +90,8 @@ class _Session04State extends State<Session04> {
                     });
                     //Move session to done sessions
                     final user = await User2.getLocalUser();
-                    user!.markSessionDone(widget._sessionID, widget._session);
+                    user!.markSessionDone(
+                        widget._sessionID, widget._session, widget._corseName);
                     Navigator.pop(context);
                   },
                 )
