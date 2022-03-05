@@ -64,11 +64,9 @@ class _MyCoursesState extends State<MyCourses> {
     User2? _local = await User2.getLocalUser();
     final _databaseRef =
         _ref.child('users').child(_local!.userAuth).child('a_sessions');
-
     List<Offer> _offers = [];
     _databaseRef.onValue.listen((event) {
       for (DataSnapshot _courseName in event.snapshot.children) {
-        print(_courseName.value.toString());
         _offers.add(Offer.fromJson(_courseName.value));
       }
       setState(() {
@@ -98,7 +96,6 @@ List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
           IconButton(
             icon: const Icon(Icons.more_vert_outlined),
             onPressed: () {
-              print('here');
               Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -9,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class User2 {
   static final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  static final DatabaseReference _ref = FirebaseDatabase.instance.ref();
+  static final DatabaseReference ref =
+      FirebaseDatabase.instance.ref().child('users');
   static final String _localUser = "USER_CRED";
   String _email, _password, userAuth;
   int _currentTip = 0;
@@ -39,7 +40,7 @@ class User2 {
 
   void markSessionDone(
       String sessionid, Session _session, String courseName) async {
-    DatabaseReference _userRef = _ref.child('users').child(userAuth);
+    DatabaseReference _userRef = ref.child(userAuth);
     _userRef
         .child('c_sessions')
         .child(sessionid)
@@ -84,8 +85,7 @@ class User2 {
   }
 
   void assignToCourse(Offer _offer) {
-    _ref
-        .child('users')
+    ref
         .child(userAuth)
         .child('a_sessions')
         .child(_offer.name)
@@ -99,14 +99,13 @@ class User2 {
       };
 
   void _syncToServer() {
-    _ref.child('users').child(userAuth).set('1');
+    ref.child(userAuth).set('1');
 
     //Set to completed no intro sessions
   }
 
   static void assignToOffer(Offer _offer) {
-    _ref
-        .child('users')
+    ref
         .child('1')
         .child('assigned_sessions')
         .child(_offer.name)
@@ -114,7 +113,7 @@ class User2 {
   }
 
   void sendTip(List<String> test) {
-    _ref
+    ref
         .child('improvement')
         .child(userAuth)
         .child(_currentTip.toString())
@@ -158,7 +157,8 @@ class User2 {
 
   static Future<bool> isManager() async {
     User2? user2 = await getLocalUser();
-    DataSnapshot snap = await _ref
+    DataSnapshot snap = await FirebaseDatabase.instance
+        .ref()
         .child('admins')
         .child(user2!.userAuth)
         .child('isadmin')
@@ -168,11 +168,8 @@ class User2 {
   }
 
   Future<String> getNrOfAssignedCourses() async {
-    DataSnapshot data = await _ref
-        .child('users')
-        .child(userAuth)
-        .child('assigned_sessions')
-        .get();
+    DataSnapshot data =
+        await ref.child(userAuth).child('assigned_sessions').get();
     String s = data.children.length.toString();
     return s;
   }
