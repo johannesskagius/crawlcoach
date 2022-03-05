@@ -52,8 +52,7 @@ class _ViewSessionsState extends State<ViewSessions> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => SessionPreview(
-                                _sessions.elementAt(index),
-                              )));
+                                _sessions.elementAt(index), '')));
                 },
                 leading: Text(
                   index.toString(),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crawl_course_3/courses/offer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +16,10 @@ class Store extends StatefulWidget {
 
 class _StoreState extends State<Store> {
   List<GestureDetector> _offers = [];
+  late StreamSubscription listen;
 
   Future<void> _listenToOffers() async {
-    Offer.courseRef.onValue.listen((event) {
+    listen = Offer.courseRef.onValue.listen((event) {
       List<GestureDetector> _offerItem = [];
       for (DataSnapshot _data in event.snapshot.children) {
         _offerItem.add(_gridItem(context, Offer.fromJson(_data.value)));
@@ -36,6 +39,13 @@ class _StoreState extends State<Store> {
   @override
   void dispose() {
     super.dispose();
+    listen.cancel();
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    listen.pause();
   }
 
   @override
@@ -79,7 +89,7 @@ GestureDetector _gridItem(BuildContext context, Offer _offer) {
           ),
           Table(
             columnWidths: const <int, TableColumnWidth>{
-              0: IntrinsicColumnWidth(),
+              0: FlexColumnWidth(),
               1: FlexColumnWidth(),
             },
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,

@@ -46,6 +46,7 @@ class User2 {
         .child(sessionid)
         .child(_session.sessionName)
         .set('');
+    print('cName: $courseName');
     _userRef
         .child('a_sessions')
         .child(courseName)
