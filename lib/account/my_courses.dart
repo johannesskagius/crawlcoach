@@ -44,11 +44,29 @@ class _MyCoursesState extends State<MyCourses> {
 
   Future<void> _activateListener() async {
     User2? _local = await User2.getLocalUser();
-    final _databaseRef =
-        _ref.child('users').child(_local!.userAuth).child('a_sessions');
     List<Offer> _offers = [];
-    _databaseRef.onValue.listen((event) {
+   _ref
+        .child('users')
+        .child(_local!.userAuth)
+        .child('a_sessions')
+        .onValue
+        .listen((event) {
       for (DataSnapshot _courseName in event.snapshot.children) {
+        if (!_courseName.hasChild('session')) {
+          String course = _courseName.key.toString();
+          //Add course to completed courses.
+          User2.ref
+              .child(_local.userAuth)
+              .child('c_courses')
+              .child(course)
+              .set('');
+          User2.ref
+              .child(_local.userAuth)
+              .child('a_sessions')
+              .child(course)
+              .remove();
+          break;
+        }
         _offers.add(Offer.fromJson(_courseName.value));
       }
       setState(() {

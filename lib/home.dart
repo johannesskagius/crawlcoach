@@ -31,36 +31,36 @@ class _HomeState extends State<Home> {
         ),
         body: Center(
             child: Stack(
-              alignment: Alignment.topCenter,
+          alignment: Alignment.topCenter,
+          children: [
+            Container(
+              child: controller!.value.isInitialized
+                  ? AspectRatio(
+                      aspectRatio: controller!.value.aspectRatio,
+                      child: VideoPlayer(controller!),
+                    )
+                  : const CircularProgressIndicator(),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  child: controller!.value.isInitialized
-                      ? AspectRatio(
-                    aspectRatio: controller!.value.aspectRatio,
-                    child: VideoPlayer(controller!),
-                  )
-                      : const CircularProgressIndicator(),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Today is your opportunity to build the tomorrow you',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'Today is your opportunity to build the tomorrow you',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                    Column(
-                      children: _previews,
-                    ),
-                  ],
+                  children: _previews,
                 ),
               ],
-            )));
+            ),
+          ],
+        )));
   }
 
   Future<void> _listenToAssigned() async {
@@ -71,6 +71,9 @@ class _HomeState extends State<Home> {
     _sub = _ref.onValue.listen((event) async {
       for (DataSnapshot _data in event.snapshot.children) {
         List<String> list = [];
+        if (!_data.hasChild('session')) {
+          break;
+        }
         list.add(_data.child('session').children.first.key.toString());
         list.add(_data.child('userID').value.toString());
         list.add(_data.key.toString());

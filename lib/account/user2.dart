@@ -43,10 +43,9 @@ class User2 {
     DatabaseReference _userRef = ref.child(userAuth);
     _userRef
         .child('c_sessions')
-        .child(sessionid)
+        .child(courseName)
         .child(_session.sessionName)
         .set('');
-    print('cName: $courseName');
     _userRef
         .child('a_sessions')
         .child(courseName)
@@ -169,9 +168,26 @@ class User2 {
   }
 
   Future<String> getNrOfAssignedCourses() async {
-    DataSnapshot data =
-        await ref.child(userAuth).child('assigned_sessions').get();
+    DataSnapshot data = await ref.child(userAuth).child('a_sessions').get();
     String s = data.children.length.toString();
     return s;
+  }
+
+  Future<int> getNrOfSessions() async {
+    DataSnapshot data = await ref.child(userAuth).child('a_sessions').get();
+    int count = 0;
+    for (DataSnapshot _child in data.children) {
+      count += _child.child('session').children.length;
+    }
+    return count;
+  }
+
+  Future<int> getDoneSessions() async {
+    DataSnapshot _data = await ref.child(userAuth).child('c_sessions').get();
+    int count = 0;
+    for (DataSnapshot _child in _data.children) {
+      count += _child.children.length;
+    }
+    return count;
   }
 }

@@ -15,14 +15,14 @@ class Store extends StatefulWidget {
 
 
 class _StoreState extends State<Store> {
-  List<GestureDetector> _offers = [];
+  List<Offer> _offers = [];
   late StreamSubscription listen;
 
   Future<void> _listenToOffers() async {
     listen = Offer.courseRef.onValue.listen((event) {
-      List<GestureDetector> _offerItem = [];
+      List<Offer> _offerItem = [];
       for (DataSnapshot _data in event.snapshot.children) {
-        _offerItem.add(_gridItem(context, Offer.fromJson(_data.value)));
+        _offerItem.add(Offer.fromJson(_data.value));
       }
       setState(() {
         _offers = _offerItem;
@@ -57,13 +57,57 @@ class _StoreState extends State<Store> {
           style: TextStyle(color: Colors.greenAccent),
         ),
       ),
-      body: GridView.count(
-        padding: const EdgeInsets.all(1),
-        // crossAxisSpacing: 1,
-        // mainAxisSpacing: 1,
-        crossAxisCount: 2,
-        children: _offers,
+      body: ListView.builder(
+        itemCount: _offers.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          BuyOffer(_offers.elementAt(index))));
+            },
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Center(
+                    child: Text(
+                      _offers.elementAt(index).name,
+                      style: const TextStyle(
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(_offers.elementAt(index).name),
+                  ),
+                  Image.asset(
+                    'assets/crawl.jpeg',
+                    fit: BoxFit.contain,
+                  ),
+                  Divider(),
+                  ListTile(
+                    title: Text(_offers.elementAt(index).price),
+                    trailing: const Icon(Icons.arrow_forward_ios_outlined),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
       ),
+      // body: GridView.count(
+      //   padding: const EdgeInsets.all(1),
+      //   // crossAxisSpacing: 1,
+      //   // mainAxisSpacing: 1,
+      //   crossAxisCount: 1,
+      //   children: _offers,
+      // ),
     );
   }
 }
@@ -75,34 +119,18 @@ GestureDetector _gridItem(BuildContext context, Offer _offer) {
           context, MaterialPageRoute(builder: (context) => BuyOffer(_offer)));
     },
     child: Card(
+      clipBehavior: Clip.antiAlias,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Center(
-            child: Text(
-              _offer.name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 15,
-              ),
-            ),
+          ListTile(
+            title: Text(_offer.name),
+            subtitle: Text(_offer.desc),
           ),
-          Table(
-            columnWidths: const <int, TableColumnWidth>{
-              0: FlexColumnWidth(),
-              1: FlexColumnWidth(),
-            },
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            children: <TableRow>[
-              TableRow(children: [
-                _textContainer('Sessions: '),
-                _textContainer(_offer.listOfSessions.length.toString()),
-              ]),
-              TableRow(children: [
-                _textContainer('Price: '),
-                _textContainer(_offer.price),
-              ]),
-            ],
+          Padding(padding: const EdgeInsets.all(0), child: Text(_offer.desc)),
+          Image.asset(
+            'assets/crawl.jpeg',
+            fit: BoxFit.contain,
           ),
         ],
       ),
