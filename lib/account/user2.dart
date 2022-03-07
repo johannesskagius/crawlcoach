@@ -11,11 +11,13 @@ class User2 {
   static final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   static final DatabaseReference ref =
       FirebaseDatabase.instance.ref().child('users');
-  static final String _localUser = "USER_CRED";
+  static const String _localUser = "USER_CRED";
   String _email, _password, userAuth;
   int _currentTip = 0;
 
   User2(this._email, this._password, this.userAuth);
+
+  get userID => null;
 
   static Future<String?> createUser(String email, String password) async {
     try {

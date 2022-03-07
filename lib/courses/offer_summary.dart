@@ -17,37 +17,9 @@ class OfferSummary extends StatelessWidget {
       appBar: AppBar(
         title: const Text('summary'),
       ),
-      body: SizedBox(
-        width: _width,
-        height: _height,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Name: '),
-                Text(_offer.name),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Desc: '),
-                Text(_offer.price),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Nr och exercises: '),
-                Text(_offer.listOfSessions.length.toString()),
-              ],
-            ),
-          ],
-        ),
-      ),
+      body: _offer.previewTable(_width, _height),
       bottomSheet: ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
           _ref
               .child('courses')
               .child(_offer.name.toString())

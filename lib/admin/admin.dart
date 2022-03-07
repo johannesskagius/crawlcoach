@@ -28,7 +28,7 @@ class _AdminState extends State<Admin> {
                     child: const Text('Add Offer')),
                 ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/addoffer');
+                      Navigator.pushNamed(context, '/viewOffers');
                     },
                     child: const Text('View my offers')),
               ],

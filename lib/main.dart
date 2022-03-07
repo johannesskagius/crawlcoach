@@ -14,6 +14,7 @@ import 'admin/add_session/add_session.dart';
 import 'admin/add_session/view_sessions.dart';
 import 'admin/admin.dart';
 import 'courses/add_offer.dart';
+import 'courses/view_offers.dart';
 import 'home.dart';
 import 'store.dart';
 
@@ -31,10 +32,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/addsession': (context) => const AddSession(),
+        '/viewSessions': (context) => const ViewSessions(),
         '/addoffer': (context) => const AddOffer(),
+        '/viewOffers': (context) => const ViewOffers(),
         '/addexercise': (context) => const AddExercise(),
         '/viewexercises': (context) => const ViewExercises(),
-        '/viewSessions': (context) => const ViewSessions(),
       },
       theme:
           ThemeData(brightness: Brightness.dark, primaryColor: Colors.blueGrey),

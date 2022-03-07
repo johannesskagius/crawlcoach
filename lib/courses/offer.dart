@@ -1,5 +1,5 @@
-
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
@@ -50,6 +50,44 @@ class Offer {
   int get hashCode => name.hashCode ^ userID.hashCode;
 
   factory Offer.fromJson(dynamic json) => _offerFromJson(json);
+
+  Table previewTable(double _width, double _height) {
+    const double headerSize = 18;
+    return Table(
+      columnWidths: <int, TableColumnWidth>{
+        0: FixedColumnWidth(_width * 0.35),
+        1: const FlexColumnWidth(),
+      },
+      border: TableBorder.all(),
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: [
+        TableRow(children: <Widget>[
+          const TableCell(
+              child: Text(
+            'Name:',
+            style: TextStyle(fontSize: headerSize, fontWeight: FontWeight.bold),
+          )),
+          TableCell(child: Text(name)),
+        ]),
+        TableRow(children: <Widget>[
+          const TableCell(
+              child: Text('Price:',
+                  style: TextStyle(
+                      fontSize: headerSize, fontWeight: FontWeight.bold))),
+          TableCell(
+            child: Text(price),
+          ),
+        ]),
+        TableRow(children: <Widget>[
+          const TableCell(
+              child: Text('Description:',
+                  style: TextStyle(
+                      fontSize: headerSize, fontWeight: FontWeight.bold))),
+          TableCell(child: Text(desc)),
+        ]),
+      ],
+    );
+  }
 }
 
 Offer _offerFromJson(dynamic json) {
