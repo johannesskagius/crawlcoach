@@ -54,7 +54,7 @@ class _MyCoursesState extends State<MyCourses> {
         .child(_local!.userAuth)
         .child('a_sessions')
         .onValue
-        .listen((event) {
+        .listen((event) async {
       for (DataSnapshot _courseName in event.snapshot.children) {
         if (!_courseName.hasChild('session')) {
           String course = _courseName.key.toString();

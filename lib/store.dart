@@ -29,7 +29,6 @@ class _StoreState extends State<Store> {
     for (DataSnapshot _data in dataSnap.children) {
       _alreadyAssigned.add(Offer.fromJson(_data.value));
     }
-    for (DataSnapshot _data in dataSnap2.children) {}
 
     listen = Offer.courseRef.onValue.listen((event) {
       List<Offer> _offerItem = [];
