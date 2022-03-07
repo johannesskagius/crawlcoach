@@ -35,14 +35,16 @@ class _MediaState extends State<Media> {
   final asset = 'assets/videos/IMG_4498_HD.mp4';
   List<SessionPreview> _previews = [];
   VideoPlayerController? controller;
-  late StreamSubscription _sub;
 
   Future<void> _listenToAssigned() async {
+    if (User2.firebaseAuth.currentUser!.isAnonymous) {
+      return;
+    }
     final _local = await User2.getLocalUser();
     final _ref = User2.ref.child(_local!.userAuth).child('a_sessions');
     Map<String, List<String>> _nextInAssCourse = {};
     List<SessionPreview> nextInAssigned = [];
-    _sub = _ref.onValue.listen((event) async {
+    _ref.onValue.listen((event) async {
       for (DataSnapshot _data in event.snapshot.children) {
         List<String> list = [];
         if (!_data.hasChild('session')) {
@@ -71,7 +73,6 @@ class _MediaState extends State<Media> {
   @override
   void dispose() {
     controller!.dispose();
-    _sub.cancel();
     super.dispose();
   }
 

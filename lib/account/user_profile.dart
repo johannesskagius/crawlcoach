@@ -77,6 +77,8 @@ class UpdateUser extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {
                     User2.logOutUser();
+                    print(User2.firebaseAuth.currentUser!.uid);
+                    Navigator.pop(context);
                   },
                   child: const Text('Sign out')),
             ],

@@ -16,18 +16,30 @@ class MyCourses extends StatefulWidget {
 class _MyCoursesState extends State<MyCourses> {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   List<Offer> _assigned2 = [];
+  bool isSignedIn = false;
+
+  void _setSignedIn() {
+    setState(() {
+      isSignedIn = User2.firebaseAuth.currentUser!.isAnonymous;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      child: CustomScrollView(
-        slivers: _sliverList(context, _assigned2),
-      ),
-    );
+    return isSignedIn
+        ? const Center(
+            child: Text('Sign in to see your courses here'),
+          )
+        : Scrollbar(
+            child: CustomScrollView(
+              slivers: _sliverList(context, _assigned2),
+            ),
+          );
   }
 
   @override
   void initState() {
+    _setSignedIn();
     _activateListener();
     super.initState();
   }
@@ -47,6 +59,9 @@ class _MyCoursesState extends State<MyCourses> {
   }
 
   Future<void> _activateListener() async {
+    if (User2.firebaseAuth.currentUser!.isAnonymous) {
+      return;
+    }
     User2? _local = await User2.getLocalUser();
     List<Offer> _offers = [];
     _ref

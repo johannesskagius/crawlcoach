@@ -72,6 +72,9 @@ class _LayoutState extends State<Layout> {
   Future<void> _checkIfManager() async {
     User2? user = await User2.getLocalUser();
     bool manager = false;
+    if (User2.firebaseAuth.currentUser!.isAnonymous) {
+      return;
+    }
     FirebaseDatabase.instance
         .ref()
         .child('admins')

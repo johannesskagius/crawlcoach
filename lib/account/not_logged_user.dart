@@ -16,6 +16,7 @@ class LogInUser extends StatelessWidget {
       child: Form(
         key: _formKey,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _emailForm(_txtEditList.elementAt(0)),
             _passwordForm(_txtEditList.elementAt(1)),
@@ -27,7 +28,8 @@ class LogInUser extends StatelessWidget {
                 }
               },
               child: const Text('Log in'),
-            )
+            ),
+            const Text('Create user by swiping down'),
           ],
         ),
       ),
@@ -58,6 +60,7 @@ class CreateUser extends StatelessWidget {
       child: Form(
         key: _formKey,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _emailForm(_txtEditList.elementAt(0)),
             _passwordForm(_txtEditList.elementAt(1)),
@@ -79,7 +82,7 @@ class CreateUser extends StatelessWidget {
                 }
               },
               child: const Text('Create user'),
-            )
+            ),
           ],
         ),
       ),
