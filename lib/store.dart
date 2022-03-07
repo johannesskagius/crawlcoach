@@ -24,8 +24,6 @@ class _StoreState extends State<Store> {
     List<Offer> _alreadyAssigned = [];
     final dataSnap =
         await User2.ref.child(user!.userAuth).child('a_sessions').get();
-    final dataSnap2 =
-        await User2.ref.child(user.userAuth).child('c_courses').get();
     for (DataSnapshot _data in dataSnap.children) {
       _alreadyAssigned.add(Offer.fromJson(_data.value));
     }
