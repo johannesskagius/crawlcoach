@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
                 Container(
                   alignment: Alignment.center,
                   child: const Text(
-                    'Today is your opportunity to build the tomorrow you',
+                    'Today is your opportunity to build the tomorrow you want',
                     style: TextStyle(
                       fontSize: 15,
                       fontStyle: FontStyle.italic,

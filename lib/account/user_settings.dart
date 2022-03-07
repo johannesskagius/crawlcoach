@@ -23,6 +23,9 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final _height =
+        (MediaQuery.of(context).size.height - AppBar().preferredSize.height) *
+            0.4;
     return Container(
       margin: const EdgeInsets.all(8),
       color: Colors.transparent,
@@ -40,15 +43,15 @@ class _UserSettingsState extends State<UserSettings> {
             ),
           ),
           SizedBox(
-            height: (MediaQuery.of(context).size.height -
-                    AppBar().preferredSize.height) *
-                0.4,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: _cards.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _cards.elementAt(index);
-              },
+            height: _height,
+            child: Scrollbar(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: _cards.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _cards.elementAt(index);
+                },
+              ),
             ),
           ),
         ],

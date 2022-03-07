@@ -4,6 +4,7 @@ import 'package:crawl_course_3/courses/offer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import 'account/user2.dart';
 import 'courses/buy_offer.dart';
 
 class Store extends StatefulWidget {
@@ -19,10 +20,25 @@ class _StoreState extends State<Store> {
   late StreamSubscription listen;
 
   Future<void> _listenToOffers() async {
+    final user = await User2.getLocalUser();
+    List<Offer> _alreadyAssigned = [];
+    final dataSnap =
+        await User2.ref.child(user!.userAuth).child('a_sessions').get();
+    final dataSnap2 =
+        await User2.ref.child(user.userAuth).child('c_courses').get();
+    for (DataSnapshot _data in dataSnap.children) {
+      _alreadyAssigned.add(Offer.fromJson(_data.value));
+    }
+    for (DataSnapshot _data in dataSnap2.children) {}
+
     listen = Offer.courseRef.onValue.listen((event) {
       List<Offer> _offerItem = [];
+
       for (DataSnapshot _data in event.snapshot.children) {
-        _offerItem.add(Offer.fromJson(_data.value));
+        Offer _offer = Offer.fromJson(_data.value);
+        if (!_alreadyAssigned.contains(_offer)) {
+          _offerItem.add(_offer);
+        }
       }
       setState(() {
         _offers = _offerItem;
@@ -57,87 +73,52 @@ class _StoreState extends State<Store> {
           style: TextStyle(color: Colors.greenAccent),
         ),
       ),
-      body: ListView.builder(
-        itemCount: _offers.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          BuyOffer(_offers.elementAt(index))));
-            },
-            child: Card(
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Center(
-                    child: Text(
-                      _offers.elementAt(index).name,
-                      style: const TextStyle(
-                        fontSize: 30,
+      body: Scrollbar(
+        child: ListView.builder(
+          itemCount: _offers.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            BuyOffer(_offers.elementAt(index))));
+              },
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Center(
+                      child: Text(
+                        _offers.elementAt(index).name,
+                        style: const TextStyle(
+                          fontSize: 30,
+                        ),
                       ),
                     ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(_offers.elementAt(index).name),
-                  ),
-                  Image.asset(
-                    'assets/crawl.jpeg',
-                    fit: BoxFit.contain,
-                  ),
-                  Divider(),
-                  ListTile(
-                    title: Text(_offers.elementAt(index).price),
-                    trailing: const Icon(Icons.arrow_forward_ios_outlined),
-                  )
-                ],
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(_offers.elementAt(index).name),
+                    ),
+                    Image.asset(
+                      'assets/crawl.jpeg',
+                      fit: BoxFit.contain,
+                    ),
+                    const Divider(),
+                    ListTile(
+                      title: Text(_offers.elementAt(index).price),
+                      trailing: const Icon(Icons.arrow_forward_ios_outlined),
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
-      // body: GridView.count(
-      //   padding: const EdgeInsets.all(1),
-      //   // crossAxisSpacing: 1,
-      //   // mainAxisSpacing: 1,
-      //   crossAxisCount: 1,
-      //   children: _offers,
-      // ),
     );
   }
-}
-
-GestureDetector _gridItem(BuildContext context, Offer _offer) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => BuyOffer(_offer)));
-    },
-    child: Card(
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ListTile(
-            title: Text(_offer.name),
-            subtitle: Text(_offer.desc),
-          ),
-          Padding(padding: const EdgeInsets.all(0), child: Text(_offer.desc)),
-          Image.asset(
-            'assets/crawl.jpeg',
-            fit: BoxFit.contain,
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Container _textContainer(String s) {
-  return Container(alignment: Alignment.centerLeft, child: Text(s));
 }

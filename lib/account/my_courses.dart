@@ -19,8 +19,10 @@ class _MyCoursesState extends State<MyCourses> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: _sliverList(context, _assigned2),
+    return Scrollbar(
+      child: CustomScrollView(
+        slivers: _sliverList(context, _assigned2),
+      ),
     );
   }
 
@@ -60,7 +62,7 @@ class _MyCoursesState extends State<MyCourses> {
               .child(_local.userAuth)
               .child('c_courses')
               .child(course)
-              .set('');
+              .set(_courseName.value);
           User2.ref
               .child(_local.userAuth)
               .child('a_sessions')

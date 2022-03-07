@@ -179,7 +179,16 @@ class UserEmail extends StatelessWidget {
 
 Container _title(double _height, String s) {
   return Container(
-      height: _height * 0.1, alignment: Alignment.center, child: Text(s));
+      margin: const EdgeInsets.all(8),
+      height: _height * 0.1,
+      alignment: Alignment.centerLeft,
+      child: Text(
+        s,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ));
 }
 
 Container _userInfo(double _height, String s, bool isActive) {
