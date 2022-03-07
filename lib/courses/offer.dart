@@ -38,6 +38,17 @@ class Offer {
     return _getOffers;
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Offer &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          userID == other.userID;
+
+  @override
+  int get hashCode => name.hashCode ^ userID.hashCode;
+
   factory Offer.fromJson(dynamic json) => _offerFromJson(json);
 }
 

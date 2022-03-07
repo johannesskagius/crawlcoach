@@ -15,22 +15,24 @@ class MyCourses extends StatefulWidget {
 
 class _MyCoursesState extends State<MyCourses> {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
-  Map<Object?, List<Object?>> _assigned = {};
   List<Offer> _assigned2 = [];
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      //slivers: _sliverList(context, _assigned),
       slivers: _sliverList(context, _assigned2),
     );
   }
 
   @override
   void initState() {
-    //_activateListener();
     _activateListener();
     super.initState();
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
   }
 
   @override
@@ -45,7 +47,7 @@ class _MyCoursesState extends State<MyCourses> {
   Future<void> _activateListener() async {
     User2? _local = await User2.getLocalUser();
     List<Offer> _offers = [];
-   _ref
+    _ref
         .child('users')
         .child(_local!.userAuth)
         .child('a_sessions')
@@ -54,7 +56,6 @@ class _MyCoursesState extends State<MyCourses> {
       for (DataSnapshot _courseName in event.snapshot.children) {
         if (!_courseName.hasChild('session')) {
           String course = _courseName.key.toString();
-          //Add course to completed courses.
           User2.ref
               .child(_local.userAuth)
               .child('c_courses')
@@ -67,7 +68,10 @@ class _MyCoursesState extends State<MyCourses> {
               .remove();
           break;
         }
-        _offers.add(Offer.fromJson(_courseName.value));
+        Offer newOffer = Offer.fromJson(_courseName.value);
+        if (!_offers.contains(newOffer)) {
+          _offers.add(newOffer);
+        }
       }
       setState(() {
         _assigned2 = _offers;
