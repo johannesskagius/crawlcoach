@@ -53,6 +53,7 @@ Container sessionCon(Session _session, BuildContext context) {
                     .child(user2!.userAuth)
                     .child(_session.sessionName)
                     .remove();
+                Navigator.pop(context);
               },
               child: const Text('Delete session')),
         ],

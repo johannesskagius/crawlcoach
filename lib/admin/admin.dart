@@ -45,7 +45,7 @@ class _AdminState extends State<Admin> {
                     onPressed: () {
                       Navigator.pushNamed(context, '/viewSessions');
                     },
-                    child: const Text('View my offers')),
+                    child: const Text('View my sessions')),
               ],
             ),
             Row(
