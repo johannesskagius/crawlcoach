@@ -7,61 +7,35 @@ import 'package:video_player/video_player.dart';
 
 import 'account/user2.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  final asset = 'assets/videos/IMG_4498_HD.mp4';
-  List<SessionPreview> _previews = [];
-  VideoPlayerController? controller;
-  late StreamSubscription _sub;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            '21th Swim',
-            style: TextStyle(color: Colors.greenAccent),
-          ),
+      appBar: AppBar(
+        title: const Text(
+          '21th Swim',
+          style: TextStyle(color: Colors.greenAccent),
         ),
-        body: Center(
-            child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Container(
-              child: controller!.value.isInitialized
-                  ? AspectRatio(
-                      aspectRatio: controller!.value.aspectRatio,
-                      child: VideoPlayer(controller!),
-                    )
-                  : const CircularProgressIndicator(),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Today is your opportunity to build the tomorrow you want',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ),
-                Column(
-                  children: _previews,
-                ),
-              ],
-            ),
-          ],
-        )));
+      ),
+      body: const Media(),
+    );
   }
+}
+
+class Media extends StatefulWidget {
+  const Media({Key? key}) : super(key: key);
+
+  @override
+  _MediaState createState() => _MediaState();
+}
+
+class _MediaState extends State<Media> {
+  final asset = 'assets/videos/IMG_4498_HD.mp4';
+  List<SessionPreview> _previews = [];
+  VideoPlayerController? controller;
+  late StreamSubscription _sub;
 
   Future<void> _listenToAssigned() async {
     final _local = await User2.getLocalUser();
@@ -110,5 +84,41 @@ class _HomeState extends State<Home> {
       ..setLooping(true)
       ..initialize().then((_) => controller!.play())
       ..setVolume(0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        Container(
+          child: controller!.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: controller!.value.aspectRatio,
+                  child: VideoPlayer(controller!),
+                )
+              : const CircularProgressIndicator(),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              child: const Text(
+                'Today is your opportunity to build the tomorrow you want',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            Column(
+              children: _previews,
+            ),
+          ],
+        ),
+      ],
+    ));
   }
 }
