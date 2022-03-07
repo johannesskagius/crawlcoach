@@ -69,6 +69,44 @@ class Session {
   String toString() {
     return 'Session{_sessionName: $sessionName, _desc: $desc}';
   }
+
+  Table previewTable(double _width, double _height) {
+    const double headerSize = 18;
+    return Table(
+      columnWidths: <int, TableColumnWidth>{
+        0: FixedColumnWidth(_width * 0.35),
+        1: const FlexColumnWidth(),
+      },
+      border: TableBorder.all(),
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: [
+        TableRow(children: <Widget>[
+          const TableCell(
+              child: Text(
+            'Name:',
+            style: TextStyle(fontSize: headerSize, fontWeight: FontWeight.bold),
+          )),
+          TableCell(child: Text(sessionName)),
+        ]),
+        TableRow(children: <Widget>[
+          const TableCell(
+              child: Text('Nr of exercises:',
+                  style: TextStyle(
+                      fontSize: headerSize, fontWeight: FontWeight.bold))),
+          TableCell(
+            child: Text(exercises.keys.length.toString()),
+          ),
+        ]),
+        TableRow(children: <Widget>[
+          const TableCell(
+              child: Text('Description:',
+                  style: TextStyle(
+                      fontSize: headerSize, fontWeight: FontWeight.bold))),
+          TableCell(child: Text(desc)),
+        ]),
+      ],
+    );
+  }
 }
 
 Session _sessionFromJson(dynamic json) {

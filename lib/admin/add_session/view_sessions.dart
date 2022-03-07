@@ -1,5 +1,6 @@
 import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/session.dart';
+import 'package:crawl_course_3/session/update_session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -46,13 +47,11 @@ class _ViewSessionsState extends State<ViewSessions> {
             return Card(
               child: ListTile(
                 onTap: () async {
-                  User2? user = await User2.getLocalUser();
-
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SessionPreview(
-                                _sessions.elementAt(index), '')));
+                          builder: (context) =>
+                              UpdateSession(_sessions.elementAt(index))));
                 },
                 leading: Text(
                   index.toString(),
