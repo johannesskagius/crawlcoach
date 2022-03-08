@@ -41,6 +41,7 @@ dependencies:
   flutter_switch: ^0.3.2
   sign_in_with_apple: ^3.3.0
   youtube_player_flutter: ^8.0.0
+  image_picker: ^0.8.4+10
 
 dev_dependencies:
   flutter_test:

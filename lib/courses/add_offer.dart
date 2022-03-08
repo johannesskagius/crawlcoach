@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'offer_chose_sessions.dart';
 
@@ -11,17 +12,12 @@ class AddOffer extends StatelessWidget {
     final _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Add Offer'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: Center(
-        child: SizedBox(
-          width: _width * 0.9,
-          height: _height,
-          child: SessionGeneral(),
-        ),
-      ),
+      body: SessionGeneral(),
     );
   }
 }
@@ -33,29 +29,35 @@ class SessionGeneral extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _txtEditList = List.generate(3, (index) => TextEditingController());
-    return Container(
-      margin: const EdgeInsets.all(8),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            _courseName(_txtEditList),
-            _courseDesc(_txtEditList),
-            _coursePrice(_txtEditList),
-            ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChooseSessions(
-                                _txtEditList.elementAt(0).value.text,
-                                _txtEditList.elementAt(1).value.text,
-                                _txtEditList.elementAt(2).value.text)));
-                  }
-                },
-                child: const Text('Pick sessions')),
-          ],
+    return GestureDetector(
+      onTap: () {
+        WidgetsBinding.instance?.focusManager.primaryFocus?.unfocus();
+      },
+      child: Container(
+        margin: const EdgeInsets.all(8),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const ImageView(),
+              _courseName(_txtEditList),
+              _courseDesc(_txtEditList),
+              _coursePrice(_txtEditList),
+              ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChooseSessions(
+                                  _txtEditList.elementAt(0).value.text,
+                                  _txtEditList.elementAt(1).value.text,
+                                  _txtEditList.elementAt(2).value.text)));
+                    }
+                  },
+                  child: const Text('Pick sessions')),
+            ],
+          ),
         ),
       ),
     );
@@ -108,6 +110,60 @@ class SessionGeneral extends StatelessWidget {
           return 'Session name';
         }
       },
+    );
+  }
+}
+
+class ImageView extends StatefulWidget {
+  const ImageView({Key? key}) : super(key: key);
+
+  @override
+  _ImageViewState createState() => _ImageViewState();
+}
+
+class _ImageViewState extends State<ImageView> {
+  String _asset = 'assets/human.jpeg';
+
+  Future<void> _getImage(BuildContext c) async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(() {
+      _asset = pickedFile!.path;
+    });
+    Navigator.pop(c);
+  }
+
+  Future<void> _showChoiceDialog() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Choose option'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  const Divider(height: 1),
+                  ListTile(
+                    title: const Text('Gallery'),
+                    leading: const Icon(Icons.photo_album_outlined),
+                    onTap: () {
+                      _getImage(context);
+                    },
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onLongPress: () async {
+        _showChoiceDialog();
+      },
+      child: Image.asset(_asset),
     );
   }
 }

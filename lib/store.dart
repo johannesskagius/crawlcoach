@@ -36,19 +36,21 @@ class _StoreContentState extends State<StoreContent> {
 
   void initiate() async {
     if (User2.firebaseAuth.currentUser!.isAnonymous) {
-      _listenToOffers(Offer.courseRef);
+      _listenToOffers(null);
     } else {
-      print('here');
       final user = await User2.getLocalUser();
       _listenToOffers(User2.ref.child(user!.userAuth).child('a_sessions'));
     }
   }
 
-  Future<void> _listenToOffers(DatabaseReference _ref) async {
+  Future<void> _listenToOffers(DatabaseReference? _ref) async {
     List<Offer> _alreadyAssigned = [];
-    final dataSnap = await _ref.get();
-    for (DataSnapshot _data in dataSnap.children) {
-      _alreadyAssigned.add(Offer.fromJson(_data.value));
+
+    if (_ref == null) {
+      final dataSnap = await _ref!.get();
+      for (DataSnapshot _data in dataSnap.children) {
+        _alreadyAssigned.add(Offer.fromJson(_data.value));
+      }
     }
 
     Offer.courseRef.onValue.listen((event) {

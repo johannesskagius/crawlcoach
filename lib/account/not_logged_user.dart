@@ -40,7 +40,6 @@ class LogInUser extends StatelessWidget {
     bool loggedIn = await User2.signInUser(email, pss);
     if (loggedIn) {
       //reload;
-
     }
   }
 }
@@ -53,8 +52,6 @@ class CreateUser extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
         List.generate(2, (index) => TextEditingController());
-    _txtEditList.elementAt(0).text = 'test@gmail.com';
-    _txtEditList.elementAt(1).text = 'test12';
     return Container(
       margin: const EdgeInsets.all(8),
       child: Form(
