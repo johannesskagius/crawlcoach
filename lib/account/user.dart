@@ -12,8 +12,8 @@ class LocalUser {
   String _password, _email, _userAuth2;
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   Map<String, List<dynamic>> assignedCourses = {};
-  List<String> _listOfSessions = [];
-  List<String> _completedSessions = [];
+  final List<String> _listOfSessions = [];
+  final List<String> _completedSessions = [];
 
   LocalUser(this._email, this._password, this._userAuth2);
 

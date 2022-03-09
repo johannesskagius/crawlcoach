@@ -1,5 +1,4 @@
 import 'package:crawl_course_3/account/user2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LogInUser extends StatelessWidget {

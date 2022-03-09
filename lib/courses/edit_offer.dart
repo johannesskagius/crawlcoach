@@ -42,7 +42,7 @@ Container offerInfo(Offer _offer, BuildContext context) {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChooseSessions(
-                          _offer.name, _offer.price, _offer.desc)));
+                          _offer.name, _offer.price, _offer.desc, null)));
             },
             child: ListView.builder(
               shrinkWrap: true,

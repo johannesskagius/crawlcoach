@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -7,9 +9,10 @@ import 'offer.dart';
 import 'offer_summary.dart';
 
 class ChooseSessions extends StatefulWidget {
-  const ChooseSessions(this._name, this._price, this._desc, {Key? key})
+  ChooseSessions(this._name, this._price, this._desc, this.imgPath, {Key? key})
       : super(key: key);
   final String _name, _price, _desc;
+  File? imgPath;
 
   @override
   _ChooseSessionsState createState() => _ChooseSessionsState();
@@ -17,7 +20,6 @@ class ChooseSessions extends StatefulWidget {
 
 class _ChooseSessionsState extends State<ChooseSessions> {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
-
   List<String> _chosens = [];
   final Map<String, String> _chosens2 = {};
 
@@ -95,12 +97,14 @@ class _ChooseSessionsState extends State<ChooseSessions> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OfferSummary(Offer(
-                                  name: widget._name,
-                                  listOfSessions: _chosens2,
-                                  price: widget._price,
-                                  desc: widget._desc,
-                                  userID: _user!.userAuth))));
+                              builder: (context) => OfferSummary(
+                                  Offer(
+                                      name: widget._name,
+                                      listOfSessions: _chosens2,
+                                      price: widget._price,
+                                      desc: widget._desc,
+                                      userID: _user!.userAuth),
+                                  widget.imgPath)));
                     },
                     child: const Text('Go to summary'),
                   ),

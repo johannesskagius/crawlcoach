@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:path_provider/path_provider.dart';
 
 @JsonSerializable()
 class Offer {
@@ -11,6 +15,7 @@ class Offer {
   final String name;
   final String desc;
   final String userID;
+  String downloadUrl = '';
 
   Offer(
       {required this.name,
@@ -87,6 +92,70 @@ class Offer {
         ]),
       ],
     );
+  }
+
+  Future<TaskSnapshot> uploadImageToServer(File _img) async {
+    final _s = FirebaseStorage.instance
+        .ref()
+        .child('courseimages/')
+        .child(userID) //TODO ändra till sessionID
+        .child(name);
+    downloadUrl = _s.fullPath;
+    return await _s.putFile(_img);
+  }
+
+  Card offerCard() {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Center(
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 30,
+              ),
+            ),
+          ),
+          const Divider(),
+          FutureBuilder(
+            future: downloadFile(),
+            builder: (BuildContext context, AsyncSnapshot<File?> snapshot) {
+              if (!snapshot.hasData) {
+                return const Text('error');
+              }
+              return Image.file(snapshot.requireData!);
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(name),
+          ),
+          const Divider(),
+          ListTile(
+            title: Text(price),
+            trailing: const Icon(Icons.arrow_forward_ios_outlined),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<File?> downloadFile() async {
+    final _s = FirebaseStorage.instance
+        .ref('courseimages/' + userID) //TODO ändra till sessionID
+        .child(name);
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    //File downloadToFile = File('${appDocDir.path}/download-logo.png');
+    File downloadToFile = File('${appDocDir.path}/name.jpg');
+    print(downloadToFile.path);
+    await _s.writeToFile(downloadToFile);
+    try {
+      return downloadToFile;
+    } catch (e) {
+      return null;
+    }
   }
 }
 

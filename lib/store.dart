@@ -96,36 +96,7 @@ class _StoreContentState extends State<StoreContent> {
                       builder: (context) =>
                           BuyOffer(_offers.elementAt(index))));
             },
-            child: Card(
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Center(
-                    child: Text(
-                      _offers.elementAt(index).name,
-                      style: const TextStyle(
-                        fontSize: 30,
-                      ),
-                    ),
-                  ),
-                  const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(_offers.elementAt(index).name),
-                  ),
-                  Image.asset(
-                    'assets/crawl.jpeg',
-                    fit: BoxFit.contain,
-                  ),
-                  const Divider(),
-                  ListTile(
-                    title: Text(_offers.elementAt(index).price),
-                    trailing: const Icon(Icons.arrow_forward_ios_outlined),
-                  )
-                ],
-              ),
-            ),
+            child: _offers.elementAt(index).offerCard(),
           );
         },
       ),
