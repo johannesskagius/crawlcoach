@@ -126,6 +126,7 @@ class SessionPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 8,
       color: Colors.grey.withOpacity(0.5),
       child: ListTile(
         onTap: () async {
@@ -158,6 +159,7 @@ class SessionPreviewNoSession extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 8,
       clipBehavior: Clip.antiAlias,
       child: ListTile(
         onTap: () async {
@@ -170,10 +172,10 @@ class SessionPreviewNoSession extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => Session00(
-                        session: session,
-                        id: _sessionKey,
-                        offerName: _offerName,
-                      )));
+                    session: session,
+                    id: _sessionKey,
+                    offerName: _offerName,
+                  )));
         },
         title: Text(
           _sessionName,

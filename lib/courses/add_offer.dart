@@ -13,16 +13,19 @@ class AddOffer extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Add Offer'),
+        title: const Text(
+          'Add Offer',
+          style: TextStyle(color: Colors.greenAccent),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: SessionGeneral(),
+      body: const SessionGeneral(),
     );
   }
 }
 
 class SessionGeneral extends StatefulWidget {
-  SessionGeneral({Key? key}) : super(key: key);
+  const SessionGeneral({Key? key}) : super(key: key);
 
   @override
   State<SessionGeneral> createState() => _SessionGeneralState();
@@ -79,10 +82,6 @@ class _SessionGeneralState extends State<SessionGeneral> {
                     child: _photo != null
                         ? Image.file(_photo!)
                         : Image.asset(_asset),
-                    // child: Image.asset(
-                    //   _asset, f
-                    //   fit: BoxFit.fill,
-                    // ),
                   ),
                   _goNext(_formKey, _txtEditList, _asset)
                 ]),

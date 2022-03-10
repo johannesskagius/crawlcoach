@@ -40,7 +40,10 @@ class _ViewOffersState extends State<ViewOffers> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('My Offers'),
+          title: const Text(
+            'My Offers',
+            style: TextStyle(color: Colors.greenAccent),
+          ),
         ),
         body: ListView.builder(
           itemCount: _offers.length,

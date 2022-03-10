@@ -26,7 +26,10 @@ class AddExercise extends StatelessWidget {
           WidgetsBinding.instance?.focusManager.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Add Exercise'),
+          title: const Text(
+            'Add Exercise',
+            style: TextStyle(color: Colors.greenAccent),
+          ),
         ),
         resizeToAvoidBottomInset: false,
         body: Container(

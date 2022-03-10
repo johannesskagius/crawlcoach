@@ -41,7 +41,10 @@ class _ViewExercisesState extends State<ViewExercises> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('My Exercises'),
+          title: const Text(
+            'My Exercises',
+            style: TextStyle(color: Colors.greenAccent),
+          ),
         ),
         body: ListView.builder(
           itemCount: _exercises.length,

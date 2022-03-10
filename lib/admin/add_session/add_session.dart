@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'add_session_choose_exercises.dart';
@@ -13,7 +12,10 @@ class AddSession extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Session'),
+        title: const Text(
+          'Add Session',
+          style: TextStyle(color: Colors.greenAccent),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Center(
@@ -27,9 +29,16 @@ class AddSession extends StatelessWidget {
   }
 }
 
-class SessionGeneral extends StatelessWidget {
+class SessionGeneral extends StatefulWidget {
   SessionGeneral({Key? key}) : super(key: key);
+
+  @override
+  State<SessionGeneral> createState() => _SessionGeneralState();
+}
+
+class _SessionGeneralState extends State<SessionGeneral> {
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
@@ -81,7 +90,6 @@ class SessionGeneral extends StatelessWidget {
     return TextFormField(
       keyboardType: TextInputType.text,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      autofocus: true,
       controller: _txtEditList.elementAt(0),
       decoration: const InputDecoration(
           hintText: 'Intro crawl', labelText: 'Session name'),

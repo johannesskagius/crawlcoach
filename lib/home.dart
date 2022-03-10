@@ -61,8 +61,6 @@ class _MediaState extends State<Media> {
         String _sId = _nextInAssCourse[session]!.elementAt(1);
         String _course = _nextInAssCourse[session]!.elementAt(2);
         final data = await Session.sessionRef.child(_sId).child(_sName).get();
-        print(session);
-        print(data.key);
         nextInAssigned
             .add(SessionPreview(Session.fromJson(data.value), _course));
       }

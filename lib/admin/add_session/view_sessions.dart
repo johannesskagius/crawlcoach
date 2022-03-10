@@ -39,7 +39,10 @@ class _ViewSessionsState extends State<ViewSessions> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('My Sessions'),
+          title: const Text(
+            'My Sessions',
+            style: TextStyle(color: Colors.greenAccent),
+          ),
         ),
         body: ListView.builder(
           itemCount: _sessions.length,
