@@ -1,5 +1,6 @@
 import 'package:crawl_course_3/account/user2.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'user_profile.dart';
@@ -23,35 +24,83 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final _height =
-        (MediaQuery.of(context).size.height - AppBar().preferredSize.height) *
-            0.4;
     return Container(
       margin: const EdgeInsets.all(8),
       color: Colors.transparent,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => UpdateUser(widget._user))),
-            child: Container(
-              color: Colors.transparent,
-              child: UserEmail(false, widget._user),
+          const Text(
+            'user',
+            style: TextStyle(
+              fontWeight: FontWeight.w100,
             ),
           ),
-          SizedBox(
-            height: _height,
-            child: Scrollbar(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _cards.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _cards.elementAt(index);
-                },
+          Material(
+            elevation: 4,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black12,
+                border: _border(),
               ),
+              child: GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UpdateUser(widget._user))),
+                child: Container(
+                  color: Colors.transparent,
+                  child: UserEmail(false, widget._user),
+                ),
+              ),
+            ),
+          ),
+          const Divider(
+            height: 16,
+          ),
+          Material(
+            elevation: 8,
+            child: Container(
+              child: _cards.isNotEmpty
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Completed courses',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w100,
+                          ),
+                        ),
+                        Scrollbar(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _cards.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return _cards.elementAt(index);
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black12,
+                        border: _border(),
+                      ),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: const [
+                          ListTile(
+                            title: Text(
+                                'Your completed courses will be saved here',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w100,
+                                )),
+                          )
+                        ],
+                      ),
+                    ),
             ),
           ),
         ],
@@ -75,4 +124,8 @@ class _UserSettingsState extends State<UserSettings> {
       _cards = _courses;
     });
   }
+}
+
+Border _border() {
+  return Border.all(color: Colors.black12, width: 1);
 }

@@ -85,7 +85,6 @@ class LocalUser {
           .get();
       return Session.fromJson(_session);
     } catch (e) {
-      print(e);
       throw NullThrownError();
     }
   }
@@ -113,38 +112,25 @@ class LocalUser {
   }
 
   void saveToSharedPreferences() async {
-    try {
       SharedPreferences sharedPreferences =
       await SharedPreferences.getInstance();
       String json = jsonEncode(toJson());
       await sharedPreferences.setString('USER_CRED', json + '\n');
-    } catch (e) {
-      print(e);
-    }
   }
 
   void syncToServer() async {
-    try {
-      await _ref
-          .child('users')
-          .child(_userAuth2)
-          .update(toJson())
-          .catchError((o) => print(o));
-      //Set to completed no intro sessions
-      await _ref
-          .child('users')
-          .child(_userAuth2)
-          .child('intro_sessions')
-          .set(false);
-      await _ref
-          .child('admins')
-          .child(_userAuth2)
-          .child('isadmin')
-          .set(true); //TODO Take away later,
-
-    } catch (e) {
-      print(e);
-    }
+      await _ref.child('users').child(_userAuth2).update(toJson());
+    //Set to completed no intro sessions
+    await _ref
+        .child('users')
+        .child(_userAuth2)
+        .child('intro_sessions')
+        .set(false);
+    await _ref
+        .child('admins')
+        .child(_userAuth2)
+        .child('isadmin')
+        .set(true); //TODO Take away later,
   }
 
   Map<String, dynamic> toJson() => {

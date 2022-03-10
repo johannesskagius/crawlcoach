@@ -29,6 +29,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive,
+        overlays: [SystemUiOverlay.top]);
     return MaterialApp(
       routes: {
         '/addsession': (context) => const AddSession(),

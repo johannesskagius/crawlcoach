@@ -58,6 +58,7 @@ Container offerInfo(Offer _offer, BuildContext context) {
           ElevatedButton(
               onPressed: () {
                 Offer.courseRef.child(_offer.name).remove();
+                _offer.removeOfferPic();
                 Navigator.pop(context);
               },
               child: const Text('Remove course'))

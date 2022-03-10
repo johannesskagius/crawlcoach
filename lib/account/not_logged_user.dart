@@ -131,6 +131,7 @@ TextFormField _emailForm(TextEditingController _controller) {
       if (!isValid) {
         return 'please enter a correct email';
       }
+      return null;
     },
   );
 }
@@ -149,6 +150,7 @@ TextFormField _passwordForm(TextEditingController _controller) {
       } else if (value.isNotEmpty && value.length < 5) {
         return 'Please enter a password longer than 5 characters';
       }
+      return null;
     },
   );
 }

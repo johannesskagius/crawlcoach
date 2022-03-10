@@ -168,8 +168,17 @@ class Offer {
     );
   }
 
+  Future<void> removeOfferPic() async {
+    FirebaseStorage.instance
+        .ref()
+        .child('courseimages/')
+        .child(userID) //TODO ändra till sessionID
+        .child(name)
+        .delete();
+  }
+
   Card offerCard(double _height) {
-    final cardSize = _height / 4;
+    final cardSize = _height / 2;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -200,7 +209,7 @@ class Offer {
                       height: cardSize,
                       child: Image.file(
                         snapshot.requireData!,
-                        fit: BoxFit.fitHeight,
+                        fit: BoxFit.fitWidth,
                       ));
               }
               return const Text('error');
