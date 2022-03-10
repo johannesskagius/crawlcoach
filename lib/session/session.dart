@@ -1,4 +1,3 @@
-import 'package:crawl_course_3/account/user.dart';
 import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/session_view_00.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -29,40 +28,14 @@ class Session {
 
   factory Session.fromJson(dynamic json) => _sessionFromJson(json);
 
-  static Future<Session> getSession() async {
-    DatabaseReference _ref = FirebaseDatabase.instance.ref();
-    LocalUser? _x = await LocalUser.getLocalUser();
-    try {
-      DataSnapshot x = await _ref
-          .child('users')
-          .child(_x!.userAuth2)
-          .child('intro_sessions')
-          .get();
-      if (x.value == "false") {
-        print('here');
-      }
-    } catch (e) {
-      print(e);
-    }
-    throw NullThrownError();
-  }
-
-  Future<void> pushSessionStats(
-      List<double> stats, String s, String userID) async {
+  Future<void> pushSessionStats(Map<String, double> _sessionStats,
+      String _sessionName, String _uID) async {
     final DatabaseReference _ref = FirebaseDatabase.instance.ref();
     await _ref
         .child('session_stats')
-        .child(s)
-        .child(userID)
-        .set(stats.toString());
-  }
-
-  static void getSessionStats() async {
-    DatabaseReference _ref = FirebaseDatabase.instance.ref();
-    DataSnapshot _snap = await _ref.child('session_stats').get();
-    for (DataSnapshot _data in _snap.children) {
-      print(_data.value.toString());
-    }
+        .child(_sessionName)
+        .child(_uID)
+        .set(_sessionStats);
   }
 
   @override

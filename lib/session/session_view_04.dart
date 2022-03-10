@@ -3,11 +3,11 @@ import 'package:crawl_course_3/session/session.dart';
 import 'package:flutter/material.dart';
 
 class Session04 extends StatefulWidget {
-  const Session04(this._session, this._sessionID, this._corseName, {Key? key})
+  const Session04(this._session, this._sessionID, this._courseName, {Key? key})
       : super(key: key);
   final Session _session;
   final String _sessionID;
-  final String _corseName;
+  final String _courseName;
 
   @override
   State<Session04> createState() => _Session04State();
@@ -15,8 +15,9 @@ class Session04 extends StatefulWidget {
 
 class _Session04State extends State<Session04> {
   bool isDone = false;
+  Map<String, double> sessionStats = {};
   double _sessionFun = 0;
-  double _sessionClearity = 0;
+  double _clarity = 0;
   double _sessionToughness = 0;
 
   @override
@@ -47,18 +48,20 @@ class _Session04State extends State<Session04> {
                 onChanged: (val) {
                   setState(() {
                     _sessionFun = val;
+                    sessionStats['Fun'] = val;
                   });
                 }),
             const Text('Where the instructions clear'),
             Slider(
-                label: "$_sessionClearity",
+                label: "$_clarity",
                 divisions: 10,
                 max: 10,
                 min: 0,
-                value: _sessionClearity,
+                value: _clarity,
                 onChanged: (val) {
                   setState(() {
-                    _sessionClearity = val;
+                    _clarity = val;
+                    sessionStats['Clarity'] = val;
                   });
                 }),
             const Text('Was the session though?'),
@@ -71,6 +74,7 @@ class _Session04State extends State<Session04> {
                 onChanged: (val) {
                   setState(() {
                     _sessionToughness = val;
+                    sessionStats['toughness'] = val;
                   });
                 }),
             Row(
@@ -90,8 +94,10 @@ class _Session04State extends State<Session04> {
                     });
                     //Move session to done sessions
                     final user = await User2.getLocalUser();
-                    user!.markSessionDone(
-                        widget._sessionID, widget._session, widget._corseName);
+                    widget._session.pushSessionStats(sessionStats,
+                        widget._session.sessionName, user!.userAuth);
+                    user.markSessionDone(
+                        widget._sessionID, widget._session, widget._courseName);
                     Navigator.pop(context);
                   },
                 )

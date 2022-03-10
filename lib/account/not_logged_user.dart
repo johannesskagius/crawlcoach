@@ -8,8 +8,8 @@ class LogInUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _txtEditList = List.generate(2, (index) => TextEditingController());
-    _txtEditList.elementAt(0).text = 'test@gmail.com';
-    _txtEditList.elementAt(1).text = 'test12';
+    //_txtEditList.elementAt(0).text = 'test@gmail.com';
+    //_txtEditList.elementAt(1).text = 'test12';
     return Container(
       margin: const EdgeInsets.all(8),
       child: Form(
@@ -58,6 +58,7 @@ class CreateUser extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            const Text('Create user by swiping up'),
             _emailForm(_txtEditList.elementAt(0)),
             _passwordForm(_txtEditList.elementAt(1)),
             ElevatedButton(

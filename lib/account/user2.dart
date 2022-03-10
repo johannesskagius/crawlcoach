@@ -29,9 +29,9 @@ class User2 {
         user2._syncToServer();
       }
     } on FirebaseAuthException catch (e) {
-      print(e.message);
       return e.message;
     }
+    return null;
   }
 
   String get email => _email;

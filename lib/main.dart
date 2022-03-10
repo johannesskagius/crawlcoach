@@ -59,21 +59,9 @@ class _LayoutState extends State<Layout> {
   bool isManager = false;
   int _selected = 0;
 
-  Future<void> _getUserInfo() async {
-    bool loggedIn = await User2.signIn();
-    if (loggedIn) {
-      //check if manager
-      // if (await User2.isManager()) {
-      //   setState(() {
-      //     isManager = true;
-      //   });
-      // }
-    }
-  }
-
   Future<void> _checkIfManager() async {
     User2? user = await User2.getLocalUser();
-    bool manager = false;
+    bool _manager = false;
     if (User2.firebaseAuth.currentUser!.isAnonymous) {
       return;
     }
@@ -84,19 +72,18 @@ class _LayoutState extends State<Layout> {
         .onValue
         .listen((event) {
       if (event.snapshot.child('isadmin').value.toString() == 'true') {
-        manager = true;
+        _manager = true;
       } else {
-        manager = false;
+        _manager = false;
       }
       setState(() {
-        isManager = manager;
+        isManager = _manager;
       });
     });
   }
 
   @override
   void initState() {
-    _getUserInfo();
     _checkIfManager();
     super.initState();
   }
