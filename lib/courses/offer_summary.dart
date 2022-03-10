@@ -50,39 +50,32 @@ class _OfferSummaryState extends State<OfferSummary> {
       appBar: AppBar(
         title: const Text('summary'),
       ),
-      body: !uploading
-          ? Container(
-              margin: const EdgeInsets.all(8),
-              child: ListView(
-                children: [
-                  _gotPic ? Image.file(img!) : Container(),
-                  const Divider(
-                    height: 10,
-                  ),
-                  widget._offer.previewTable(),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (widget._img != null) {
-                        widget._offer
-                            .uploadImageToServer(img!)
-                            .then((value) => _isUploading())
-                            .whenComplete(() => {
-                                  _uploadingIsComplete(),
-                                });
-                      }
-                      _ref
-                          .child('courses')
-                          .child(widget._offer.name.toString())
-                          .set(widget._offer.toJson());
-                    },
-                    child: const Text('To Server'),
-                  )
-                ],
-              ),
-            )
-          : const Center(
-              child: CircularProgressIndicator(),
-            ),
+      body: ListView(
+        children: [
+          _gotPic ? Image.file(img!) : Container(),
+          const Divider(
+            height: 10,
+          ),
+          widget._offer.previewTable(),
+          ElevatedButton(
+            onPressed: () async {
+              if (widget._img != null) {
+                widget._offer
+                    .uploadImageToServer(img!)
+                    .then((value) => _isUploading())
+                    .whenComplete(() => {
+                          _uploadingIsComplete(),
+                        });
+              }
+              _ref
+                  .child('courses')
+                  .child(widget._offer.name.toString())
+                  .set(widget._offer.toJson());
+            },
+            child: const Text('To Server'),
+          )
+        ],
+      ),
     );
   }
 }

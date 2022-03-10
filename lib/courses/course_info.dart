@@ -29,34 +29,4 @@ class CourseInfo extends StatelessWidget {
   }
 }
 
-Container _textContainer(String s, Alignment _align) {
-  return Container(alignment: Alignment.centerLeft, child: Text(s));
-}
 
-Container _getOfferInfo(double _width, Offer? _offer) {
-  return Container(
-    margin: const EdgeInsets.all(8),
-    child: Table(
-      columnWidths: <int, TableColumnWidth>{
-        0: FixedColumnWidth(_width * 0.3),
-        1: const FlexColumnWidth(),
-      },
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: <TableRow>[
-        TableRow(children: [
-          _textContainer('Title: ', Alignment.centerLeft),
-          _textContainer(_offer!.name, Alignment.center),
-        ]),
-        TableRow(children: [
-          _textContainer('Description: ', Alignment.centerLeft),
-          _textContainer(_offer.desc, Alignment.center),
-        ]),
-        TableRow(children: [
-          _textContainer('Sessions: ', Alignment.centerLeft),
-          _textContainer(
-              _offer.listOfSessions.length.toString(), Alignment.center),
-        ]),
-      ],
-    ),
-  );
-}
