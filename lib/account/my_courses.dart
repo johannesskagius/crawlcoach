@@ -121,7 +121,7 @@ List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
                   context,
                   MaterialPageRoute(
                       builder: (context) => CourseInfo(
-                            courseName: _courseName,
+                            courseName: _offers.elementAt(_i),
                           )));
             },
           )

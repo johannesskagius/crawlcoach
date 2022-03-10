@@ -12,6 +12,8 @@ class Store extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _height =
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -19,13 +21,14 @@ class Store extends StatelessWidget {
           style: TextStyle(color: Colors.greenAccent),
         ),
       ),
-      body: const StoreContent(),
+      body: StoreContent(_height),
     );
   }
 }
 
 class StoreContent extends StatefulWidget {
-  const StoreContent({Key? key}) : super(key: key);
+  const StoreContent(this._height, {Key? key}) : super(key: key);
+  final double _height;
 
   @override
   _StoreContentState createState() => _StoreContentState();
@@ -96,7 +99,7 @@ class _StoreContentState extends State<StoreContent> {
                       builder: (context) =>
                           BuyOffer(_offers.elementAt(index))));
             },
-            child: _offers.elementAt(index).offerCard(),
+            child: _offers.elementAt(index).offerCard(widget._height),
           );
         },
       ),

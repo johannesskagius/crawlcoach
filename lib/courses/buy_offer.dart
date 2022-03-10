@@ -8,6 +8,10 @@ class BuyOffer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _width = MediaQuery.of(context).size.width;
+    final _height =
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Buy'),
@@ -15,27 +19,13 @@ class BuyOffer extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text('Course name: '),
-              Text(_offer.name),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text('Price: '),
-              Text(_offer.price),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text('Number of sessions: '),
-              Text(_offer.listOfSessions.length.toString()),
-            ],
-          ),
+          SizedBox(
+              height: _height / 3,
+              child: Image.file(
+                _offer.getImage(),
+                fit: BoxFit.fitHeight,
+              )),
+          _offer.previewTable(_width, _height),
           ElevatedButton(
               onPressed: () async {
                 User2? _local = await User2.getLocalUser();

@@ -16,7 +16,6 @@ class OfferSummary extends StatefulWidget {
 
 class _OfferSummaryState extends State<OfferSummary> {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
-  bool hasUploaded = false;
   bool uploading = false;
   bool _gotPic = false;
   File? img;
@@ -30,7 +29,7 @@ class _OfferSummaryState extends State<OfferSummary> {
   void _uploadingIsComplete() {
     setState(() {
       uploading = false;
-      hasUploaded = true;
+      Navigator.pop(context);
     });
   }
 
@@ -75,9 +74,6 @@ class _OfferSummaryState extends State<OfferSummary> {
                           .child('courses')
                           .child(widget._offer.name.toString())
                           .set(widget._offer.toJson());
-                      if (hasUploaded) {
-                        Navigator.pop(context);
-                      }
                     },
                     child: const Text('To Server'),
                   )

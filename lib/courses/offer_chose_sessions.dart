@@ -22,7 +22,6 @@ class _ChooseSessionsState extends State<ChooseSessions> {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   List<String> _chosens = [];
   final Map<String, String> _chosens2 = {};
-
   int _nrChosen = 0;
   List<Session> _sessions = [];
 

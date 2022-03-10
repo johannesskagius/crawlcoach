@@ -1,55 +1,32 @@
 import 'package:crawl_course_3/courses/offer.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class CourseInfo extends StatelessWidget {
   const CourseInfo({Key? key, required this.courseName}) : super(key: key);
-  final String courseName;
+  final Offer courseName;
 
   @override
   Widget build(BuildContext context) {
     final _width = MediaQuery.of(context).size.width;
-    Future<Offer?> _getOffer() async {
-      Offer? _offer;
-      DataSnapshot _offerData = await Offer.courseRef.child(courseName).get();
-      _offer = Offer.fromJson(_offerData.value);
-      return _offer;
-    }
+    final _height =
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Course info',
-          style: TextStyle(color: Colors.greenAccent),
+        appBar: AppBar(
+          title: const Text(
+            'Course info',
+            style: TextStyle(color: Colors.greenAccent),
+          ),
         ),
-      ),
-      body: FutureBuilder(
-        future: _getOffer(),
-        builder: (BuildContext context, AsyncSnapshot<Offer?> snapshot) {
-          List<Widget> _widget = [];
-          if (snapshot.hasData) {
-            _widget.add(_getOfferInfo(_width, snapshot.data));
-          } else {
-            _widget.add(const CircularProgressIndicator());
-          }
-          return Container(
-            margin: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  alignment: Alignment.topCenter,
-                  child: Text(courseName),
-                ),
-                Column(
-                  children: _widget,
-                )
-              ],
-            ),
-          );
-        },
-      ),
-    );
+        body: Container(
+          margin: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              //SizedBox(height: _height/3,child: Image.file(courseName.getImage(), fit: BoxFit.fitHeight,)), TODO
+              courseName.previewTable(_width, _height),
+            ],
+          ),
+        ));
   }
 }
 

@@ -15,14 +15,15 @@ class Offer {
   final String name;
   final String desc;
   final String userID;
-  String downloadUrl = '';
+  File? _img;
 
-  Offer(
-      {required this.name,
-      required this.listOfSessions,
-      required this.price,
-      required this.desc,
-      required this.userID});
+  Offer({
+    required this.name,
+    required this.listOfSessions,
+    required this.price,
+    required this.desc,
+    required this.userID,
+  });
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -37,10 +38,18 @@ class Offer {
     List<Offer> _getOffers = [];
     for (DataSnapshot snap in _snapshot.children) {
       late Map<Object?, dynamic> object = snap.value as Map<Object?, dynamic>;
-      final course = Offer.fromJson(object); //error here
+      final course = Offer.fromJson(object);
       _getOffers.add(course);
     }
     return _getOffers;
+  }
+
+  File getImage() {
+    return _img!.absolute;
+  }
+
+  set img(File value) {
+    _img = value;
   }
 
   @override
@@ -100,11 +109,11 @@ class Offer {
         .child('courseimages/')
         .child(userID) //TODO ändra till sessionID
         .child(name);
-    downloadUrl = _s.fullPath;
     return await _s.putFile(_img);
   }
 
-  Card offerCard() {
+  Card offerCard(double _height) {
+    final cardSize = _height / 4;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -122,10 +131,23 @@ class Offer {
           FutureBuilder(
             future: downloadFile(),
             builder: (BuildContext context, AsyncSnapshot<File?> snapshot) {
-              if (!snapshot.hasData) {
-                return const Text('error');
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return const Text('error');
+                case ConnectionState.waiting:
+                  return const CircularProgressIndicator();
+                case ConnectionState.active:
+                  const CircularProgressIndicator();
+                  break;
+                case ConnectionState.done:
+                  return SizedBox(
+                      height: cardSize,
+                      child: Image.file(
+                        snapshot.requireData!,
+                        fit: BoxFit.fitHeight,
+                      ));
               }
-              return Image.file(snapshot.requireData!);
+              return const Text('error');
             },
           ),
           Padding(
@@ -143,13 +165,12 @@ class Offer {
   }
 
   Future<File?> downloadFile() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
     final _s = FirebaseStorage.instance
         .ref('courseimages/' + userID) //TODO ändra till sessionID
         .child(name);
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    //File downloadToFile = File('${appDocDir.path}/download-logo.png');
-    File downloadToFile = File('${appDocDir.path}/name.jpg');
-    print(downloadToFile.path);
+    File downloadToFile = File('${appDocDir.path}/$name.jpg');
+    _img = downloadToFile;
     await _s.writeToFile(downloadToFile);
     try {
       return downloadToFile;
