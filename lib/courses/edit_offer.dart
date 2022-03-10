@@ -34,7 +34,7 @@ Container offerInfo(Offer _offer, BuildContext context) {
                 //Update picture,
               },
               child: Image.asset('assets/crawl.jpeg')),
-          _offer.previewTable(_width, _height),
+          _offer.previewTable(),
           GestureDetector(
             onLongPress: () {
               //Change sessions

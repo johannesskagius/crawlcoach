@@ -7,7 +7,6 @@ class CourseInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _width = MediaQuery.of(context).size.width;
     final _height =
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
 
@@ -22,8 +21,8 @@ class CourseInfo extends StatelessWidget {
           margin: const EdgeInsets.all(8),
           child: Column(
             children: [
-              //SizedBox(height: _height/3,child: Image.file(courseName.getImage(), fit: BoxFit.fitHeight,)), TODO
-              courseName.previewTable(_width, _height),
+              courseName.offerCard(_height),
+              courseName.previewTable(),
             ],
           ),
         ));

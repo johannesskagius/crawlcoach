@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../account/user2.dart';
+
 @JsonSerializable()
 class Offer {
   static final DatabaseReference courseRef =
@@ -45,6 +47,7 @@ class Offer {
   }
 
   File getImage() {
+    if (_img!.isAbsolute) {}
     return _img!.absolute;
   }
 
@@ -65,41 +68,44 @@ class Offer {
 
   factory Offer.fromJson(dynamic json) => _offerFromJson(json);
 
-  Table previewTable(double _width, double _height) {
+  Expanded previewTable() {
     const double headerSize = 18;
-    return Table(
-      columnWidths: <int, TableColumnWidth>{
-        0: FixedColumnWidth(_width * 0.35),
-        1: const FlexColumnWidth(),
-      },
-      border: TableBorder.all(),
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: [
-        TableRow(children: <Widget>[
-          const TableCell(
-              child: Text(
-            'Name:',
-            style: TextStyle(fontSize: headerSize, fontWeight: FontWeight.bold),
-          )),
-          TableCell(child: Text(name)),
-        ]),
-        TableRow(children: <Widget>[
-          const TableCell(
-              child: Text('Price:',
-                  style: TextStyle(
-                      fontSize: headerSize, fontWeight: FontWeight.bold))),
-          TableCell(
-            child: Text(price),
-          ),
-        ]),
-        TableRow(children: <Widget>[
-          const TableCell(
-              child: Text('Description:',
-                  style: TextStyle(
-                      fontSize: headerSize, fontWeight: FontWeight.bold))),
-          TableCell(child: Text(desc)),
-        ]),
-      ],
+    return Expanded(
+      child: Table(
+        columnWidths: const <int, TableColumnWidth>{
+          0: FlexColumnWidth(),
+          1: FlexColumnWidth(),
+        },
+        border: TableBorder.all(),
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: [
+          TableRow(children: <Widget>[
+            const TableCell(
+                child: Text(
+              'Name:',
+              style:
+                  TextStyle(fontSize: headerSize, fontWeight: FontWeight.bold),
+            )),
+            TableCell(child: Text(name)),
+          ]),
+          TableRow(children: <Widget>[
+            const TableCell(
+                child: Text('Price:',
+                    style: TextStyle(
+                        fontSize: headerSize, fontWeight: FontWeight.bold))),
+            TableCell(
+              child: Text(price),
+            ),
+          ]),
+          TableRow(children: <Widget>[
+            const TableCell(
+                child: Text('Description:',
+                    style: TextStyle(
+                        fontSize: headerSize, fontWeight: FontWeight.bold))),
+            TableCell(child: Text(desc)),
+          ]),
+        ],
+      ),
     );
   }
 
@@ -110,6 +116,56 @@ class Offer {
         .child(userID) //TODO ändra till sessionID
         .child(name);
     return await _s.putFile(_img);
+  }
+
+  Container offerPreview(bool buyOffer, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          const Divider(
+            height: 5,
+            thickness: 1,
+          ),
+          FutureBuilder(
+            future: downloadFile(),
+            builder: (BuildContext context, AsyncSnapshot<File?> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return const Text('error');
+                case ConnectionState.waiting:
+                  return const CircularProgressIndicator();
+                case ConnectionState.active:
+                  const CircularProgressIndicator();
+                  break;
+                case ConnectionState.done:
+                  return Expanded(
+                      child: Image.file(
+                    snapshot.requireData!,
+                    fit: BoxFit.fitHeight,
+                  ));
+              }
+              return const Text('error');
+            },
+          ),
+          const Divider(
+            height: 5,
+            thickness: 1,
+          ),
+          previewTable(),
+          buyOffer
+              ? ElevatedButton(
+                  onPressed: () async {
+                    User2? _local = await User2.getLocalUser();
+                    _local!.assignToCourse(this);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('buy'))
+              : Container(),
+        ],
+      ),
+    );
   }
 
   Card offerCard(double _height) {

@@ -21,6 +21,7 @@ class Session00 extends StatefulWidget {
 
 class _Session00State extends State<Session00> {
   String _subTitle = 'video';
+  int _selected = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,7 @@ class _Session00State extends State<Session00> {
     String _title = widget.session.sessionName;
     void _changeTitle(int index) {
       setState(() {
+        _selected = index;
         if (index == 0) {
           _subTitle = 'Swim session';
         } else if (index == 1) {
@@ -50,11 +52,20 @@ class _Session00State extends State<Session00> {
           Session02(widget.session, widget.id), //Exercises as list,
           Session04(widget.session, widget.id, widget.offerName), //
         ],
-        onPageChanged: (value){
+        onPageChanged: (value) {
           _changeTitle(value);
         },
       ),
-      //bottomSheet: TODO att progressindicator,
+      bottomSheet: BottomNavigationBar(
+        currentIndex: _selected,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.check_outlined), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.check_outlined), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.check_outlined), label: ''),
+        ],
+        showSelectedLabels: true,
+        selectedItemColor: Colors.greenAccent,
+      ),
     );
   }
 }

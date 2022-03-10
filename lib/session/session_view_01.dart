@@ -17,7 +17,6 @@ class _Session01State extends State<Session01> {
 
   @override
   void initState() {
-    //_controller = VideoPlayerController.asset('assets/videos/crawl_intro.mp4');
     _controller = VideoPlayerController.network(widget._session.videoUrl);
     _initializeVideoPlayerFuture = _controller.initialize();
     super.initState();
@@ -28,15 +27,18 @@ class _Session01State extends State<Session01> {
     return FutureBuilder(
         future: _initializeVideoPlayerFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return const Text('error');
+            case ConnectionState.waiting:
+              return const Text('waiting');
+            case ConnectionState.active:
+              return const CircularProgressIndicator();
+            case ConnectionState.done:
+              return AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              );
           }
         });
   }

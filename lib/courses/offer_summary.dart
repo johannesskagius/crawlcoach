@@ -59,7 +59,7 @@ class _OfferSummaryState extends State<OfferSummary> {
                   const Divider(
                     height: 10,
                   ),
-                  widget._offer.previewTable(_width, _height),
+                  widget._offer.previewTable(),
                   ElevatedButton(
                     onPressed: () async {
                       if (widget._img != null) {
