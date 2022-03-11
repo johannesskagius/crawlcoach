@@ -8,10 +8,7 @@ class BuyOffer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Buy: ' + _offer.name),
-      ),
-      body: _offer.offerPreview(true, context),
+      body: SafeArea(child: _offer.offerPreview(true, context)),
     );
   }
 }

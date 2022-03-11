@@ -15,7 +15,6 @@ class Settings2 extends StatefulWidget {
 class _Settings2State extends State<Settings2> {
   final List<String> _loggedInTitles = ['User settings', 'Feedback'];
   final List<String> _loggedOutTitle = ['Log in', 'CreateUser'];
-  String _title = 'Log in';
   final pControll = PageController();
   User2? user2;
   bool hasLoggedIn = false;
@@ -41,16 +40,6 @@ class _Settings2State extends State<Settings2> {
     });
   }
 
-  void _onPageChanged(int index) {
-    setState(() {
-      if (hasLoggedIn) {
-        _title = _loggedInTitles.elementAt(index);
-      } else {
-        _title = _loggedOutTitle.elementAt(index);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +49,6 @@ class _Settings2State extends State<Settings2> {
           PageView(
             scrollDirection: Axis.vertical,
             controller: pControll,
-            onPageChanged: _onPageChanged,
             pageSnapping: true,
             children: _widgets,
           ),

@@ -121,9 +121,10 @@ class Offer {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Divider(
+          Divider(
             height: 5,
             thickness: 1,
+            color: Colors.greenAccent.withOpacity(0.3),
           ),
           FutureBuilder(
             future: downloadFile(),
@@ -137,20 +138,25 @@ class Offer {
                   const CircularProgressIndicator();
                   break;
                 case ConnectionState.done:
-                  return Expanded(
-                      child: Image.file(
+                  return Image.file(
                     snapshot.requireData!,
                     fit: BoxFit.fitHeight,
-                  ));
+                  );
               }
               return const Text('error');
             },
           ),
-          const Divider(
+          Divider(
             height: 5,
+            color: Colors.greenAccent.withOpacity(0.3),
             thickness: 1,
           ),
           previewTable(),
+          Divider(
+            height: 5,
+            color: Colors.greenAccent.withOpacity(0.3),
+            thickness: 1,
+          ),
           buyOffer
               ? ElevatedButton(
                   onPressed: () async {

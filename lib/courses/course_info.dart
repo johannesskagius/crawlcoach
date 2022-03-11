@@ -1,6 +1,8 @@
 import 'package:crawl_course_3/courses/offer.dart';
 import 'package:flutter/material.dart';
 
+import '../contact_course_admin.dart';
+
 class CourseInfo extends StatelessWidget {
   const CourseInfo({Key? key, required this.courseName}) : super(key: key);
   final Offer courseName;
@@ -11,21 +13,25 @@ class CourseInfo extends StatelessWidget {
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Course info',
-            style: TextStyle(color: Colors.greenAccent),
-          ),
+        body: SafeArea(
+      child: Container(
+        margin: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            courseName.offerCard(_height),
+            courseName.previewTable(),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ContactAdmin()));
+                },
+                child: const Text('Contact course creator'))
+          ],
         ),
-        body: Container(
-          margin: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              courseName.offerCard(_height),
-              courseName.previewTable(),
-            ],
-          ),
-        ));
+      ),
+    ));
   }
 }
 

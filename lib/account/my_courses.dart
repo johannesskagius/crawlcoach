@@ -100,7 +100,10 @@ List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
     _widgets
       ..add(SliverAppBar(
         flexibleSpace: FlexibleSpaceBar(
-          title: Text(_courseName),
+          title: Text(
+            _courseName,
+            style: const TextStyle(color: Colors.greenAccent),
+          ),
         ),
         actions: [
           IconButton(

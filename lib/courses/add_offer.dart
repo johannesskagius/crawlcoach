@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -55,6 +56,13 @@ class _SessionGeneralState extends State<SessionGeneral> {
       _photo = File(pickedFile.path);
     });
     Navigator.pop(context);
+  }
+
+  @override
+  void initState() {
+    FirebaseInAppMessaging fiam = FirebaseInAppMessaging.instance;
+    fiam.triggerEvent('t'); //TODO kolla vidare på iapp
+    super.initState();
   }
 
   @override
