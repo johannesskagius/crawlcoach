@@ -54,23 +54,19 @@ class _Settings2State extends State<Settings2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _title,
-            style: const TextStyle(color: Colors.greenAccent),
+        body: SafeArea(
+      child: Stack(
+        children: [
+          PageView(
+            scrollDirection: Axis.vertical,
+            controller: pControll,
+            onPageChanged: _onPageChanged,
+            pageSnapping: true,
+            children: _widgets,
           ),
-        ),
-        body: Stack(
-          children: [
-            PageView(
-              scrollDirection: Axis.vertical,
-              controller: pControll,
-              onPageChanged: _onPageChanged,
-              pageSnapping: true,
-              children: _widgets,
-            ),
-          ],
-        ));
+        ],
+      ),
+    ));
   }
 }
 

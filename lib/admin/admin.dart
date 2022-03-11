@@ -10,10 +10,6 @@ class _AdminState extends State<Admin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crawl coach admin',
-            style: TextStyle(color: Colors.greenAccent)),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

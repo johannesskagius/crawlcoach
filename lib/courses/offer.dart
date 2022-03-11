@@ -68,44 +68,41 @@ class Offer {
 
   factory Offer.fromJson(dynamic json) => _offerFromJson(json);
 
-  Expanded previewTable() {
+  Table previewTable() {
     const double headerSize = 18;
-    return Expanded(
-      child: Table(
-        columnWidths: const <int, TableColumnWidth>{
-          0: FlexColumnWidth(),
-          1: FlexColumnWidth(),
-        },
-        border: TableBorder.all(),
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        children: [
-          TableRow(children: <Widget>[
-            const TableCell(
-                child: Text(
-              'Name:',
-              style:
-                  TextStyle(fontSize: headerSize, fontWeight: FontWeight.bold),
-            )),
-            TableCell(child: Text(name)),
-          ]),
-          TableRow(children: <Widget>[
-            const TableCell(
-                child: Text('Price:',
-                    style: TextStyle(
-                        fontSize: headerSize, fontWeight: FontWeight.bold))),
-            TableCell(
-              child: Text(price),
-            ),
-          ]),
-          TableRow(children: <Widget>[
-            const TableCell(
-                child: Text('Description:',
-                    style: TextStyle(
-                        fontSize: headerSize, fontWeight: FontWeight.bold))),
-            TableCell(child: Text(desc)),
-          ]),
-        ],
-      ),
+    return Table(
+      columnWidths: const <int, TableColumnWidth>{
+        0: IntrinsicColumnWidth(),
+        1: FlexColumnWidth(),
+      },
+      border: TableBorder.all(),
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: [
+        TableRow(children: <Widget>[
+          const TableCell(
+              child: Text(
+            'Name:',
+            style: TextStyle(fontSize: headerSize, fontWeight: FontWeight.bold),
+          )),
+          TableCell(child: Text(name, textAlign: TextAlign.center)),
+        ]),
+        TableRow(children: <Widget>[
+          const TableCell(
+              child: Text('Price:',
+                  style: TextStyle(
+                      fontSize: headerSize, fontWeight: FontWeight.bold))),
+          TableCell(
+            child: Text(price, textAlign: TextAlign.center),
+          ),
+        ]),
+        TableRow(children: <Widget>[
+          const TableCell(
+              child: Text('Description:',
+                  style: TextStyle(
+                      fontSize: headerSize, fontWeight: FontWeight.bold))),
+          TableCell(child: Text(desc, textAlign: TextAlign.center)),
+        ]),
+      ],
     );
   }
 
@@ -192,7 +189,9 @@ class Offer {
               ),
             ),
           ),
-          const Divider(),
+          Divider(
+            color: Colors.greenAccent.withOpacity(0.3),
+          ),
           FutureBuilder(
             future: downloadFile(),
             builder: (BuildContext context, AsyncSnapshot<File?> snapshot) {
@@ -219,7 +218,9 @@ class Offer {
             padding: const EdgeInsets.all(8),
             child: Text(name),
           ),
-          const Divider(),
+          Divider(
+            color: Colors.greenAccent.withOpacity(0.3),
+          ),
           ListTile(
             title: Text(price),
             trailing: const Icon(Icons.arrow_forward_ios_outlined),

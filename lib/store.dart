@@ -12,8 +12,6 @@ class Store extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _height =
-        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -21,20 +19,19 @@ class Store extends StatelessWidget {
           style: TextStyle(color: Colors.greenAccent),
         ),
       ),
-      body: StoreContent(_height),
+      body: const Store2(),
     );
   }
 }
 
-class StoreContent extends StatefulWidget {
-  const StoreContent(this._height, {Key? key}) : super(key: key);
-  final double _height;
+class Store2 extends StatefulWidget {
+  const Store2({Key? key}) : super(key: key);
 
   @override
-  _StoreContentState createState() => _StoreContentState();
+  _Store2State createState() => _Store2State();
 }
 
-class _StoreContentState extends State<StoreContent> {
+class _Store2State extends State<Store2> {
   List<Offer> _offers = [];
 
   void initiate() async {
@@ -85,8 +82,11 @@ class _StoreContentState extends State<StoreContent> {
   void deactivate() {
     super.deactivate();
   }
+
   @override
   Widget build(BuildContext context) {
+    final _height =
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     return Scrollbar(
       child: ListView.builder(
         itemCount: _offers.length,
@@ -99,7 +99,7 @@ class _StoreContentState extends State<StoreContent> {
                       builder: (context) =>
                           BuyOffer(_offers.elementAt(index))));
             },
-            child: _offers.elementAt(index).offerCard(widget._height),
+            child: _offers.elementAt(index).offerCard(_height),
           );
         },
       ),

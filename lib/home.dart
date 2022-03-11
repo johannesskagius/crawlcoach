@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '21th Swim',
+          '21st Swim',
           style: TextStyle(color: Colors.greenAccent),
         ),
       ),

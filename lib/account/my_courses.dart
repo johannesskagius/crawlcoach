@@ -26,7 +26,7 @@ class _MyCoursesState extends State<MyCourses> {
 
   @override
   Widget build(BuildContext context) {
-    return isSignedIn
+    return isSignedIn || _assigned2.isEmpty
         ? const Center(
             child: Text('Sign in to see your courses here'),
           )
@@ -52,10 +52,6 @@ class _MyCoursesState extends State<MyCourses> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void markPressed() {
-    setState(() {});
   }
 
   Future<void> _activateListener() async {
@@ -99,13 +95,6 @@ class _MyCoursesState extends State<MyCourses> {
 
 List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
   List<Widget> _widgets = [];
-  _widgets.add(const SliverAppBar(
-    flexibleSpace: FlexibleSpaceBar(
-      title: Text('My courses', style: TextStyle(color: Colors.greenAccent)),
-    ),
-    expandedHeight: 50,
-    floating: true,
-  ));
   for (int _i = 0; _i < _offers.length; _i++) {
     String _courseName = _offers.elementAt(_i).name;
     _widgets

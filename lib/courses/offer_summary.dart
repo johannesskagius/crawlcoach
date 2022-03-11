@@ -35,10 +35,6 @@ class _OfferSummaryState extends State<OfferSummary> {
 
   @override
   Widget build(BuildContext context) {
-    final _height =
-        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
-    final _width = MediaQuery.of(context).size.width;
-
     if (widget._img != null) {
       _gotPic = true;
       setState(() {
@@ -48,7 +44,7 @@ class _OfferSummaryState extends State<OfferSummary> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('summary'),
+        title: const Text('Summary'),
       ),
       body: ListView(
         children: [
