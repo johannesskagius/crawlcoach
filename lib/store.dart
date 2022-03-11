@@ -7,31 +7,14 @@ import 'package:flutter/material.dart';
 import 'account/user2.dart';
 import 'courses/buy_offer.dart';
 
-class Store extends StatelessWidget {
+class Store extends StatefulWidget {
   const Store({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Store',
-          style: TextStyle(color: Colors.greenAccent),
-        ),
-      ),
-      body: const Store2(),
-    );
-  }
+  _StoreState createState() => _StoreState();
 }
 
-class Store2 extends StatefulWidget {
-  const Store2({Key? key}) : super(key: key);
-
-  @override
-  _Store2State createState() => _Store2State();
-}
-
-class _Store2State extends State<Store2> {
+class _StoreState extends State<Store> {
   List<Offer> _offers = [];
 
   void initiate() async {
@@ -45,9 +28,8 @@ class _Store2State extends State<Store2> {
 
   Future<void> _listenToOffers(DatabaseReference? _ref) async {
     List<Offer> _alreadyAssigned = [];
-
-    if (_ref == null) {
-      final dataSnap = await _ref!.get();
+    if (_ref != null) {
+      final dataSnap = await _ref.get();
       for (DataSnapshot _data in dataSnap.children) {
         _alreadyAssigned.add(Offer.fromJson(_data.value));
       }

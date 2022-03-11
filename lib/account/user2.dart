@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:crawl_course_3/account/user.dart';
 import 'package:crawl_course_3/courses/offer.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,12 +61,11 @@ class User2 {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     try {
-      User2 _local =
-          User2.fromJson(jsonDecode(sharedPreferences.getString(_localUser)!));
+      String s = sharedPreferences.getString(_localUser)!;
+      User2 _local = User2.fromJson(jsonDecode(s));
       return _local;
     } catch (e) {
-      print(e);
-      //TODO When signed anonymosly, you can't create a new account
+      LocalUser.firebaseAuth.signInAnonymously();
       return null;
     }
   }

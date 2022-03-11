@@ -67,9 +67,3 @@ class _AdminState extends State<Admin> {
 
   void onValueListen() {}
 }
-
-// BarChart _getBarchart(){
-//   return BarChart(
-//
-//   );
-// }

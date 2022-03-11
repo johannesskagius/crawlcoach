@@ -61,7 +61,7 @@ class _SessionGeneralState extends State<SessionGeneral> {
   @override
   void initState() {
     FirebaseInAppMessaging fiam = FirebaseInAppMessaging.instance;
-    fiam.triggerEvent('t'); //TODO kolla vidare på iapp
+    fiam.triggerEvent('Test');
     super.initState();
   }
 
@@ -128,6 +128,7 @@ class _SessionGeneralState extends State<SessionGeneral> {
         if (value == null || value.isEmpty) {
           return 'error';
         }
+        return null;
       },
     );
   }
@@ -145,6 +146,7 @@ class _SessionGeneralState extends State<SessionGeneral> {
         if (value == null || value.isEmpty) {
           return 'error';
         }
+        return null;
       },
     );
   }
@@ -160,6 +162,7 @@ class _SessionGeneralState extends State<SessionGeneral> {
         if (value == null || value.isEmpty) {
           return 'Session name';
         }
+        return null;
       },
     );
   }

@@ -114,14 +114,14 @@ class _LayoutState extends State<Layout> {
               ? const [
                   Home(),
                   MyCourses(),
-                  Store2(),
+                  Store(),
                   Settings2(),
                   Admin(),
                 ]
               : const [
                   Home(),
                   MyCourses(),
-                  Store2(),
+                  Store(),
                   Settings2(),
                 ],
         ),
