@@ -140,8 +140,13 @@ class _SessionExercisesState extends State<SessionExercises> {
             controller: _controller,
           ),
           DropdownButton(
-            items: <String>['meters', 'minutes', 'seconds', 'kilometers']
-                .map<DropdownMenuItem<String>>((String value) {
+            items: <String>[
+              'meters',
+              'minutes',
+              'seconds',
+              'kilometers',
+              'antal'
+            ].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),

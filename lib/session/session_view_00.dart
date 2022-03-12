@@ -49,7 +49,7 @@ class _Session00State extends State<Session00> {
         controller: pControll,
         children: [
           Session01(widget.session), //Video
-          Session021(widget.session, widget.id), //Exercises as list,
+          Session02(widget.session, widget.id), //Exercises as list,
           Session04(widget.session, widget.id, widget.offerName), //
         ],
         onPageChanged: (value) {
