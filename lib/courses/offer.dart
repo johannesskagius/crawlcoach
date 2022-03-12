@@ -210,12 +210,21 @@ class Offer {
                   const CircularProgressIndicator();
                   break;
                 case ConnectionState.done:
-                  return SizedBox(
-                      height: cardSize,
-                      child: Image.file(
-                        snapshot.requireData!,
-                        fit: BoxFit.fitWidth,
-                      ));
+                  if (snapshot.requireData != null) {
+                    return SizedBox(
+                        height: cardSize,
+                        child: Image.file(
+                          snapshot.requireData!,
+                          fit: BoxFit.fitWidth,
+                        ));
+                  } else {
+                    return SizedBox(
+                        height: cardSize,
+                        child: Image.asset(
+                          'assets/crawl.jpeg',
+                          fit: BoxFit.fitWidth,
+                        ));
+                  }
               }
               return const Text('error');
             },
@@ -237,14 +246,14 @@ class Offer {
   }
 
   Future<File?> downloadFile() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    final _s = FirebaseStorage.instance
-        .ref('courseimages/' + userID) //TODO ändra till sessionID
-        .child(name);
-    File downloadToFile = File('${appDocDir.path}/$name.jpg');
-    _img = downloadToFile;
-    await _s.writeToFile(downloadToFile);
     try {
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      final _s = FirebaseStorage.instance
+          .ref('courseimages/' + userID) //TODO ändra till sessionID
+          .child(name);
+      File downloadToFile = File('${appDocDir.path}/$name.jpg');
+      _img = downloadToFile;
+      await _s.writeToFile(downloadToFile);
       return downloadToFile;
     } catch (e) {
       return null;

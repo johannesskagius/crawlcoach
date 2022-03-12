@@ -129,6 +129,7 @@ class _SessionExercisesState extends State<SessionExercises> {
 
   Future<String> getUnitForExercise() async {
     final _controller = TextEditingController();
+    final _controller2 = TextEditingController();
     String _dropdownValue = 'minutes';
     String _result;
     return await showDialog(
@@ -137,7 +138,16 @@ class _SessionExercisesState extends State<SessionExercises> {
         title: const Text('How many repetitions?'),
         actions: [
           TextField(
+            decoration: const InputDecoration(hintText: 'Reps'),
             controller: _controller,
+            keyboardType: TextInputType.number,
+          ),
+          TextField(
+            decoration: const InputDecoration(
+              hintText: 'times',
+            ),
+            controller: _controller2,
+            keyboardType: TextInputType.number,
           ),
           DropdownButton(
             items: <String>[
@@ -145,7 +155,7 @@ class _SessionExercisesState extends State<SessionExercises> {
               'minutes',
               'seconds',
               'kilometers',
-              'antal'
+              'times'
             ].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -161,7 +171,11 @@ class _SessionExercisesState extends State<SessionExercises> {
           TextButton(
               child: const Text("accept"),
               onPressed: () {
-                _result = _controller.value.text + ' ' + _dropdownValue;
+                _result = _controller.value.text +
+                    ' x ' +
+                    _controller.value.text +
+                    ' ' +
+                    _dropdownValue;
                 Navigator.pop(context, _result);
               }),
         ],

@@ -45,7 +45,6 @@ class _ExerciseResultState extends State<ExerciseResult> {
       } catch (e) {
         continue;
       }
-
       i++;
       if (i == 7) {
         break;
@@ -77,9 +76,9 @@ class _ExerciseResultState extends State<ExerciseResult> {
             TextButton(
                 child: const Text("Add"),
                 onPressed: () {
-                  double x = 2;
-                  x = double.parse(_controller.value.text);
-                  Navigator.pop(context, x);
+                  double _loadForSet = 2;
+                  _loadForSet = double.parse(_controller.value.text);
+                  Navigator.pop(context, _loadForSet);
                 }),
           ],
         ),
@@ -121,8 +120,7 @@ class _ExerciseResultState extends State<ExerciseResult> {
                   Map<String, Map<Object, Object>> result = {};
                   Map<Object, Object> _userRes = {};
                   final user = await User2.getLocalUser();
-                  int antal = int.parse(widget._type.substring(0,
-                      1)); //TODO lås i addsession så att det är en siffra som första tecken.
+                  int antal = int.parse(widget._type.substring(0, 1));
                   for (int i = 0; i < antal; i++) {
                     _userRes[i] = (await getResult(i));
                   }
@@ -153,61 +151,61 @@ class _ExerciseResultState extends State<ExerciseResult> {
     }
     return now.day.toString() + month + now.year.toString();
   }
-}
 
-BarChartGroupData _makeGroupData(int _date, List<double> _resOnDate) {
-  List<BarChartRodData> _rods = []; // BarChartRodData(toY: y, width: 15)
-  for (double s in _resOnDate) {
-    _rods.add(BarChartRodData(toY: s, width: 10));
+  BarChartGroupData _makeGroupData(int _date, List<double> _resOnDate) {
+    List<BarChartRodData> _rods = []; // BarChartRodData(toY: y, width: 15)
+    for (double s in _resOnDate) {
+      _rods.add(BarChartRodData(toY: s, width: 10));
+    }
+    return BarChartGroupData(x: _date, barsSpace: 8, barRods: _rods);
   }
-  return BarChartGroupData(x: _date, barsSpace: 8, barRods: _rods);
-}
 
-FlTitlesData _getTitles() {
-  return FlTitlesData(
-      //12032022
-      show: true,
-      rightTitles: SideTitles(showTitles: false),
-      topTitles: SideTitles(showTitles: false),
-      bottomTitles: SideTitles(
-          showTitles: true,
-          margin: 8,
-          reservedSize: 28,
-          rotateAngle: 45,
-          getTitles: (double value) {
-            String _date = value.toString().substring(0, 2);
-            String _month = value.toString().substring(2, 4);
-            String _m = _getMonth(_month);
-            return _date + ' $_m';
-          }));
-}
-
-String _getMonth(String _month) {
-  switch (_month) {
-    case '01':
-      return 'January';
-    case '02':
-      return 'February';
-    case '03':
-      return 'Mars';
-    case '04':
-      return 'April';
-    case '05':
-      return 'May';
-    case '06':
-      return 'June';
-    case '07':
-      return 'July';
-    case '08':
-      return 'August';
-    case '09':
-      return 'September';
-    case '10':
-      return 'October';
-    case '11':
-      return 'November';
-    case '12':
-      return 'December';
+  FlTitlesData _getTitles() {
+    return FlTitlesData(
+        //12032022
+        show: true,
+        rightTitles: SideTitles(showTitles: false),
+        topTitles: SideTitles(showTitles: false),
+        bottomTitles: SideTitles(
+            showTitles: true,
+            margin: 8,
+            reservedSize: 28,
+            rotateAngle: 45,
+            getTitles: (double value) {
+              String _date = value.toString().substring(0, 2);
+              String _month = value.toString().substring(2, 4);
+              String _m = _getMonth(_month);
+              return _date + ' $_m';
+            }));
   }
-  return '';
+
+  String _getMonth(String _month) {
+    switch (_month) {
+      case '01':
+        return 'January';
+      case '02':
+        return 'February';
+      case '03':
+        return 'Mars';
+      case '04':
+        return 'April';
+      case '05':
+        return 'May';
+      case '06':
+        return 'June';
+      case '07':
+        return 'July';
+      case '08':
+        return 'August';
+      case '09':
+        return 'September';
+      case '10':
+        return 'October';
+      case '11':
+        return 'November';
+      case '12':
+        return 'December';
+    }
+    return '';
+  }
 }
