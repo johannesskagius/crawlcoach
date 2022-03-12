@@ -5,14 +5,14 @@ import 'account/not_logged_user.dart';
 import 'account/user2.dart';
 import 'account/user_settings.dart';
 
-class Settings2 extends StatefulWidget {
-  const Settings2({Key? key}) : super(key: key);
+class Settings extends StatefulWidget {
+  const Settings({Key? key}) : super(key: key);
 
   @override
-  _Settings2State createState() => _Settings2State();
+  _SettingsState createState() => _SettingsState();
 }
 
-class _Settings2State extends State<Settings2> {
+class _SettingsState extends State<Settings> {
   final List<String> _loggedInTitles = ['User settings', 'Feedback'];
   final List<String> _loggedOutTitle = ['Log in', 'CreateUser'];
   final pControll = PageController();

@@ -69,21 +69,26 @@ class _StoreState extends State<Store> {
   Widget build(BuildContext context) {
     final _height =
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
-    return Scrollbar(
-      child: ListView.builder(
-        itemCount: _offers.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          BuyOffer(_offers.elementAt(index))));
-            },
-            child: _offers.elementAt(index).offerCard(_height),
-          );
-        },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Store'),
+      ),
+      body: Scrollbar(
+        child: ListView.builder(
+          itemCount: _offers.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            BuyOffer(_offers.elementAt(index))));
+              },
+              child: _offers.elementAt(index).offerCard(_height),
+            );
+          },
+        ),
       ),
     );
   }

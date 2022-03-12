@@ -16,7 +16,6 @@ import 'admin/admin.dart';
 import 'courses/add_offer.dart';
 import 'courses/view_offers.dart';
 import 'home.dart';
-import 'store.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -114,15 +113,13 @@ class _LayoutState extends State<Layout> {
               ? const [
                   Home(),
                   MyCourses(),
-                  Store(),
-                  Settings2(),
+                  Settings(),
                   Admin(),
                 ]
               : const [
                   Home(),
                   MyCourses(),
-                  Store(),
-                  Settings2(),
+                  Settings(),
                 ],
         ),
       ),
@@ -141,7 +138,6 @@ const List<BottomNavigationBarItem> standard = [
   BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
   BottomNavigationBarItem(
       icon: Icon(Icons.my_library_add_outlined), label: 'Courses'),
-  BottomNavigationBarItem(icon: Icon(Icons.shop_outlined), label: 'Store'),
   BottomNavigationBarItem(
       icon: Icon(Icons.settings_outlined), label: 'Settings'),
 ];
@@ -150,7 +146,6 @@ const List<BottomNavigationBarItem> manager = [
   BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
   BottomNavigationBarItem(
       icon: Icon(Icons.my_library_add_outlined), label: 'Courses'),
-  BottomNavigationBarItem(icon: Icon(Icons.shop_outlined), label: 'Store'),
   BottomNavigationBarItem(
       icon: Icon(Icons.settings_outlined), label: 'Settings'),
   BottomNavigationBarItem(

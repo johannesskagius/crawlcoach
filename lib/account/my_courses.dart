@@ -4,6 +4,7 @@ import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import '../store.dart';
 import 'user2.dart';
 
 class MyCourses extends StatefulWidget {
@@ -95,6 +96,20 @@ class _MyCoursesState extends State<MyCourses> {
 
 List<Widget> _sliverList(BuildContext context, List<Offer> _offers) {
   List<Widget> _widgets = [];
+  _widgets.add(SliverAppBar(
+    flexibleSpace: const FlexibleSpaceBar(
+      title: Text('Courses'),
+    ),
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.shopping_cart_outlined),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const Store()));
+        },
+      )
+    ],
+  ));
   for (int _i = 0; _i < _offers.length; _i++) {
     String _courseName = _offers.elementAt(_i).name;
     _widgets

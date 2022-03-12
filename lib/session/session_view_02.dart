@@ -64,13 +64,22 @@ class _Session02State extends State<Session02> {
                           exercise: values.keys.elementAt(index))));
             },
             onTap: () {
-              //Save result
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ExerciseResult(
-                          values.keys.elementAt(index),
-                          values[values.keys.elementAt(index)].toString())));
+              String type =
+                  values[values.keys.elementAt(index)].toString().substring(6);
+              switch (type) {
+                case 'times':
+                  _openAntalProg(values.keys.elementAt(index),
+                      values[values.keys.elementAt(index)].toString());
+                  break;
+                case 'minutes':
+                  break;
+                case 'seconds':
+                  break;
+                case 'kilometers':
+                  break;
+                case 'meters':
+                  break;
+              }
             },
             leading: Text(
               index.toString(),
@@ -87,5 +96,12 @@ class _Session02State extends State<Session02> {
         );
       },
     );
+  }
+
+  void _openAntalProg(Exercise _exercise, String _repsSet) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ExerciseResult(_exercise, _repsSet)));
   }
 }
