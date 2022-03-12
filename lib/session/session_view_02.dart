@@ -130,8 +130,16 @@ class _Session021State extends State<Session021> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ExerciseViewPort(
-                          exercise: values.keys.elementAt(index))));
+                      builder: (context) =>
+                          ExerciseViewPort(
+                              exercise: values.keys.elementAt(index))));
+            },
+            onLongPress: () {
+              //Save result
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>));
             },
             leading: Text(
               index.toString(),
@@ -140,8 +148,12 @@ class _Session021State extends State<Session021> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            title: Text(values.keys.elementAt(index).title),
-            subtitle: Text(values.keys.elementAt(index).subTitle),
+            title: Text(values.keys
+                .elementAt(index)
+                .title),
+            subtitle: Text(values.keys
+                .elementAt(index)
+                .subTitle),
             trailing: Text(values[values.keys.elementAt(index)].toString()),
             //trailing: ,
           ),
