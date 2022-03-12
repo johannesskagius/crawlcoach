@@ -38,7 +38,6 @@ class _SessionExercisesState extends State<SessionExercises> {
     Exercise.exerciseRefStandard.onValue.listen((event) {
       for (var element in event.snapshot.children) {
         Object? test = element.value;
-        print(test);
         _ex.add(Exercise.fromJson(test));
       }
       setState(() {
@@ -47,10 +46,10 @@ class _SessionExercisesState extends State<SessionExercises> {
     });
   }
 
-  void increment(int index) {
+  void increment(int index) async {
     if (!_chosens.contains(_exercises.elementAt(index).title)) {
       _chosens.add(_exercises.elementAt(index).title);
-      _chosens2[_exercises.elementAt(index).title] = '1';
+      _chosens2[_exercises.elementAt(index).title] = await getUnitForExercise();
       setState(() {
         _nrChosen++;
       });
@@ -124,6 +123,43 @@ class _SessionExercisesState extends State<SessionExercises> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<String> getUnitForExercise() async {
+    final _controller = TextEditingController();
+    String _dropdownValue = 'minutes';
+    String _result;
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('How many repetitions?'),
+        actions: [
+          TextField(
+            controller: _controller,
+          ),
+          DropdownButton(
+            items: <String>['meters', 'minutes', 'seconds', 'kilometers']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _dropdownValue = newValue!;
+              });
+            },
+          ),
+          TextButton(
+              child: const Text("accept"),
+              onPressed: () {
+                _result = _controller.value.text + ' ' + _dropdownValue;
+                Navigator.pop(context, _result);
+              }),
+        ],
       ),
     );
   }

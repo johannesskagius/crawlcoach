@@ -49,7 +49,7 @@ class _Session00State extends State<Session00> {
         controller: pControll,
         children: [
           Session01(widget.session), //Video
-          Session02(widget.session, widget.id), //Exercises as list,
+          Session021(widget.session, widget.id), //Exercises as list,
           Session04(widget.session, widget.id, widget.offerName), //
         ],
         onPageChanged: (value) {
@@ -59,9 +59,11 @@ class _Session00State extends State<Session00> {
       bottomSheet: BottomNavigationBar(
         currentIndex: _selected,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.check_outlined), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.check_outlined), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.check_outlined), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.done), label: 'Video'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.check_outlined), label: 'Exercises'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.check_outlined), label: 'Completed'),
         ],
         showSelectedLabels: true,
         selectedItemColor: Colors.greenAccent,
