@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'free_session.dart';
+
 class OwnCoach extends StatefulWidget {
   const OwnCoach({Key? key}) : super(key: key);
 
@@ -21,7 +23,10 @@ class _OwnCoachState extends State<OwnCoach> {
               //
               child: TextButton(
                 onPressed: () {
-                  //Go to do session
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const FreeSession()));
                 },
                 child: const Text('Start session'),
               ),
