@@ -43,6 +43,9 @@ class _SessionGeneralState extends State<SessionGeneral> {
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
         List.generate(2, (index) => TextEditingController());
+    _txtEditList.elementAt(0).text = 'TEST';
+    _txtEditList.elementAt(1).text = 'Strengthen';
+
     return Container(
       margin: const EdgeInsets.all(8),
       child: Form(
