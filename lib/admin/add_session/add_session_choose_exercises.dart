@@ -15,9 +15,9 @@ class SessionExercises extends StatefulWidget {
 }
 
 class _SessionExercisesState extends State<SessionExercises> {
-  Map<String, String> _exReps = {};
+  final Map<String, String> _exReps = {};
   int _nrChosen = 0;
-  Map<String, List<Exercise>> _exercisesMap = {};
+  final Map<String, List<Exercise>> _exercisesMap = {};
 
   void _getOwnExercises() async {
     User2? user = await User2.getLocalUser();
@@ -37,14 +37,12 @@ class _SessionExercisesState extends State<SessionExercises> {
   }
 
   void _getStandardExercises() async {
-    Map<String, List<Exercise>> _ex = {};
     DataSnapshot snapshot = await Exercise.exerciseRefStandard.get();
 
     for (DataSnapshot _types in snapshot.children) {
       String _typeName = _types.key.toString();
       for (DataSnapshot _exercises in _types.children) {
         final _x = Exercise.fromJson(_exercises.value);
-        //Kolla om key finns -> addera till listan
         if (_exercisesMap.containsKey(_typeName)) {
           _exercisesMap[_typeName]!.add(_x);
         } else {
@@ -54,25 +52,6 @@ class _SessionExercisesState extends State<SessionExercises> {
       }
     }
     setState(() {});
-
-    // Exercise.exerciseRefStandard.onValue.listen((event) {
-    //   for (DataSnapshot element in event.snapshot.children) {
-    //     List<Exercise> _ez = [];
-    //     String s = element.key.toString();
-    //     for (DataSnapshot _d in element.children) {
-    //       final _x = Exercise.fromJson(_d.value);
-    //       if (_exercises.containsKey(s)) {
-    //         _exercises[s]!.add(_x);
-    //       } else {
-    //         _ez.add(_x);
-    //       }
-    //     }
-    //     if (_ez.isNotEmpty) {
-    //       _exxes[element.key.toString()] = _ez;
-    //     }
-    //   }
-    //   setState(() {});
-    // });
   }
 
   void _increment(Exercise _ex, String _reps) async {
@@ -91,9 +70,6 @@ class _SessionExercisesState extends State<SessionExercises> {
 
   @override
   Widget build(BuildContext context) {
-    final _height =
-        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
-    final _width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Scrollbar(
         child: Stack(
@@ -166,10 +142,7 @@ class _SessionExercisesState extends State<SessionExercises> {
               child: ListTile(
                 onTap: () async {
                   String _reps = await _getUnitForExercise();
-                  print(_reps);
-                  if (_reps != null) {
-                    _increment(_exxes[_courseName]!.elementAt(index), _reps);
-                  }
+                  _increment(_exxes[_courseName]!.elementAt(index), _reps);
                 },
                 title: Text(_exxes[_courseName]!.elementAt(index).title),
               ),
