@@ -30,7 +30,7 @@ class AddSession extends StatelessWidget {
 }
 
 class SessionGeneral extends StatefulWidget {
-  SessionGeneral({Key? key}) : super(key: key);
+  const SessionGeneral({Key? key}) : super(key: key);
 
   @override
   State<SessionGeneral> createState() => _SessionGeneralState();
