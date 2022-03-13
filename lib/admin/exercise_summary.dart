@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 
 class ExerciseSummary extends StatelessWidget {
   final Exercise _exercise;
+  final String _type;
 
-  const ExerciseSummary(this._exercise, {Key? key}) : super(key: key);
+  const ExerciseSummary(this._exercise, this._type, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,9 @@ class ExerciseSummary extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                Divider(),
+                Text(_type),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -42,7 +47,7 @@ class ExerciseSummary extends StatelessWidget {
                     onPressed: () async {
                       User2? user = await User2.getLocalUser();
                       if (user != null) {
-                        _exercise.uploadExercise(user);
+                        _exercise.uploadExercise(user, _type);
                       }
                       Navigator.pop(context);
                     },

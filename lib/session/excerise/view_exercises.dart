@@ -4,8 +4,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import 'excercise.dart';
-
 class ViewExercises extends StatefulWidget {
   const ViewExercises({Key? key}) : super(key: key);
 
@@ -16,18 +14,24 @@ class ViewExercises extends StatefulWidget {
 class _ViewExercisesState extends State<ViewExercises> {
   final asset = 'assets/videos/IMG_4498_HD.mp4';
   VideoPlayerController? controller;
-  List<Exercise> _exercises = [];
+  Map<String, List<Exercise>> _exercises = {};
 
   void _getExercises() async {
     User2? user = await User2.getLocalUser();
-    List<Exercise> _exer = [];
+    Map<String, List<Exercise>> _ex = {};
+
     DataSnapshot snapshot =
         await Exercise.exerciseRefUser.child(user!.userAuth).get();
-    for (DataSnapshot data in snapshot.children) {
-      _exer.add(Exercise.fromJson(data.value));
+    for (DataSnapshot _types in snapshot.children) {
+      List<Exercise> _exer = [];
+      String typeName = _types.key.toString();
+      for (DataSnapshot _exercises in _types.children) {
+        _exer.add(Exercise.fromJson(_exercises.value));
+      }
+      _ex[typeName] = _exer;
     }
     setState(() {
-      _exercises = _exer;
+      _exercises = _ex;
     });
   }
 
@@ -40,13 +44,54 @@ class _ViewExercisesState extends State<ViewExercises> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'My Exercises',
-            style: TextStyle(color: Colors.greenAccent),
+      body: Scrollbar(
+        child: CustomScrollView(
+          slivers: _sliverList(context, _exercises),
+        ),
+      ),
+    );
+  }
+}
+
+List<Widget> _sliverList(
+    BuildContext context, Map<String, List<Exercise>> _exxes) {
+  List<Widget> _widgets = [];
+  _widgets.add(const SliverAppBar(
+    flexibleSpace: FlexibleSpaceBar(
+      title: Text('Add exercises', style: TextStyle(color: Colors.greenAccent)),
+    ),
+    actions: [],
+  ));
+  for (int _i = 0; _i < _exxes.keys.length; _i++) {
+    String _courseName = _exxes.keys.elementAt(_i);
+    _widgets
+      ..add(SliverAppBar(
+        automaticallyImplyLeading: false,
+        flexibleSpace: FlexibleSpaceBar(
+          title: Text(
+            _courseName,
+            style: const TextStyle(color: Colors.greenAccent),
           ),
         ),
-        body: ListView.builder(
+        expandedHeight: 50,
+        floating: true,
+      ))
+      ..add(SliverFixedExtentList(
+        itemExtent: 60.0,
+        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+          return Card(
+            child: ListTile(
+              title: Text(_exxes[_courseName]!.elementAt(index).title),
+            ),
+          );
+        }, childCount: _exxes[_courseName]!.length),
+      ));
+  }
+  return _widgets;
+}
+
+/*
+*       body: ListView.builder(
           itemCount: _exercises.length,
           itemBuilder: (BuildContext context, int index) {
             return Card(
@@ -70,6 +115,5 @@ class _ViewExercisesState extends State<ViewExercises> {
               ),
             );
           },
-        ));
-  }
-}
+        )
+* */

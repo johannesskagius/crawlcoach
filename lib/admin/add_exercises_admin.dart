@@ -9,15 +9,16 @@ class AddExercise extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
-        List.generate(7, (index) => TextEditingController());
-    // _txtEditList.elementAt(0).text = 'TEST';
-    // _txtEditList.elementAt(1).text = 'Strengthen';
-    // _txtEditList.elementAt(2).text = 'Lats';
-    // _txtEditList.elementAt(3).text = 'Back';
-    // _txtEditList.elementAt(4).text = 'Strength';
-    // _txtEditList.elementAt(5).text =
-    //     'https://www.youtube.com/watch?v=g7-xnvc3ap8';
-    // _txtEditList.elementAt(6).text = 'Hang on a bar, pull yourself up';
+        List.generate(8, (index) => TextEditingController());
+    _txtEditList.elementAt(0).text = 'TEST';
+    _txtEditList.elementAt(1).text = 'Strengthen';
+    _txtEditList.elementAt(2).text = 'Lats';
+    _txtEditList.elementAt(3).text = 'Back';
+    _txtEditList.elementAt(4).text = 'Strength';
+    _txtEditList.elementAt(7).text = 'Gym';
+    _txtEditList.elementAt(5).text =
+        'https://www.youtube.com/watch?v=g7-xnvc3ap8';
+    _txtEditList.elementAt(6).text = 'Hang on a bar, pull yourself up';
     final _formKey = GlobalKey<FormState>();
 
     return GestureDetector(
@@ -41,6 +42,7 @@ class AddExercise extends StatelessWidget {
                     children: [
                       _exName(_txtEditList.elementAt(0)),
                       _focusPoint(_txtEditList.elementAt(1)),
+                      _exerciseType(_txtEditList.elementAt(7)),
                       _perk(_txtEditList.elementAt(2)),
                       _perk(_txtEditList.elementAt(3)),
                       _perk(_txtEditList.elementAt(4)),
@@ -97,12 +99,13 @@ class AddExercise extends StatelessWidget {
                                       .value
                                       .text
                                       .split(','));
-
-                              Navigator.pushReplacement(
+                              String _type =
+                                  _txtEditList.elementAt(7).value.text;
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          ExerciseSummary(_ex)));
+                                          ExerciseSummary(_ex, _type)));
                               for (TextEditingController controller
                                   in _txtEditList) {
                                 controller.clear();
@@ -161,6 +164,24 @@ class AddExercise extends StatelessWidget {
       },
     );
   }
+}
+
+TextFormField _exerciseType(TextEditingController _controller) {
+  return TextFormField(
+    keyboardType: TextInputType.name,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+    controller: _controller,
+    decoration: const InputDecoration(
+        labelText: 'Sport', hintText: 'minimum 3 characters'),
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'please enter a sport';
+      }
+      if (value.length < 2 && value.length > 10) {
+        return 'please enter a sport';
+      }
+    },
+  );
 }
 
 TextFormField _exName(TextEditingController _controller) {

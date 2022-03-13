@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'account/my_courses.dart';
+import 'account/own_coach.dart';
 import 'admin/add_exercises_admin.dart';
 import 'admin/add_session/add_session.dart';
 import 'admin/add_session/view_sessions.dart';
@@ -113,12 +114,14 @@ class _LayoutState extends State<Layout> {
               ? const [
                   Home(),
                   MyCourses(),
+                  OwnCoach(),
                   Settings(),
                   Admin(),
                 ]
               : const [
                   Home(),
                   MyCourses(),
+                  OwnCoach(),
                   Settings(),
                 ],
         ),
@@ -139,6 +142,8 @@ const List<BottomNavigationBarItem> standard = [
   BottomNavigationBarItem(
       icon: Icon(Icons.my_library_add_outlined), label: 'Courses'),
   BottomNavigationBarItem(
+      icon: Icon(Icons.star_border_outlined), label: 'Own coach'),
+  BottomNavigationBarItem(
       icon: Icon(Icons.settings_outlined), label: 'Settings'),
 ];
 
@@ -146,6 +151,8 @@ const List<BottomNavigationBarItem> manager = [
   BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
   BottomNavigationBarItem(
       icon: Icon(Icons.my_library_add_outlined), label: 'Courses'),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.star_border_outlined), label: 'Own coach'),
   BottomNavigationBarItem(
       icon: Icon(Icons.settings_outlined), label: 'Settings'),
   BottomNavigationBarItem(

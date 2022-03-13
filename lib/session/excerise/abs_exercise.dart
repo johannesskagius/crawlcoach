@@ -11,8 +11,7 @@ class Exercise {
       FirebaseDatabase.instance.ref().child('exercises').child('userMade');
   static final DatabaseReference exerciseRefStandard =
       FirebaseDatabase.instance.ref().child('exercises').child('standard');
-  final String title, subTitle;
-  final String perk1, perk2, perk3;
+  final String title, subTitle, perk1, perk2, perk3;
   String? url;
   final List<Object?> description;
 
@@ -41,8 +40,12 @@ class Exercise {
     return 'Exercise{_title: $title, _subTitle: $subTitle}';
   }
 
-  void uploadExercise(User2 user) async {
-    exerciseRefUser.child(user.userAuth).child(title).set(toJson());
+  void uploadExercise(User2 _user, String _type) async {
+    exerciseRefUser
+        .child(_user.userAuth)
+        .child(_type)
+        .child(title)
+        .set(toJson());
   }
 }
 
