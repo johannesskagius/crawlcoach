@@ -32,6 +32,7 @@ class _Session02State extends State<Session02> {
         //Check if userMade
         _data = await Exercise.exerciseRefUser
             .child(widget._id)
+            .child('Gym')
             .child(_exerciseToGet.toString())
             .get();
       }
