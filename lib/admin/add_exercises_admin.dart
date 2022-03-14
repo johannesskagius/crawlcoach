@@ -10,15 +10,15 @@ class AddExercise extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
         List.generate(8, (index) => TextEditingController());
-    _txtEditList.elementAt(0).text = 'TEST';
-    _txtEditList.elementAt(1).text = 'Strengthen';
-    _txtEditList.elementAt(2).text = 'Lats';
-    _txtEditList.elementAt(3).text = 'Back';
-    _txtEditList.elementAt(4).text = 'Strength';
-    _txtEditList.elementAt(7).text = 'Gym';
-    _txtEditList.elementAt(5).text =
-        'https://www.youtube.com/watch?v=g7-xnvc3ap8';
-    _txtEditList.elementAt(6).text = 'Hang on a bar, pull yourself up';
+    // _txtEditList.elementAt(0).text = 'TEST';
+    // _txtEditList.elementAt(1).text = 'Strengthen';
+    // _txtEditList.elementAt(2).text = 'Lats';
+    // _txtEditList.elementAt(3).text = 'Back';
+    // _txtEditList.elementAt(4).text = 'Strength';
+    // _txtEditList.elementAt(7).text = 'Gym';
+    // _txtEditList.elementAt(5).text =
+    //     'https://www.youtube.com/watch?v=g7-xnvc3ap8';
+    // _txtEditList.elementAt(6).text = 'Hang on a bar, pull yourself up';
     final _formKey = GlobalKey<FormState>();
 
     return GestureDetector(
@@ -138,7 +138,7 @@ class AddExercise extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return 'please enter a perk';
         }
-        if (value.length > 10) {
+        if (value.length > 15) {
           return 'Too many letters';
         }
         return null;
@@ -157,8 +157,8 @@ class AddExercise extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return 'please enter a subtitle';
         }
-        if (value.length > 10) {
-          return 'less than 10 characters';
+        if (value.length > 15) {
+          return 'less than 15 characters';
         }
         return null;
       },
