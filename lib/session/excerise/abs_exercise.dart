@@ -31,8 +31,8 @@ class Exercise {
         'perk1': perk1,
         'perk2': perk2,
         'perk3': perk3,
-        'url': url,
         'description': description,
+        'url': url,
       };
 
   @override

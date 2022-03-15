@@ -16,31 +16,55 @@ class Session02 extends StatefulWidget {
 }
 
 class _Session02State extends State<Session02> {
-  Map<Exercise, Object> values = {};
+  Map<Exercise, Object> _values = {};
 
   Future<void> _getListOfExercises2() async {
+    DatabaseReference _ref = Exercise.exerciseRefStandard;
+    String _exType = 'Gym';
     Map<Exercise, String> _gottenExercises = {};
     Map<Object?, Object?> _exercisesAmounts = widget._session.exercises;
 
+    int i = 0;
     for (Object? _exerciseToGet in _exercisesAmounts.keys) {
-      // iterate through the exercise that should be collected.
-      //Check if standard made,
-      DataSnapshot _data = await Exercise.exerciseRefStandard
-          .child(_exerciseToGet.toString())
-          .get();
-      if (!_data.exists) {
-        //Check if userMade
-        _data = await Exercise.exerciseRefUser
-            .child(widget._id)
-            .child('Gym')
-            .child(_exerciseToGet.toString())
-            .get();
+      String _getInfo = _exercisesAmounts.values.elementAt(i).toString();
+      _getInfo = _getInfo.substring(1, _getInfo.length - 1);
+      List<String> _list = _getInfo.split(',');
+      print('list: "' + _list.elementAt(1) + '"');
+      if (_list.elementAt(1).trim() == 'user') {
+        // true == standard
+        print('user: ' + widget._id);
+        _ref = Exercise.exerciseRefUser.child(widget._id);
+      } else {
+        _ref = Exercise.exerciseRefStandard;
       }
+      switch (_list.elementAt(2).trim()) {
+        case 'Body weight':
+          _exType = 'Body weight';
+          break;
+        case 'Body Weight':
+          _exType = 'Body Weight';
+          break;
+        case 'Swim':
+          _exType = 'Swim';
+          break;
+        case 'Gym':
+          _exType = 'Gym';
+          break;
+        case 't':
+          _exType = 't';
+          break;
+      }
+      // iterate through the exercise that should be collected.
+      DataSnapshot _data =
+          await _ref.child(_exType).child(_exerciseToGet.toString()).get();
       Exercise _ex = Exercise.fromJson(_data.value);
-      _gottenExercises[_ex] = _exercisesAmounts[_ex.title].toString();
+      String _d = _exercisesAmounts[_ex.title].toString();
+      _d = _d.substring(1, _d.length);
+      _gottenExercises[_ex] = _d.split(',').elementAt(0);
+      i++;
     }
     setState(() {
-      values = _gottenExercises;
+      _values = _gottenExercises;
     });
   }
 
@@ -53,7 +77,7 @@ class _Session02State extends State<Session02> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: values.keys.length,
+      itemCount: _values.keys.length,
       itemBuilder: (BuildContext context, int index) {
         return Card(
           child: ListTile(
@@ -62,15 +86,16 @@ class _Session02State extends State<Session02> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ExerciseViewPort(
-                          exercise: values.keys.elementAt(index))));
+                          exercise: _values.keys.elementAt(index))));
             },
             onTap: () {
-              String type =
-                  values[values.keys.elementAt(index)].toString().substring(6);
+              String type = _values[_values.keys.elementAt(index)]
+                  .toString()
+                  .substring(6);
               switch (type) {
                 case 'times':
-                  _openAntalProg(values.keys.elementAt(index),
-                      values[values.keys.elementAt(index)].toString());
+                  _openAntalProg(_values.keys.elementAt(index),
+                      _values[_values.keys.elementAt(index)].toString());
                   break;
                 case 'minutes':
                   break;
@@ -89,9 +114,9 @@ class _Session02State extends State<Session02> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            title: Text(values.keys.elementAt(index).title),
-            subtitle: Text(values.keys.elementAt(index).subTitle),
-            trailing: Text(values[values.keys.elementAt(index)].toString()),
+            title: Text(_values.keys.elementAt(index).title),
+            subtitle: Text(_values.keys.elementAt(index).subTitle),
+            trailing: Text(_values[_values.keys.elementAt(index)].toString()),
             //trailing: ,
           ),
         );

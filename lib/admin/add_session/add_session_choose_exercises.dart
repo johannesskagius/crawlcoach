@@ -15,9 +15,10 @@ class SessionExercises extends StatefulWidget {
 }
 
 class _SessionExercisesState extends State<SessionExercises> {
-  final Map<String, String> _exReps = {};
+  final Map<String, List<Object>> _exReps = {};
   int _nrChosen = 0;
   final Map<String, List<Exercise>> _exercisesMap = {};
+  final Set<String> _standard = {};
 
   void _getOwnExercises() async {
     User2? user = await User2.getLocalUser();
@@ -29,20 +30,22 @@ class _SessionExercisesState extends State<SessionExercises> {
       List<Exercise> _exer = [];
       String typeName = _types.key.toString();
       for (DataSnapshot _exercises in _types.children) {
-        _exer.add(Exercise.fromJson(_exercises.value));
+        final _ex = Exercise.fromJson(_exercises.value);
+        _exer.add(_ex);
       }
-      _ex[typeName] = _exer;
+      setState(() {
+        _exercisesMap[typeName] = _exer;
+      });
     }
-    _exercisesMap.addAll(_ex);
   }
 
   void _getStandardExercises() async {
     DataSnapshot snapshot = await Exercise.exerciseRefStandard.get();
-
     for (DataSnapshot _types in snapshot.children) {
       String _typeName = _types.key.toString();
       for (DataSnapshot _exercises in _types.children) {
         final _x = Exercise.fromJson(_exercises.value);
+        _standard.add(_x.title);
         if (_exercisesMap.containsKey(_typeName)) {
           _exercisesMap[_typeName]!.add(_x);
         } else {
@@ -54,8 +57,21 @@ class _SessionExercisesState extends State<SessionExercises> {
     setState(() {});
   }
 
-  void _increment(Exercise _ex, String _reps) async {
-    _exReps[_ex.title] = _reps;
+  void _increment(Exercise _ex, String _reps, String _exType) async {
+    String _isUserMade = 'user';
+    if (_standard.contains(_ex.title)) {
+      _isUserMade = 'standard';
+    }
+    print(_isUserMade);
+    if (_exReps.containsKey(_ex.title)) {
+      _exReps[_ex.title]!
+        ..add(_reps)
+        ..add(_isUserMade.toString())
+        ..add(_exType);
+    } else {
+      List<Object> _list = [_reps, _isUserMade, _exType];
+      _exReps[_ex.title] = _list;
+    }
     setState(() {
       _nrChosen++;
     });
@@ -142,7 +158,8 @@ class _SessionExercisesState extends State<SessionExercises> {
               child: ListTile(
                 onTap: () async {
                   String _reps = await _getUnitForExercise();
-                  _increment(_exxes[_courseName]!.elementAt(index), _reps);
+                  _increment(_exxes[_courseName]!.elementAt(index), _reps,
+                      _courseName);
                 },
                 title: Text(_exxes[_courseName]!.elementAt(index).title),
               ),
