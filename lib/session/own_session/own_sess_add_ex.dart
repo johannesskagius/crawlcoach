@@ -45,7 +45,6 @@ class _AddExercisesState extends State<AddExercises> {
 
   void _saveData() async {
     SharedPreferences _shared = await SharedPreferences.getInstance();
-    print(_exercises.length);
     if (_exercises.isNotEmpty) {
       String _ex = json.encode(_exercises);
       _shared.setString('EX', _ex);
