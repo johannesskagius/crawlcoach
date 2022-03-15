@@ -62,7 +62,6 @@ class _SessionExercisesState extends State<SessionExercises> {
     if (_standard.contains(_ex.title)) {
       _isUserMade = 'standard';
     }
-    print(_isUserMade);
     if (_exReps.containsKey(_ex.title)) {
       _exReps[_ex.title]!
         ..add(_reps)
@@ -157,7 +156,7 @@ class _SessionExercisesState extends State<SessionExercises> {
             return Card(
               child: ListTile(
                 onTap: () async {
-                  String _reps = await _getUnitForExercise();
+                  String _reps = await Session.getUnitForExercise(context);
                   _increment(_exxes[_courseName]!.elementAt(index), _reps,
                       _courseName);
                 },
@@ -168,61 +167,5 @@ class _SessionExercisesState extends State<SessionExercises> {
         ));
     }
     return _widgets;
-  }
-
-  Future<String> _getUnitForExercise() async {
-    final _controller = TextEditingController();
-    final _controller2 = TextEditingController();
-    String _dropdownValue = 'minutes';
-    String _result;
-    return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('How many repetitions?'),
-        actions: [
-          TextField(
-            decoration: const InputDecoration(hintText: 'Reps'),
-            controller: _controller,
-            keyboardType: TextInputType.number,
-          ),
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'times',
-            ),
-            controller: _controller2,
-            keyboardType: TextInputType.number,
-          ),
-          DropdownButton(
-            items: <String>[
-              'meters',
-              'minutes',
-              'seconds',
-              'kilometers',
-              'times'
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                _dropdownValue = newValue!;
-              });
-            },
-          ),
-          TextButton(
-              child: const Text("accept"),
-              onPressed: () {
-                _result = _controller.value.text +
-                    ' x ' +
-                    _controller.value.text +
-                    ' ' +
-                    _dropdownValue;
-                Navigator.pop(context, _result);
-              }),
-        ],
-      ),
-    );
   }
 }

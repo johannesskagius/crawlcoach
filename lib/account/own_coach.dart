@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'free_session.dart';
+import '../session/own_session/free_session.dart';
 
 class OwnCoach extends StatefulWidget {
   const OwnCoach({Key? key}) : super(key: key);

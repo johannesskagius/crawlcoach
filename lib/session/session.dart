@@ -80,6 +80,58 @@ class Session {
       ],
     );
   }
+
+  static Future<String> getUnitForExercise(BuildContext context) async {
+    final _controller = TextEditingController();
+    final _controller2 = TextEditingController();
+    String _dropdownValue = 'minutes';
+    String _result;
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('How many repetitions?'),
+        actions: [
+          TextField(
+            decoration: const InputDecoration(hintText: 'Reps'),
+            controller: _controller,
+            keyboardType: TextInputType.number,
+          ),
+          TextField(
+            decoration: const InputDecoration(
+              hintText: 'times',
+            ),
+            controller: _controller2,
+            keyboardType: TextInputType.number,
+          ),
+          DropdownButton(
+            items: <String>[
+              'meters',
+              'minutes',
+              'seconds',
+              'kilometers',
+              'times'
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {},
+          ),
+          TextButton(
+              child: const Text("accept"),
+              onPressed: () {
+                _result = _controller.value.text +
+                    ' x ' +
+                    _controller.value.text +
+                    ' ' +
+                    _dropdownValue;
+                Navigator.pop(context, _result);
+              }),
+        ],
+      ),
+    );
+  }
 }
 
 Session _sessionFromJson(dynamic json) {
