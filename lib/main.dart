@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'account/my_courses.dart';
-import 'account/own_coach.dart';
 import 'admin/add_exercises_admin.dart';
 import 'admin/add_session/add_session.dart';
 import 'admin/add_session/view_sessions.dart';
@@ -17,6 +16,7 @@ import 'admin/admin.dart';
 import 'courses/add_offer.dart';
 import 'courses/view_offers.dart';
 import 'home.dart';
+import 'session/own_session/own_coach.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AddExercises extends StatefulWidget {
   const AddExercises(this._exNames, {Key? key}) : super(key: key);
-  final List<String> _exNames;
+  final Map<String, String> _exNames;
 
   @override
   _AddExercisesState createState() => _AddExercisesState();
@@ -15,21 +15,18 @@ class _AddExercisesState extends State<AddExercises> {
   final _controller1 = TextEditingController();
   final _controller2 = TextEditingController();
   Map<String, dynamic> _exercises = {};
-  int _exNr = 1;
   String _exName = '';
 
   void _addExRes(String _ex, String _res) async {
     if (_exercises.isEmpty) {
-      print('here');
       SharedPreferences _shared = await SharedPreferences.getInstance();
       DateTime _dateTimeNow = DateTime.now();
       String _date = _dateTimeNow.toIso8601String();
       _shared.setString('date', _date);
     }
     setState(() {
-      _exercises[_exNr.toString() + _ex] = _res;
+      _exercises[_exercises.length.toString() + _ex] = _res;
     });
-    _exNr++;
   }
 
   void _getStoredData() async {
@@ -55,6 +52,7 @@ class _AddExercisesState extends State<AddExercises> {
 
   @override
   void initState() {
+    print(widget._exNames.values);
     _getStoredData();
     super.initState();
   }
@@ -103,7 +101,7 @@ class _AddExercisesState extends State<AddExercises> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: Autocomplete(
                   onSelected: (value) => {
                         _exName = value as String,
@@ -112,14 +110,14 @@ class _AddExercisesState extends State<AddExercises> {
                     if (textEditingValue.text == '') {
                       return const Iterable<String>.empty();
                     }
-                    return widget._exNames.where((String option) {
+                    return widget._exNames.values.where((String option) {
                       return option
                           .contains(textEditingValue.text.toLowerCase());
                     });
                   }),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: TextField(
                 decoration: const InputDecoration(
                   hintText: 'Reps',
@@ -129,7 +127,7 @@ class _AddExercisesState extends State<AddExercises> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: TextField(
                 decoration: const InputDecoration(
                   hintText: 'Weight',

@@ -29,7 +29,9 @@ class _OverViewState extends State<OverView> {
         _exerPresent[_exName] = _list;
       }
     }
-    setState(() {});
+    setState(() {
+      _exerPresent;
+    });
   }
 
   void _getWorkOutTime() async {
@@ -47,36 +49,76 @@ class _OverViewState extends State<OverView> {
     super.initState();
   }
 
+  void _unBind() {
+    setState(() {
+      WidgetsBinding.instance?.focusManager.primaryFocus?.unfocus();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text('Great job!'),
-        _sessDur != null ? Text(_sessDur!.inMinutes.toString()) : Container(),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: _exerPresent.keys.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Card(
-              child: ListTile(
-                title: Text(_exerPresent.keys.elementAt(index)),
-                trailing: Text(
-                    _exerPresent.values.elementAt(index).length.toString()),
+    return GestureDetector(
+      onTap: _unBind,
+      child: Container(
+        margin: const EdgeInsets.all(8),
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                'Great job!',
+                style: TextStyle(
+                  fontSize: 30,
+                ),
               ),
-            );
-          },
+            ),
+            _sessDur != null
+                ? Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('This session took: '),
+                        Text(_sessDur!.inMinutes.toString() + 'min'),
+                      ],
+                    ),
+                  )
+                : Container(),
+            const TextField(
+              decoration: InputDecoration(
+                  hintText: 'Would you like to save this session?'),
+              keyboardType: TextInputType.name,
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _exerPresent.keys.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  child: ListTile(
+                    title: Text(_exerPresent.keys.elementAt(index)),
+                    trailing: Text(
+                        _exerPresent.values.elementAt(index).length.toString()),
+                  ),
+                );
+              },
+            ),
+            ElevatedButton(
+                onPressed: _exerPresent.keys.isNotEmpty
+                    ? () async {
+                        SharedPreferences _shared =
+                            await SharedPreferences.getInstance();
+                        //remove all
+                        _shared.remove('EX');
+                        _shared.remove('date');
+                        Navigator.pop(context);
+                      }
+                    : null,
+                child: const Text('Completed'))
+          ],
         ),
-        ElevatedButton(
-            onPressed: () async {
-              SharedPreferences _shared = await SharedPreferences.getInstance();
-              //remove all
-              _shared.remove('EX');
-              _shared.remove('date');
-              Navigator.pop(context);
-            },
-            child: const Text('Completed'))
-      ],
+      ),
     );
   }
 }

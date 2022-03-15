@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../session/own_session/free_session.dart';
+import 'free_session.dart';
 
 class OwnCoach extends StatefulWidget {
   const OwnCoach({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _OwnCoachState extends State<OwnCoach> {
               //Show training calendar
               //
               child: TextButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
