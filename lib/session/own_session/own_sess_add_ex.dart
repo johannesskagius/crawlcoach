@@ -109,6 +109,7 @@ class _AddExercisesState extends State<AddExercises> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Autocomplete(
+                  //TODO värdelös
                   onSelected: (value) => {
                         _exName = value as String,
                       },

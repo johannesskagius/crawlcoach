@@ -33,8 +33,6 @@ class _FreeSessionState extends State<FreeSession> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _actionBar = [];
-
     void _pageChanged(int value) {
       WidgetsBinding.instance?.focusManager.primaryFocus?.unfocus();
     }
