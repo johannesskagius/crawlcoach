@@ -94,7 +94,7 @@ class _Session04State extends State<Session04> {
                     });
                     //Move session to done sessions
                     final user = await User2.getLocalUser();
-                    widget._session.pushSessionStats(sessionStats,
+                    widget._session.pushSessionFeedback(sessionStats,
                         widget._session.sessionName, user!.userAuth);
                     user.markSessionDone(
                         widget._sessionID, widget._session, widget._courseName);

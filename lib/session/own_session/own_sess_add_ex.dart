@@ -12,12 +12,12 @@ class AddExercises extends StatefulWidget {
 }
 
 class _AddExercisesState extends State<AddExercises> {
-  final _controller1 = TextEditingController();
-  final _controller2 = TextEditingController();
+  final TextEditingController _controller1 = TextEditingController();
+  final TextEditingController _controller2 = TextEditingController();
   Map<String, dynamic> _exercises = {};
   String _exName = '';
 
-  void _addExRes(String _ex, String _res) async {
+  void _addExRes(String _ex, String _reps, String _weight) async {
     if (_exercises.isEmpty) {
       SharedPreferences _shared = await SharedPreferences.getInstance();
       DateTime _dateTimeNow = DateTime.now();
@@ -25,8 +25,9 @@ class _AddExercisesState extends State<AddExercises> {
       _shared.setString('date', _date);
     }
     setState(() {
-      _exercises[_exercises.length.toString() + _ex] = _res;
+      _exercises[_exercises.length.toString() + _ex] = [_reps, _weight];
     });
+    _saveData();
   }
 
   void _getStoredData() async {
@@ -52,14 +53,12 @@ class _AddExercisesState extends State<AddExercises> {
 
   @override
   void initState() {
-    print(widget._exNames.values);
     _getStoredData();
     super.initState();
   }
 
   @override
   void dispose() {
-    _saveData();
     super.dispose();
   }
 
@@ -76,9 +75,16 @@ class _AddExercisesState extends State<AddExercises> {
               title: const Text('Remove exercise'),
               actions: [
                 TextButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      SharedPreferences _shared =
+                          await SharedPreferences.getInstance();
                       setState(() {
                         _exercises.remove(_string);
+                        if (_exercises.isEmpty) {
+                          _shared.remove('EX');
+                        } else {
+                          _saveData();
+                        }
                       });
                       Navigator.pop(context);
                     },
@@ -172,13 +178,15 @@ class _AddExercisesState extends State<AddExercises> {
                 padding: const EdgeInsets.all(20),
                 child: ElevatedButton(
                     onPressed: () {
-                      String loadNReps = _controller1.value.text + ' x ';
-                      loadNReps += _controller2.value.text + 'kg';
-                      if (loadNReps.isNotEmpty && _exName.isNotEmpty) {
-                        _addExRes(_exName, loadNReps);
+                      String _reps = _controller1.value.text + ' x ';
+                      String _weight = _controller2.value.text;
+                      if (_reps.isNotEmpty &&
+                          _weight.isNotEmpty &&
+                          _exName.isNotEmpty) {
+                        _addExRes(_exName, _reps, _weight);
                       }
-                      _controller1.clear();
-                      _controller2.clear();
+                      _controller1.text = '';
+                      _controller2.text = '';
                       WidgetsBinding.instance?.focusManager.primaryFocus
                           ?.unfocus();
                     },

@@ -28,7 +28,7 @@ class Session {
 
   factory Session.fromJson(dynamic json) => _sessionFromJson(json);
 
-  Future<void> pushSessionStats(Map<String, double> _sessionStats,
+  Future<void> pushSessionFeedback(Map<String, double> _sessionStats,
       String _sessionName, String _uID) async {
     final DatabaseReference _ref = FirebaseDatabase.instance.ref();
     await _ref

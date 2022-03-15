@@ -125,9 +125,8 @@ class _ExerciseResultState extends State<ExerciseResult> {
                     _userRes[i] = (await getResult(i));
                   }
                   _userRes['set_type'] = widget._type;
-                  String nowString = getToday();
+                  String nowString = _getToday();
                   result[nowString.toString()] = _userRes;
-
                   User2.ref
                       .child(user!.userAuth)
                       .child('r_exercise')
@@ -143,7 +142,7 @@ class _ExerciseResultState extends State<ExerciseResult> {
     );
   }
 
-  String getToday() {
+  String _getToday() {
     final now = DateTime.now();
     String month = now.month.toString();
     if (now.month < 10) {

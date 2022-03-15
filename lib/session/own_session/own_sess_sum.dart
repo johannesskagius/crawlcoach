@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:crawl_course_3/session/session.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../account/user2.dart';
 
 class OverView extends StatefulWidget {
   const OverView({Key? key}) : super(key: key);
@@ -11,27 +14,20 @@ class OverView extends StatefulWidget {
 }
 
 class _OverViewState extends State<OverView> {
-  Map<String, dynamic> _exer = {};
-  Map<String, List<String>> _exerPresent = {};
+  Map<String, dynamic> _exercises = {};
   Duration? _sessDur;
+  final _contoller = TextEditingController();
+  final _contoller2 = TextEditingController();
 
-  void _loadNCountEx() async {
+  void _getStoredData() async {
     SharedPreferences _shared = await SharedPreferences.getInstance();
-    String? s = _shared.getString('EX');
-    _exer = json.decode(s!);
-    for (String _x in _exer.keys) {
-      String _exName = _x.substring(1);
-      if (_exerPresent.containsKey(_exName)) {
-        String _resr = _exer[_x].toString();
-        _exerPresent[_exName]!.add(_resr);
-      } else {
-        List<String> _list = [_exName];
-        _exerPresent[_exName] = _list;
-      }
+    DateTime _date = DateTime.parse(_shared.getString('date')!);
+    if (DateTime.now().difference(_date) < const Duration(hours: 4)) {
+      setState(() {
+        String? s = _shared.getString('EX');
+        _exercises = json.decode(s!);
+      });
     }
-    setState(() {
-      _exerPresent;
-    });
   }
 
   void _getWorkOutTime() async {
@@ -44,19 +40,20 @@ class _OverViewState extends State<OverView> {
 
   @override
   void initState() {
-    _loadNCountEx();
+    //_loadNCountEx();
+    _getStoredData();
     _getWorkOutTime();
     super.initState();
   }
 
   void _unBind() {
-    setState(() {
-      WidgetsBinding.instance?.focusManager.primaryFocus?.unfocus();
-    });
+    WidgetsBinding.instance?.focusManager.primaryFocus?.unfocus();
   }
 
   @override
   Widget build(BuildContext context) {
+    final _height =
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     return GestureDetector(
       onTap: _unBind,
       child: Container(
@@ -86,32 +83,83 @@ class _OverViewState extends State<OverView> {
                     ),
                   )
                 : Container(),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: _contoller,
+              decoration: const InputDecoration(
                   hintText: 'Would you like to save this session?'),
               keyboardType: TextInputType.name,
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: _exerPresent.keys.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  child: ListTile(
-                    title: Text(_exerPresent.keys.elementAt(index)),
-                    trailing: Text(
-                        _exerPresent.values.elementAt(index).length.toString()),
-                  ),
-                );
-              },
+            TextField(
+              controller: _contoller2,
+              decoration: const InputDecoration(
+                  hintText: 'Would you like to save this session?'),
+              keyboardType: TextInputType.name,
+            ),
+            SizedBox(
+              height: _height * .5,
+              child: ListView.builder(
+                key: const PageStorageKey<String>('Page1'),
+                shrinkWrap: true,
+                itemCount: _exercises.length,
+                itemBuilder: (BuildContext context, int index) {
+                  int _itemInList = index;
+                  _itemInList++;
+                  return _exercises.isNotEmpty
+                      ? Card(
+                          child: ListTile(
+                            onTap: () {
+                              //_remove(_exercises.keys.elementAt(index));
+                            },
+                            leading: Text(_itemInList.toString()),
+                            title: Text(
+                                _exercises.keys.elementAt(index).substring(1)),
+                            trailing: Text(
+                                _exercises.values.elementAt(index).toString()),
+                          ),
+                        )
+                      : const ListTile(
+                          title: Text('Complete first exercise'),
+                        );
+                },
+              ),
             ),
             ElevatedButton(
-                onPressed: _exerPresent.keys.isNotEmpty
+                onPressed: _exercises.keys.isNotEmpty
                     ? () async {
-                        SharedPreferences _shared =
-                            await SharedPreferences.getInstance();
-                        //remove all
-                        _shared.remove('EX');
-                        _shared.remove('date');
+                        final _user = await User2.getLocalUser();
+
+                        if (_contoller.value.text.isNotEmpty) {
+                          //Create a session,
+                          _upLoadPrivate();
+                        }
+                        //Upload t res
+                        Map<String, Map<String, Object?>> result = {};
+                        Set<String> _addedNames = {};
+
+                        int i = 0;
+                        for (String _exName in _exercises.keys) {
+                          String _exNameFormatted = _exName.substring(1);
+                          if (!_addedNames.contains(_exNameFormatted)) {
+                            i = 0;
+                          }
+                          String _info = _exercises[_exName].toString();
+                          _info = _info.substring(1, _info.length - 1);
+                          //result[_exNameFormatted] = {'set_type': _info.replaceFirst(', ', '')} //TODO add sets and reps to info
+                          _info = _info.split(',').elementAt(1).trim();
+                          result[_exNameFormatted] = {
+                            i.toString(): double.parse(_info)
+                          };
+                          User2.ref
+                              .child(_user!.userAuth)
+                              .child('r_exercise')
+                              .child(_exNameFormatted)
+                              .child(_getToday())
+                              .update({i.toString(): double.parse(_info)});
+                          result.clear();
+                          i++;
+                          _addedNames.add(_exNameFormatted);
+                        }
+                        await _resetSess();
                         Navigator.pop(context);
                       }
                     : null,
@@ -120,5 +168,33 @@ class _OverViewState extends State<OverView> {
         ),
       ),
     );
+  }
+
+  String _getToday() {
+    final now = DateTime.now();
+    String month = now.month.toString();
+    if (now.month < 10) {
+      month = '0' + now.month.toString();
+    }
+    return now.day.toString() + month + now.year.toString();
+  }
+
+  void _upLoadPrivate() {
+    Session _mySession = Session(
+        sessionName: _contoller.value.text,
+        desc: _contoller2.value.text,
+        exercises: _exercises,
+        videoUrl: 'n');
+    User2.ref
+        .child('my_sessions')
+        .child(_mySession.sessionName)
+        .set(_mySession.toJson());
+  }
+
+  Future<void> _resetSess() async {
+    SharedPreferences _shared = await SharedPreferences.getInstance();
+    //remove all
+    _shared.remove('EX');
+    _shared.remove('date');
   }
 }
