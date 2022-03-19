@@ -14,6 +14,7 @@ class Exercise {
   final String title, subTitle, perk1, perk2, perk3;
   String? url;
   final List<Object?> description;
+  final bool trackRes;
 
   Exercise(this.url,
       {required this.title,
@@ -21,7 +22,8 @@ class Exercise {
       required this.perk1,
       required this.perk2,
       required this.perk3,
-      required this.description});
+      required this.description,
+      required this.trackRes});
 
   factory Exercise.fromJson(dynamic json) => _exerciseFromJson(json);
 
@@ -56,7 +58,8 @@ Exercise _exerciseFromJson(dynamic json) {
       perk1: json['perk1'],
       perk2: json['perk2'],
       perk3: json['perk3'],
-      description: json['description']);
+      description: json['description'],
+      trackRes: json['trackRes']);
 }
 
 class Explained extends StatelessWidget {

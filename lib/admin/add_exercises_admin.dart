@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 
 import 'exercise_summary.dart';
 
-class AddExercise extends StatelessWidget {
+class AddExercise extends StatefulWidget {
   const AddExercise({Key? key}) : super(key: key);
 
+  @override
+  State<AddExercise> createState() => _AddExerciseState();
+}
+
+class _AddExerciseState extends State<AddExercise> {
   @override
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
         List.generate(8, (index) => TextEditingController());
+    bool _shouldBeTracked = true;
     // _txtEditList.elementAt(0).text = 'TEST';
     // _txtEditList.elementAt(1).text = 'Strengthen';
     // _txtEditList.elementAt(2).text = 'Lats';
@@ -42,6 +48,14 @@ class AddExercise extends StatelessWidget {
                     children: [
                       _exName(_txtEditList.elementAt(0)),
                       _focusPoint(_txtEditList.elementAt(1)),
+                      Switch(
+                        value: _shouldBeTracked,
+                        onChanged: (value) {
+                          setState(() {
+                            _shouldBeTracked = value;
+                          });
+                        },
+                      ),
                       _exerciseType(_txtEditList.elementAt(7)),
                       _perk(_txtEditList.elementAt(2)),
                       _perk(_txtEditList.elementAt(3)),
@@ -98,7 +112,8 @@ class AddExercise extends StatelessWidget {
                                       .elementAt(6)
                                       .value
                                       .text
-                                      .split(','));
+                                      .split(','),
+                                  trackRes: _shouldBeTracked);
                               String _type =
                                   _txtEditList.elementAt(7).value.text;
                               Navigator.push(

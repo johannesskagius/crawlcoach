@@ -36,6 +36,12 @@ class _OwnCoachState extends State<OwnCoach> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Train'),
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.save_outlined)),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -62,9 +68,9 @@ class _OwnCoachState extends State<OwnCoach> {
               margin: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                   border: Border.all(
-                width: 0.5,
-                color: Colors.black,
-              )),
+                    width: 0.5,
+                    color: Colors.black,
+                  )),
               child: Stack(
                 alignment: Alignment.topLeft,
                 children: [

@@ -204,11 +204,14 @@ class _AddExercisesState extends State<AddExercises> {
                     }
                     final _ex = Exercise.fromJson(_exSnap.value);
                     Map<String, Map<Object, Object>> _result = {};
-                    _result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ExerciseResult(_ex, '$_set x $_reps times')));
+                    if (_ex.trackRes == null || !_ex.trackRes) {
+                    } else {
+                      _result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ExerciseResult(_ex, '$_set x $_reps times')));
+                    }
                     String nowString = _getToday();
                     for (Object x in _result[nowString]!.values) {
                       try {
