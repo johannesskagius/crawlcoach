@@ -112,25 +112,25 @@ class _AddExercisesState extends State<AddExercises> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Remove exercise'),
-          actions: [
-            TextButton(
-                onPressed: () async {
-                  SharedPreferences _shared =
-                  await SharedPreferences.getInstance();
-                  setState(() {
-                    _exercises.remove(_string);
-                    if (_exercises.isEmpty) {
-                      _shared.remove('EX');
-                    } else {
-                      _saveData();
-                    }
-                  });
-                  Navigator.pop(context);
-                },
-                child: const Text('Remove Exercise')),
-          ],
-        ));
+              title: const Text('Remove exercise'),
+              actions: [
+                TextButton(
+                    onPressed: () async {
+                      SharedPreferences _shared =
+                          await SharedPreferences.getInstance();
+                      setState(() {
+                        _exercises.remove(_string);
+                        if (_exercises.isEmpty) {
+                          _shared.remove('EX');
+                        } else {
+                          _saveData();
+                        }
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Remove Exercise')),
+              ],
+            ));
   }
 
   @override
@@ -204,14 +204,12 @@ class _AddExercisesState extends State<AddExercises> {
                     }
                     final _ex = Exercise.fromJson(_exSnap.value);
                     Map<String, Map<Object, Object>> _result = {};
-                    if (_ex.trackRes == null || !_ex.trackRes) {
-                    } else {
-                      _result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ExerciseResult(_ex, '$_set x $_reps times')));
-                    }
+                    _result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ExerciseResult(_ex, '$_set x $_reps times')));
+
                     String nowString = _getToday();
                     for (Object x in _result[nowString]!.values) {
                       try {
@@ -243,8 +241,8 @@ class _AddExercisesState extends State<AddExercises> {
                   _itemInList++;
                   return _exercises.isNotEmpty
                       ? Card(
-                    child: ListTile(
-                      onTap: () {
+                          child: ListTile(
+                            onTap: () {
                               _remove(_exercises.keys.elementAt(index));
                             },
                             leading: Text(_itemInList.toString()),
@@ -252,10 +250,10 @@ class _AddExercisesState extends State<AddExercises> {
                             trailing: Text(
                                 _exercises.values.elementAt(index).toString()),
                           ),
-                  )
+                        )
                       : const ListTile(
-                    title: Text('Complete first exercise'),
-                  );
+                          title: Text('Complete first exercise'),
+                        );
                 },
               ),
             ),

@@ -156,7 +156,7 @@ class _SessionExercisesState extends State<SessionExercises> {
             return Card(
               child: ListTile(
                 onTap: () async {
-                  String _reps = await Session.getUnitForExercise(context);
+                  String _reps = await Exercise.setUnitAndReps(context);
                   _increment(_exxes[_courseName]!.elementAt(index), _reps,
                       _courseName);
                 },

@@ -14,7 +14,7 @@ class Exercise {
   final String title, subTitle, perk1, perk2, perk3;
   String? url;
   final List<Object?> description;
-  final bool trackRes;
+  Map<Object?, Object?>? other;
 
   Exercise(this.url,
       {required this.title,
@@ -23,11 +23,12 @@ class Exercise {
       required this.perk2,
       required this.perk3,
       required this.description,
-      required this.trackRes});
+      required this.other});
 
   factory Exercise.fromJson(dynamic json) => _exerciseFromJson(json);
 
-  Map<Object, dynamic> toJson() => {
+  Map<Object, dynamic> toJson() =>
+      {
         'title': title,
         'subTitle': subTitle,
         'perk1': perk1,
@@ -35,6 +36,7 @@ class Exercise {
         'perk3': perk3,
         'description': description,
         'url': url,
+        'other': other,
       };
 
   @override
@@ -49,6 +51,91 @@ class Exercise {
         .child(title)
         .set(toJson());
   }
+
+  static Future<String> setUnitAndReps(BuildContext context) async {
+    final _controller = TextEditingController();
+    final _controller2 = TextEditingController();
+    String _dropDownValue = '';
+
+    String _result;
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('How many repetitions?'),
+        actions: [
+          TextField(
+            decoration: const InputDecoration(hintText: 'Reps'),
+            controller: _controller,
+            keyboardType: TextInputType.number,
+          ),
+          TextField(
+            decoration: const InputDecoration(
+              hintText: 'times',
+            ),
+            controller: _controller2,
+            keyboardType: TextInputType.number,
+          ),
+          DropdownButton(
+            items: <String>[
+              'meters',
+              'minutes',
+              'seconds',
+              'kilometers',
+              'times'
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: _dropDownValue,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {},
+          ),
+          TextButton(
+              child: const Text("accept"),
+              onPressed: () {
+                _result = _controller.value.text +
+                    ' x ' +
+                    _controller.value.text +
+                    ' ' +
+                    _dropDownValue;
+                Navigator.pop(context, _result);
+              }),
+        ],
+      ),
+    );
+  }
+
+  static Future<String> setUnitType(BuildContext context) async {
+    String _dropdownValue = 'minutes';
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Set unit type'),
+        actions: [
+          DropdownButton(
+            items: <String>[
+              'meters',
+              'minutes',
+              'seconds',
+              'kilometers',
+              'times'
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {},
+          ),
+          TextButton(
+              child: const Text("accept"),
+              onPressed: () {
+                Navigator.pop(context, _dropdownValue);
+              }),
+        ],
+      ),
+    );
+  }
 }
 
 Exercise _exerciseFromJson(dynamic json) {
@@ -59,7 +146,7 @@ Exercise _exerciseFromJson(dynamic json) {
       perk2: json['perk2'],
       perk3: json['perk3'],
       description: json['description'],
-      trackRes: json['trackRes']);
+      other: json['other']);
 }
 
 class Explained extends StatelessWidget {

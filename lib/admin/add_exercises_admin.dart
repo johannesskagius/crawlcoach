@@ -48,14 +48,6 @@ class _AddExerciseState extends State<AddExercise> {
                     children: [
                       _exName(_txtEditList.elementAt(0)),
                       _focusPoint(_txtEditList.elementAt(1)),
-                      Switch(
-                        value: _shouldBeTracked,
-                        onChanged: (value) {
-                          setState(() {
-                            _shouldBeTracked = value;
-                          });
-                        },
-                      ),
                       _exerciseType(_txtEditList.elementAt(7)),
                       _perk(_txtEditList.elementAt(2)),
                       _perk(_txtEditList.elementAt(3)),
@@ -100,20 +92,25 @@ class _AddExerciseState extends State<AddExercise> {
                       ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
+                              String _s = await Exercise.setUnitType(context);
                               Exercise _ex = Exercise(
-                                  _txtEditList.elementAt(5).value.text,
-                                  title: _txtEditList.elementAt(0).value.text,
-                                  subTitle:
-                                      _txtEditList.elementAt(1).value.text,
-                                  perk1: _txtEditList.elementAt(2).value.text,
-                                  perk2: _txtEditList.elementAt(3).value.text,
-                                  perk3: _txtEditList.elementAt(4).value.text,
-                                  description: _txtEditList
-                                      .elementAt(6)
-                                      .value
-                                      .text
-                                      .split(','),
-                                  trackRes: _shouldBeTracked);
+                                _txtEditList.elementAt(5).value.text,
+                                title: _txtEditList.elementAt(0).value.text,
+                                subTitle: _txtEditList.elementAt(1).value.text,
+                                perk1: _txtEditList.elementAt(2).value.text,
+                                perk2: _txtEditList.elementAt(3).value.text,
+                                perk3: _txtEditList.elementAt(4).value.text,
+                                description: _txtEditList
+                                    .elementAt(6)
+                                    .value
+                                    .text
+                                    .split(','),
+                                other: {
+                                  'r_Type': _s,
+                                  'standard': 'standard',
+                                  'w_type': _txtEditList.elementAt(7).value.text
+                                },
+                              );
                               String _type =
                                   _txtEditList.elementAt(7).value.text;
                               Navigator.push(
