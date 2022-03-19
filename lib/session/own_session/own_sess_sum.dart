@@ -40,7 +40,6 @@ class _OverViewState extends State<OverView> {
 
   @override
   void initState() {
-    //_loadNCountEx();
     _getStoredData();
     _getWorkOutTime();
     super.initState();
@@ -127,37 +126,11 @@ class _OverViewState extends State<OverView> {
                 onPressed: _exercises.keys.isNotEmpty
                     ? () async {
                         final _user = await User2.getLocalUser();
-
+                        //Upload t res
+                        _upLoadRes(_user);
                         if (_contoller.value.text.isNotEmpty) {
                           //Create a session,
-                          _upLoadPrivate();
-                        }
-                        //Upload t res
-                        Map<String, Map<String, Object?>> result = {};
-                        Set<String> _addedNames = {};
-
-                        int i = 0;
-                        for (String _exName in _exercises.keys) {
-                          String _exNameFormatted = _exName.substring(1);
-                          if (!_addedNames.contains(_exNameFormatted)) {
-                            i = 0;
-                          }
-                          String _info = _exercises[_exName].toString();
-                          _info = _info.substring(1, _info.length - 1);
-                          //result[_exNameFormatted] = {'set_type': _info.replaceFirst(', ', '')} //TODO add sets and reps to info
-                          _info = _info.split(',').elementAt(1).trim();
-                          result[_exNameFormatted] = {
-                            i.toString(): double.parse(_info)
-                          };
-                          User2.ref
-                              .child(_user!.userAuth)
-                              .child('r_exercise')
-                              .child(_exNameFormatted)
-                              .child(_getToday())
-                              .update({i.toString(): double.parse(_info)});
-                          result.clear();
-                          i++;
-                          _addedNames.add(_exNameFormatted);
+                          _upLoadPrivate(_user!);
                         }
                         await _resetSess();
                         Navigator.pop(context);
@@ -170,6 +143,33 @@ class _OverViewState extends State<OverView> {
     );
   }
 
+  void _upLoadRes(User2? _user) {
+    Map<String, Map<String, Object?>> result = {};
+    Set<String> _addedNames = {};
+
+    int i = 0;
+    for (String _exName in _exercises.keys) {
+      String _exNameFormatted = _exName.substring(1);
+      if (!_addedNames.contains(_exNameFormatted)) {
+        i = 0;
+      }
+      String _info = _exercises[_exName].toString();
+      _info = _info.substring(1, _info.length - 1);
+      //result[_exNameFormatted] = {'set_type': _info.replaceFirst(', ', '')} //TODO add sets and reps to info
+      _info = _info.split(',').elementAt(1).trim();
+      result[_exNameFormatted] = {i.toString(): double.parse(_info)};
+      User2.ref
+          .child(_user!.userAuth)
+          .child('r_exercise')
+          .child(_exNameFormatted)
+          .child(_getToday())
+          .update({i.toString(): double.parse(_info)});
+      result.clear();
+      i++;
+      _addedNames.add(_exNameFormatted);
+    }
+  }
+
   String _getToday() {
     final now = DateTime.now();
     String month = now.month.toString();
@@ -179,13 +179,15 @@ class _OverViewState extends State<OverView> {
     return now.day.toString() + month + now.year.toString();
   }
 
-  void _upLoadPrivate() {
+  void _upLoadPrivate(User2 _user) {
+    _exercises = _format();
     Session _mySession = Session(
         sessionName: _contoller.value.text,
         desc: _contoller2.value.text,
         exercises: _exercises,
         videoUrl: 'n');
     User2.ref
+        .child(_user.userAuth)
         .child('my_sessions')
         .child(_mySession.sessionName)
         .set(_mySession.toJson());
@@ -196,5 +198,14 @@ class _OverViewState extends State<OverView> {
     //remove all
     _shared.remove('EX');
     _shared.remove('date');
+  }
+
+  Map<String, dynamic> _format() {
+    Map<String, Object> _formated = {};
+    for (String x in _exercises.keys) {
+      String _name = x.substring(1);
+      _formated[_name] = _exercises[x];
+    }
+    return _formated;
   }
 }

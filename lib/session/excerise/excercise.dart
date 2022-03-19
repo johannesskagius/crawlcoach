@@ -20,7 +20,9 @@ class _ExerciseViewPortState extends State<ExerciseViewPort> {
   @override
   void initState() {
     if (widget.exercise.url != null) {
-      _videoID = YoutubePlayer.convertUrlToId(widget.exercise.url.toString())!;
+      //_videoID = YoutubePlayer.convertUrlToId(widget.exercise.url.toString())!;
+      _videoID = YoutubePlayer.convertUrlToId(
+          'https://www.youtube.com/watch?v=IkDAb4hlof0')!;
     }
     _controller = YoutubePlayerController(initialVideoId: _videoID);
     _controller.setVolume(30);

@@ -17,6 +17,10 @@ class ExerciseResult extends StatefulWidget {
 
 class _ExerciseResultState extends State<ExerciseResult> {
   final List<BarChartGroupData> _barData = [];
+  Map<String, Map<Object, Object>> _resultMap = {};
+  Map<Object, Object> _userRes = {};
+  List<double> _tResult = [];
+
   double _maxY = 0;
 
   Future<void> _getData() async {
@@ -26,36 +30,52 @@ class _ExerciseResultState extends State<ExerciseResult> {
         .child('r_exercise')
         .child(widget._exercise.title)
         .get();
-    int i = 0;
     for (DataSnapshot x in _data.children) {
-      int key = int.parse(x.key.toString());
-      String newValues =
-          x.value.toString().substring(1, x.value.toString().length - 1);
-      List<String> xx = newValues.split(',');
-      List<double> xxx = [];
-      try {
-        for (String s in xx) {
-          double _val = double.parse(s);
-          xxx.add(_val);
-          if (_maxY < _val) {
-            _maxY = _val;
+      List<double> _results = [];
+      for (DataSnapshot x2 in x.children) {
+        if (x2.key != null && x2.key != 'set_type') {
+          double _res = double.parse(x2.value.toString());
+          if (x.key.toString() == _getToday()) {
+            _tResult.add(_res);
+          } else {
+            _results.add(_res);
+          }
+          if (_res > _maxY) {
+            _maxY = _res;
           }
         }
-        _barData.add(_makeGroupData(key, xxx));
-      } catch (e) {
-        continue;
       }
-      i++;
-      if (i == 7) {
-        break;
-      }
+      setState(() {
+        _barData.add(_makeGroupData(int.parse(x.key.toString()), _results));
+      });
     }
-    setState(() {});
+  }
+
+  void _uploadRes() async {
+    final user = await User2.getLocalUser();
+    _userRes['set_type'] = widget._type;
+    _resultMap[_getToday()] = _userRes;
+    User2.ref
+        .child(user!.userAuth)
+        .child('r_exercise')
+        .child(widget._exercise.title)
+        .update(_resultMap);
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   void initState() {
-    _getData();
+    _getData().whenComplete(
+        () => _barData.add(_makeGroupData(int.parse(_getToday()), _tResult)));
     super.initState();
   }
 
@@ -76,7 +96,7 @@ class _ExerciseResultState extends State<ExerciseResult> {
             TextButton(
                 child: const Text("Add"),
                 onPressed: () {
-                  double _loadForSet = 2;
+                  double _loadForSet = 10;
                   _loadForSet = double.parse(_controller.value.text);
                   Navigator.pop(context, _loadForSet);
                 }),
@@ -117,25 +137,30 @@ class _ExerciseResultState extends State<ExerciseResult> {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  Map<String, Map<Object, Object>> result = {};
-                  Map<Object, Object> _userRes = {};
-                  final user = await User2.getLocalUser();
-                  int antal = int.parse(widget._type.substring(0, 1));
-                  for (int i = 0; i < antal; i++) {
-                    _userRes[i] = (await getResult(i));
-                  }
-                  _userRes['set_type'] = widget._type;
-                  String nowString = _getToday();
-                  result[nowString.toString()] = _userRes;
-                  User2.ref
-                      .child(user!.userAuth)
-                      .child('r_exercise')
-                      .child(widget._exercise.title)
-                      .update(result)
-                      .onError((error, stackTrace) => print('error'))
-                      .whenComplete(() => Navigator.pop(context));
+                  double _res = await getResult(_tResult.length);
+                  _userRes[_tResult.length.toString()] = _res;
+                  _barData.removeLast();
+                  setState(() {
+                    _tResult.add(_res);
+                    _barData
+                        .add(_makeGroupData(int.parse(_getToday()), _tResult));
+                    if (_res > _maxY) {
+                      _maxY = _res;
+                    }
+                  });
+                  print(_userRes.toString());
                 },
                 child: const Text('Add result')),
+            ElevatedButton(
+                onPressed: () {
+                  if (_tResult.isEmpty) {
+                    _barData.removeLast();
+                  } else {
+                    _uploadRes();
+                    Navigator.pop(context, _resultMap);
+                  }
+                },
+                child: const Text('go back'))
           ],
         ),
       ),

@@ -1,5 +1,3 @@
-import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'own_sess_add_ex.dart';
@@ -14,20 +12,9 @@ class FreeSession extends StatefulWidget {
 
 class _FreeSessionState extends State<FreeSession> {
   final _controller = PageController();
-  final Map<String, String> _exNames = {}; //Exercise type, Exercise Name
-
-  void _getAllExercises() async {
-    DataSnapshot _data = await Exercise.exerciseRefStandard.get();
-    for (DataSnapshot _exType in _data.children) {
-      for (DataSnapshot _exName in _exType.children) {
-        _exNames[_exType.key.toString()] = (_exName.key.toString());
-      }
-    }
-  }
 
   @override
   void initState() {
-    _getAllExercises();
     super.initState();
   }
 
@@ -51,9 +38,9 @@ class _FreeSessionState extends State<FreeSession> {
           controller: _controller,
           pageSnapping: true,
           onPageChanged: _pageChanged,
-          children: [
-            AddExercises(_exNames),
-            const OverView(),
+          children: const [
+            AddExercises(),
+            OverView(),
           ],
         ),
         bottomNavigationBar: Row(),

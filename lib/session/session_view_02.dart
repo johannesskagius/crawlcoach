@@ -32,7 +32,6 @@ class _Session02State extends State<Session02> {
       print('list: "' + _list.elementAt(1) + '"');
       if (_list.elementAt(1).trim() == 'user') {
         // true == standard
-        print('user: ' + widget._id);
         _ref = Exercise.exerciseRefUser.child(widget._id);
       } else {
         _ref = Exercise.exerciseRefStandard;
@@ -98,6 +97,8 @@ class _Session02State extends State<Session02> {
                       _values[_values.keys.elementAt(index)].toString());
                   break;
                 case 'minutes':
+                  _openAntalProg(_values.keys.elementAt(index),
+                      _values[_values.keys.elementAt(index)].toString());
                   break;
                 case 'seconds':
                   break;
