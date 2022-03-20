@@ -22,6 +22,13 @@ class _AdminState extends State<Admin> {
                   _downloadAllEx();
                 },
                 child: const Text('Format')),
+            ElevatedButton(
+                onPressed: () async {
+                  final x = await Exercise.exerciseRefStandard
+                      .child('Gym/Deadlift')
+                      .get();
+                },
+                child: const Text('get')),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -90,9 +97,12 @@ class _AdminState extends State<Admin> {
     for (DataSnapshot _ExerciseTYPE in _list) {
       //
       for (DataSnapshot _exercise in _ExerciseTYPE.children) {
+        String key = _ExerciseTYPE.key.toString();
+        String ex = _exercise.key.toString();
         other['r_Type'] = 'times';
         other['standard'] = 'standard';
-        other['w_Type'] = _ExerciseTYPE.key.toString();
+        other['w_Type'] = key;
+        other['ref'] = 'standard/$key/$ex';
         other['equipment'] = 'H';
         final _ex = Exercise.fromJson(_exercise.value);
         _ex.other = other;

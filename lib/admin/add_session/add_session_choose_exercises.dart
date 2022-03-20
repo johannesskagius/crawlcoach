@@ -22,7 +22,6 @@ class _SessionExercisesState extends State<SessionExercises> {
 
   void _getOwnExercises() async {
     User2? user = await User2.getLocalUser();
-    Map<String, List<Exercise>> _ex = {};
 
     DataSnapshot snapshot =
         await Exercise.exerciseRefUser.child(user!.userAuth).get();
