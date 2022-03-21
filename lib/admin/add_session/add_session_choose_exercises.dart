@@ -114,7 +114,8 @@ class _SessionExercisesState extends State<SessionExercises> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SessionsSummary(Session(
-                                  exercises: _exReps2,
+                                  '',
+                                      exercises: _exReps2,
                                       sessionName: widget._name,
                                       desc: widget._desc,
                                       videoUrl: '',

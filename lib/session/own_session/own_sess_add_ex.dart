@@ -19,11 +19,12 @@ class _AddExercisesState extends State<AddExercises> {
   Map<String, dynamic> _exercises = {};
   List<String> _exercisesList = [];
   Map<String, Map<String, String>> _exSet = {};
-  Map<String, Map<String, String>?> _exAdd = {};
+  Map<String, dynamic> _exAdd = {};
   Map<String, Exercise> _stringToEx = {};
   String _exName = '';
+  String _sessionStart = '';
 
-  void _getAllExercises2() async {
+  void _getAllExercises() async {
     DataSnapshot _snapS = await Exercise.exerciseRefStandard.get();
     for (DataSnapshot _ExTypes in _snapS.children) {
       for (DataSnapshot _data in _ExTypes.children) {
@@ -52,7 +53,7 @@ class _AddExercisesState extends State<AddExercises> {
       if (DateTime.now().difference(_date) < const Duration(hours: 4)) {
         setState(() {
           String? s = _shared.getString('EX');
-          _exercises = json.decode(s!);
+          _exAdd = json.decode(s!);
         });
       }
     }
@@ -61,9 +62,15 @@ class _AddExercisesState extends State<AddExercises> {
   void _saveData() async {
     SharedPreferences _shared = await SharedPreferences.getInstance();
     if (_exAdd.isNotEmpty) {
+      if (_exAdd.keys.length == 1) {}
       String _ex = json.encode(_exAdd);
       _shared.setString('date', DateTime.now().toString());
       _shared.setString('EX', _ex);
+      setState(() {
+        _sessionStart = DateTime.now().hour.toString() +
+            ':' +
+            DateTime.now().minute.toString();
+      });
     } else {
       _shared.remove('EX');
     }
@@ -71,7 +78,7 @@ class _AddExercisesState extends State<AddExercises> {
 
   @override
   void initState() {
-    _getAllExercises2();
+    _getAllExercises();
     _getStoredData();
     super.initState();
   }
@@ -98,8 +105,8 @@ class _AddExercisesState extends State<AddExercises> {
                       SharedPreferences _shared =
                           await SharedPreferences.getInstance();
                       setState(() {
-                        _exercises.remove(_string);
-                        if (_exercises.isEmpty) {
+                        _exAdd.remove(_string);
+                        if (_exAdd.isEmpty) {
                           _shared.remove('EX');
                           _saveData();
                         } else {
@@ -122,14 +129,23 @@ class _AddExercisesState extends State<AddExercises> {
         _unFocus();
       },
       child: Container(
+        color: Colors.transparent,
         margin: const EdgeInsets.all(8),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'Let´s work it!',
+                style: TextStyle(
+                  fontSize: 30,
+                ),
+              ),
+            ),
+            Text(_sessionStart),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: //AutocompleteBasicExample(_exercisesList),
-                  Autocomplete(onSelected: (value) {
+              child: Autocomplete(onSelected: (value) {
                 _exName = value as String;
               }, optionsBuilder: (TextEditingValue textEditingValue) {
                 if (textEditingValue.text == '') {
@@ -176,17 +192,17 @@ class _AddExercisesState extends State<AddExercises> {
                   _itemInList++;
                   return _exAdd.isNotEmpty
                       ? Card(
-                          child: ListTile(
-                            onTap: () {
-                              _remove(_exAdd.keys.elementAt(index));
-                            },
-                            leading: Text(_itemInList.toString()),
-                            title: Text(_exAdd.keys.elementAt(index)),
-                          ),
-                        )
+                    child: ListTile(
+                      onTap: () {
+                        _remove(_exAdd.keys.elementAt(index));
+                      },
+                      leading: Text(_itemInList.toString()),
+                      title: Text(_exAdd.keys.elementAt(index)),
+                    ),
+                  )
                       : const ListTile(
-                          title: Text('Complete first exercise'),
-                        );
+                    title: Text('Complete first exercise'),
+                  );
                 },
               ),
             ),

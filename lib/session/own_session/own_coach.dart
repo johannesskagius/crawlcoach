@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../account/user2.dart';
 import 'free_session.dart';
+import 'my_session.dart';
 
 class OwnCoach extends StatefulWidget {
   const OwnCoach({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _OwnCoachState extends State<OwnCoach> {
 
   @override
   void initState() {
-    _getCompleted();
+    //_getCompleted();
     super.initState();
   }
 
@@ -39,7 +40,14 @@ class _OwnCoachState extends State<OwnCoach> {
       appBar: AppBar(
         title: const Text('Train'),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.save_outlined)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const MySessions()));
+              },
+              icon: const Icon(Icons.save_outlined)),
         ],
       ),
       body: Center(
@@ -89,6 +97,8 @@ class _OwnCoachState extends State<OwnCoach> {
                         elevation: 4,
                         child: ListTile(
                           title: Text(_completed.elementAt(index).sessionName),
+                          trailing:
+                              Text(_completed.elementAt(index).time.toString()),
                           onTap: () async {
                             final _user = await User2.getLocalUser();
                             Navigator.push(

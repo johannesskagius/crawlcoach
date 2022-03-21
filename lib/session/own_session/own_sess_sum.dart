@@ -28,8 +28,6 @@ class _OverViewState extends State<OverView> {
         _exSet = jsonDecode(s2!);
       });
     }
-    //print(_exercises.toString());
-    print(_exSet.toString());
   }
 
   void _getWorkOutTime() async {
@@ -133,8 +131,8 @@ class _OverViewState extends State<OverView> {
                           //Create a session,
                           _upLoadPrivate(_user!); //Create private session
                         }
-                        //await _resetSess();
-                        //Navigator.pop(context);
+                        await _resetSess();
+                        Navigator.pop(context);
                       }
                     : null,
                 child: const Text('Completed'))
@@ -157,6 +155,7 @@ class _OverViewState extends State<OverView> {
   void _upLoadPrivate(User2 _user) {
     _exSet = _format();
     Session _mySession = Session(
+        _sessDur!.inMinutes.toString() + 'min',
         sessionName: _contoller.value.text,
         desc: _contoller2.value.text,
         exercises: _exSet,
@@ -179,7 +178,6 @@ class _OverViewState extends State<OverView> {
   Map<String, dynamic> _format() {
     Map<String, Object> _formated = {};
     for (String x in _exSet.keys) {
-      //print(_exercises[x].toString().split(',').length);
       _formated[x] = _exSet[x];
     }
     return _formated;

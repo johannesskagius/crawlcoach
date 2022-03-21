@@ -8,12 +8,13 @@ import 'package:json_annotation/json_annotation.dart';
 class Session {
   static final DatabaseReference sessionRef =
       FirebaseDatabase.instance.ref().child('sessions');
+  String? time;
   final String sessionName;
   final String desc;
   final String videoUrl;
   final Map<Object?, Object?> exercises;
 
-  Session(
+  Session(this.time,
       {required this.sessionName,
       required this.desc,
       required this.exercises,
@@ -24,6 +25,7 @@ class Session {
         'subTitle': desc,
         'video_url': '',
         'exercises': exercises,
+        'time': time,
       };
 
   factory Session.fromJson(dynamic json) => _sessionFromJson(json);
@@ -84,6 +86,7 @@ class Session {
 
 Session _sessionFromJson(dynamic json) {
   return Session(
+      json['time'],
       sessionName: json['title'],
       desc: json['subTitle'],
       exercises: json['exercises'],
