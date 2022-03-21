@@ -24,6 +24,11 @@ class _Session00State extends State<Session00> {
   int _selected = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final PageController pControll = PageController();
     String _title = widget.session.sessionName;
@@ -71,5 +76,3 @@ class _Session00State extends State<Session00> {
     );
   }
 }
-
-

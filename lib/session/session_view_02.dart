@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
 import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'excerise/excercise.dart';
-import 'excerise/exercise_result.dart';
 
 class Session02 extends StatefulWidget {
   const Session02(this._session, this._id, {Key? key}) : super(key: key);
@@ -16,51 +17,23 @@ class Session02 extends StatefulWidget {
 }
 
 class _Session02State extends State<Session02> {
-  Map<Exercise, Object> _values = {};
+  Map<Exercise, Map<String, dynamic>> _values = {};
 
-  Future<void> _getListOfExercises2() async {
-    DatabaseReference _ref = Exercise.exerciseRefStandard;
-    String _exType = 'Gym';
-    Map<Exercise, String> _gottenExercises = {};
-    Map<Object?, Object?> _exercisesAmounts = widget._session.exercises;
+  Future<void> _getListOfExercises3() async {
+    DatabaseReference _ref = Exercise.exerciseRef;
+    Map<Exercise, Map<String, dynamic>> _gottenExercises = {};
 
-    int i = 0;
-    for (Object? _exerciseToGet in _exercisesAmounts.keys) {
-      String _getInfo = _exercisesAmounts.values.elementAt(i).toString();
-      _getInfo = _getInfo.substring(1, _getInfo.length - 1);
-      List<String> _list = _getInfo.split(',');
-      print('list: "' + _list.elementAt(1) + '"');
-      if (_list.elementAt(1).trim() == 'user') {
-        // true == standard
-        _ref = Exercise.exerciseRefUser.child(widget._id);
-      } else {
-        _ref = Exercise.exerciseRefStandard;
-      }
-      switch (_list.elementAt(2).trim()) {
-        case 'Body weight':
-          _exType = 'Body weight';
-          break;
-        case 'Body Weight':
-          _exType = 'Body Weight';
-          break;
-        case 'Swim':
-          _exType = 'Swim';
-          break;
-        case 'Gym':
-          _exType = 'Gym';
-          break;
-        case 't':
-          _exType = 't';
-          break;
-      }
-      // iterate through the exercise that should be collected.
-      DataSnapshot _data =
-          await _ref.child(_exType).child(_exerciseToGet.toString()).get();
-      Exercise _ex = Exercise.fromJson(_data.value);
-      String _d = _exercisesAmounts[_ex.title].toString();
-      _d = _d.substring(1, _d.length);
-      _gottenExercises[_ex] = _d.split(',').elementAt(0);
-      i++;
+    for (Object? _exerciseToGet in widget._session.exercises.keys) {
+      String s = jsonEncode(widget._session.exercises[_exerciseToGet]);
+      Map<String, dynamic> _t = jsonDecode(s);
+      DataSnapshot _x = await _ref
+          .child(_t['userMade'])
+          .child(_t['exCat'])
+          .child(_exerciseToGet.toString())
+          .get();
+      //DataSnapshot _x = await _ref.child('standard').child('Body weight').child('High Plank').get();
+      final _ex = Exercise.fromJson(_x.value);
+      _gottenExercises[_ex] = _t;
     }
     setState(() {
       _values = _gottenExercises;
@@ -69,7 +42,7 @@ class _Session02State extends State<Session02> {
 
   @override
   void initState() {
-    _getListOfExercises2();
+    _getListOfExercises3();
     super.initState();
   }
 
@@ -78,6 +51,12 @@ class _Session02State extends State<Session02> {
     return ListView.builder(
       itemCount: _values.keys.length,
       itemBuilder: (BuildContext context, int index) {
+        final _ex = _values.keys.elementAt(index);
+        String _setNReps = _values[_values.keys.elementAt(index)]!['set'] +
+            ' x ' +
+            _values[_values.keys.elementAt(index)]!['reps'] +
+            ' ' +
+            _values[_values.keys.elementAt(index)]!['exType'];
         return Card(
           child: ListTile(
             onLongPress: () {
@@ -87,26 +66,10 @@ class _Session02State extends State<Session02> {
                       builder: (context) => ExerciseViewPort(
                           exercise: _values.keys.elementAt(index))));
             },
-            onTap: () {
-              String type = _values[_values.keys.elementAt(index)]
-                  .toString()
-                  .substring(6);
-              switch (type) {
-                case 'times':
-                  _openAntalProg(_values.keys.elementAt(index),
-                      _values[_values.keys.elementAt(index)].toString());
-                  break;
-                case 'minutes':
-                  _openAntalProg(_values.keys.elementAt(index),
-                      _values[_values.keys.elementAt(index)].toString());
-                  break;
-                case 'seconds':
-                  break;
-                case 'kilometers':
-                  break;
-                case 'meters':
-                  break;
-              }
+            onTap: () async {
+              _values.keys
+                  .elementAt(index)
+                  .addExerciseResult(context, _setNReps);
             },
             leading: Text(
               index.toString(),
@@ -115,20 +78,13 @@ class _Session02State extends State<Session02> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            title: Text(_values.keys.elementAt(index).title),
-            subtitle: Text(_values.keys.elementAt(index).subTitle),
-            trailing: Text(_values[_values.keys.elementAt(index)].toString()),
+            title: Text(_ex.title),
+            subtitle: Text(_ex.subTitle),
+            trailing: Text(_setNReps),
             //trailing: ,
           ),
         );
       },
     );
-  }
-
-  void _openAntalProg(Exercise _exercise, String _repsSet) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ExerciseResult(_exercise, _repsSet)));
   }
 }

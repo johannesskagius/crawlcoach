@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../excerise/abs_exercise.dart';
-import '../excerise/exercise_result.dart';
 
 class AddExercises extends StatefulWidget {
   const AddExercises({Key? key}) : super(key: key);
@@ -15,48 +14,31 @@ class AddExercises extends StatefulWidget {
 }
 
 class _AddExercisesState extends State<AddExercises> {
-  Map<String, Map<String, String>> _exNames = {}; //Exercise type, Exercise Name
   final TextEditingController _controller1 = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
-  Map<String, List<Object>> _exercises = {};
+  Map<String, dynamic> _exercises = {};
   List<String> _exercisesList = [];
-  Map<String, Set<String>> _exStandard = {};
-  Map<String, String> _exCat = {};
+  Map<String, Map<String, String>> _exSet = {};
+  Map<String, Map<String, String>?> _exAdd = {};
+  Map<String, Exercise> _stringToEx = {};
   String _exName = '';
 
-  void _addExRes(String _ex, String _reps, String _weight) async {
-    if (_exercises.isEmpty) {
-      SharedPreferences _shared = await SharedPreferences.getInstance();
-      DateTime _dateTimeNow = DateTime.now();
-      String _date = _dateTimeNow.toIso8601String();
-      _shared.setString('date', _date);
-    }
-    setState(() {
-      _exercises[_exercises.length.toString() + _ex] = [_reps, _weight];
-    });
-    _saveData();
-  }
-
-  void _getAllExercises() async {
-    DataSnapshot _data = await Exercise.exerciseRefStandard.get();
-    for (DataSnapshot _exType in _data.children) {
-      for (DataSnapshot _exName in _exType.children) {
-        if (_exNames.containsKey(_exType.key.toString())) {
-          //_exNames[_exType.key.toString()]!.add(_exName.key.toString());
-//          Map<String, Map<String, String>> _exNames = {}; //Exercise type, Exercise Name
-          _exNames['standard']!.putIfAbsent(
-              _exName.key.toString(), () => _exType.key.toString());
-        } else {
-          Map<String, String> _map = {
-            _exName.key.toString(): _exType.key.toString()
+  void _getAllExercises2() async {
+    DataSnapshot _snapS = await Exercise.exerciseRefStandard.get();
+    for (DataSnapshot _ExTypes in _snapS.children) {
+      for (DataSnapshot _data in _ExTypes.children) {
+        final _ex = Exercise.fromJson(_data.value); //print(_data.value);
+        try {
+          _exercisesList.add(_ex.title);
+          _stringToEx[_ex.title] = _ex;
+          _exSet[_ex.title] = {
+            'exCat': _ExTypes.key.toString(),
+            'exType': _ex.other!['r_Type'].toString(),
+            'userMade': _ex.other!['standard'].toString(),
           };
-          _exNames['standard'] = _map;
+        } catch (e) {
+          continue;
         }
-        _exStandard
-            .putIfAbsent('standard', () => <String>{})
-            .add(_exName.key.toString());
-        _exercisesList.add(_exName.key.toString());
-        _exCat[_exName.key.toString()] = _exType.key.toString();
       }
     }
     setState(() {});
@@ -65,7 +47,6 @@ class _AddExercisesState extends State<AddExercises> {
   void _getStoredData() async {
     SharedPreferences _shared = await SharedPreferences.getInstance();
     String? _x = _shared.getString('date');
-    print(_x);
     if (_x != null && _x.isNotEmpty) {
       DateTime _date = DateTime.parse(_shared.getString('date')!);
       if (DateTime.now().difference(_date) < const Duration(hours: 4)) {
@@ -79,10 +60,8 @@ class _AddExercisesState extends State<AddExercises> {
 
   void _saveData() async {
     SharedPreferences _shared = await SharedPreferences.getInstance();
-    if (_exercises.isNotEmpty) {
-      print('e');
-      String _ex = json.encode(_exercises);
-
+    if (_exAdd.isNotEmpty) {
+      String _ex = json.encode(_exAdd);
       _shared.setString('date', DateTime.now().toString());
       _shared.setString('EX', _ex);
     } else {
@@ -92,7 +71,7 @@ class _AddExercisesState extends State<AddExercises> {
 
   @override
   void initState() {
-    _getAllExercises();
+    _getAllExercises2();
     _getStoredData();
     super.initState();
   }
@@ -122,6 +101,7 @@ class _AddExercisesState extends State<AddExercises> {
                         _exercises.remove(_string);
                         if (_exercises.isEmpty) {
                           _shared.remove('EX');
+                          _saveData();
                         } else {
                           _saveData();
                         }
@@ -148,26 +128,6 @@ class _AddExercisesState extends State<AddExercises> {
           children: [
             Padding(
               padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: _controller1,
-                decoration: const InputDecoration(
-                  hintText: 'Sets',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: _controller2,
-                decoration: const InputDecoration(
-                  hintText: 'Reps',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
               child: //AutocompleteBasicExample(_exercisesList),
                   Autocomplete(onSelected: (value) {
                 _exName = value as String;
@@ -184,46 +144,21 @@ class _AddExercisesState extends State<AddExercises> {
               padding: const EdgeInsets.all(20),
               child: ElevatedButton(
                   onPressed: () async {
-                    String _set = _controller1.value.text;
-                    String _reps = _controller2.value.text;
-                    DataSnapshot? _exSnap;
-                    bool _isStandard =
-                        _exStandard['standard']!.contains(_exName);
-                    String? _ex_Type = '';
-                    if (_isStandard) {
-                      _ex_Type = _exCat[_exName];
-                      _exSnap = await Exercise.exerciseRefStandard
-                          .child(_ex_Type!)
-                          .child(_exName)
-                          .get();
-                    } else {
-                      _exSnap = await Exercise.exerciseRefUser
-                          .child(_ex_Type)
-                          .child(_exName)
-                          .get();
+                    List<String> _list = await Exercise.setUnitAndReps(context);
+                    final _e = _stringToEx[_exName];
+                    String _repsNSet =
+                        _list.elementAt(0) + ' + ' + _list.elementAt(1);
+                    Object? x = _e!.addExerciseResult(context, _repsNSet);
+                    if (x != null) {
+                      _exSet.putIfAbsent(_e.title, () => {}).addAll({
+                        'set': _list.elementAt(0),
+                        'reps': _list.elementAt(1),
+                      });
+                      _exAdd[_e.title] = _exSet[_e.title];
+                      _saveData();
+                      _controller1.text = '';
+                      _controller2.text = '';
                     }
-                    final _ex = Exercise.fromJson(_exSnap.value);
-                    Map<String, Map<Object, Object>> _result = {};
-                    _result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ExerciseResult(_ex, '$_set x $_reps times')));
-
-                    String nowString = _getToday();
-                    for (Object x in _result[nowString]!.values) {
-                      try {
-                        double _x = double.parse(x.toString());
-                        setState(() {
-                          _exercises.putIfAbsent(_exName, () => []).add(_x);
-                        });
-                      } catch (e) {
-                        continue;
-                      }
-                    }
-                    _saveData();
-                    _controller1.text = '';
-                    _controller2.text = '';
                     WidgetsBinding.instance?.focusManager.primaryFocus
                         ?.unfocus();
                   },
@@ -235,20 +170,18 @@ class _AddExercisesState extends State<AddExercises> {
               child: ListView.builder(
                 key: const PageStorageKey<String>('Page1'),
                 shrinkWrap: true,
-                itemCount: _exercises.length,
+                itemCount: _exAdd.length,
                 itemBuilder: (BuildContext context, int index) {
                   int _itemInList = index;
                   _itemInList++;
-                  return _exercises.isNotEmpty
+                  return _exAdd.isNotEmpty
                       ? Card(
                           child: ListTile(
                             onTap: () {
-                              _remove(_exercises.keys.elementAt(index));
+                              _remove(_exAdd.keys.elementAt(index));
                             },
                             leading: Text(_itemInList.toString()),
-                            title: Text(_exercises.keys.elementAt(index)),
-                            trailing: Text(
-                                _exercises.values.elementAt(index).toString()),
+                            title: Text(_exAdd.keys.elementAt(index)),
                           ),
                         )
                       : const ListTile(
@@ -263,15 +196,6 @@ class _AddExercisesState extends State<AddExercises> {
       ),
     );
   }
-}
-
-String _getToday() {
-  final now = DateTime.now();
-  String month = now.month.toString();
-  if (now.month < 10) {
-    month = '0' + now.month.toString();
-  }
-  return now.day.toString() + month + now.year.toString();
 }
 
 Divider _divider() {

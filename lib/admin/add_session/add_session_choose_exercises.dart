@@ -15,7 +15,8 @@ class SessionExercises extends StatefulWidget {
 }
 
 class _SessionExercisesState extends State<SessionExercises> {
-  final Map<String, List<Object>> _exReps = {};
+  //final Map<String, List<Object>> _exReps = {};
+  final Map<String, Map<String, Object>> _exReps2 = {};
   int _nrChosen = 0;
   final Map<String, List<Exercise>> _exercisesMap = {};
   final Set<String> _standard = {};
@@ -56,20 +57,30 @@ class _SessionExercisesState extends State<SessionExercises> {
     setState(() {});
   }
 
-  void _increment(Exercise _ex, String _reps, String _exType) async {
+  void _increment(Exercise _ex, List<String> _reps, String _exCat) async {
     String _isUserMade = 'user';
     if (_standard.contains(_ex.title)) {
       _isUserMade = 'standard';
     }
-    if (_exReps.containsKey(_ex.title)) {
-      _exReps[_ex.title]!
-        ..add(_reps)
-        ..add(_isUserMade.toString())
-        ..add(_exType);
-    } else {
-      List<Object> _list = [_reps, _isUserMade, _exType];
-      _exReps[_ex.title] = _list;
-    }
+    _exReps2.putIfAbsent(
+      _ex.title,
+      () => {
+        'set': _reps.elementAt(0),
+        'reps': _reps.elementAt(1),
+        'userMade': _isUserMade,
+        'exCat': _exCat,
+        'exType': _reps.elementAt(2)
+      },
+    );
+    // if (_exReps.containsKey(_ex.title)) {
+    //   _exReps[_ex.title]!
+    //     ..add(_reps)
+    //     ..add(_isUserMade.toString())
+    //     ..add(_exType);
+    // } else {
+    //   List<Object> _list = [_reps, _isUserMade, _exType];
+    //   _exReps[_ex.title] = _list;
+    // }
     setState(() {
       _nrChosen++;
     });
@@ -77,7 +88,7 @@ class _SessionExercisesState extends State<SessionExercises> {
 
   @override
   void initState() {
-    _getOwnExercises(); //TODO set possible to filter exercises
+    //_getOwnExercises(); //TODO set possible to filter exercises
     _getStandardExercises();
     super.initState();
   }
@@ -103,7 +114,7 @@ class _SessionExercisesState extends State<SessionExercises> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SessionsSummary(Session(
-                                      exercises: _exReps,
+                                  exercises: _exReps2,
                                       sessionName: widget._name,
                                       desc: widget._desc,
                                       videoUrl: '',
@@ -155,8 +166,9 @@ class _SessionExercisesState extends State<SessionExercises> {
             return Card(
               child: ListTile(
                 onTap: () async {
-                  String _reps = await Exercise.setUnitAndReps(context);
-                  _increment(_exxes[_courseName]!.elementAt(index), _reps,
+                  List<String> _setAndReps =
+                      await Exercise.setUnitAndReps(context);
+                  _increment(_exxes[_courseName]!.elementAt(index), _setAndReps,
                       _courseName);
                 },
                 title: Text(_exxes[_courseName]!.elementAt(index).title),

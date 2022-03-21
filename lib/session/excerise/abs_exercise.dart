@@ -5,12 +5,16 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'exercise_result.dart';
+
 @JsonSerializable()
 class Exercise {
+  static final DatabaseReference exerciseRef =
+      FirebaseDatabase.instance.ref().child('exercises');
   static final DatabaseReference exerciseRefUser =
-      FirebaseDatabase.instance.ref().child('exercises').child('userMade');
+      exerciseRef.child('userMade');
   static final DatabaseReference exerciseRefStandard =
-      FirebaseDatabase.instance.ref().child('exercises').child('standard');
+      exerciseRef.child('standard');
   final String title, subTitle, perk1, perk2, perk3;
   String? url;
   final List<Object?> description;
@@ -22,13 +26,12 @@ class Exercise {
       required this.perk1,
       required this.perk2,
       required this.perk3,
-      required this.description,
-      required this.other});
+        required this.description,
+        required this.other});
 
   factory Exercise.fromJson(dynamic json) => _exerciseFromJson(json);
 
-  Map<Object, dynamic> toJson() =>
-      {
+  Map<Object, dynamic> toJson() => {
         'title': title,
         'subTitle': subTitle,
         'perk1': perk1,
@@ -52,56 +55,54 @@ class Exercise {
         .set(toJson());
   }
 
-  static Future<String> setUnitAndReps(BuildContext context) async {
+  static Future<List<String>> setUnitAndReps(BuildContext context) async {
     final _controller = TextEditingController();
     final _controller2 = TextEditingController();
-    String _dropDownValue = '';
-
+    String? dropdownvalue = 'meters';
+    var _list = ['meters', 'minutes', 'seconds', 'kilometers', 'times'];
     String _result;
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('How many repetitions?'),
         actions: [
+          DropdownButton(
+            value: dropdownvalue,
+            items: _list.map((String items) {
+              return DropdownMenuItem(
+                value: items,
+                child: Text(items),
+              );
+            }).toList(),
+            onChanged: (String? newValue) => {
+              dropdownvalue = newValue,
+            },
+          ),
           TextField(
-            decoration: const InputDecoration(hintText: 'Reps'),
+            decoration: const InputDecoration(hintText: 'Sets'),
             controller: _controller,
             keyboardType: TextInputType.number,
           ),
           TextField(
             decoration: const InputDecoration(
-              hintText: 'times',
+              hintText: 'Reps',
             ),
             controller: _controller2,
             keyboardType: TextInputType.number,
-          ),
-          DropdownButton(
-            items: <String>[
-              'meters',
-              'minutes',
-              'seconds',
-              'kilometers',
-              'times'
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: _dropDownValue,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {},
-          ),
-          TextButton(
-              child: const Text("accept"),
-              onPressed: () {
-                _result = _controller.value.text +
-                    ' x ' +
-                    _controller.value.text +
-                    ' ' +
-                    _dropDownValue;
-                Navigator.pop(context, _result);
+              ),
+              TextButton(
+                  child: const Text("accept"),
+                  onPressed: () {
+                List<String> _res = [
+                  _controller.value.text,
+                  _controller2.value.text,
+                  dropdownvalue.toString()
+                  //TODO sätt så att man måste sätta typ
+                ];
+                Navigator.pop(context, _res);
               }),
-        ],
-      ),
+            ],
+          ),
     );
   }
 
@@ -135,6 +136,35 @@ class Exercise {
         ],
       ),
     );
+  }
+
+  Object? addExerciseResult(BuildContext context, String _repsSet) async {
+    if (other!['r_Type'] == null) {
+      other!['r_Type'] = await setUnitAndReps(context);
+    }
+    switch (other!['r_Type']) {
+      case 'times':
+        return _openAntalProg(context, _repsSet);
+      case 'minutes':
+        return _openAntalProg(context, _repsSet);
+      case 'seconds':
+        break;
+      case 'kilometers':
+        break;
+      case 'meters':
+        break;
+      case '':
+        print('you cant track this atm');
+        break;
+    }
+    return null;
+  }
+
+  Object _openAntalProg(BuildContext context, String _repsSet) {
+    return Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ExerciseResult(this, _repsSet)));
   }
 }
 

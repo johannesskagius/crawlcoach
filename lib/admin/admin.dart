@@ -1,4 +1,6 @@
+import 'package:crawl_course_3/account/user2.dart';
 import 'package:crawl_course_3/session/excerise/abs_exercise.dart';
+import 'package:crawl_course_3/session/session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -24,9 +26,10 @@ class _AdminState extends State<Admin> {
                 child: const Text('Format')),
             ElevatedButton(
                 onPressed: () async {
-                  final x = await Exercise.exerciseRefStandard
-                      .child('Gym/Deadlift')
-                      .get();
+                  final _sess = Session.fromJson(await User2.ref
+                      .child('kx8cKStq44g3KB2he6YZSw8HMYD2')
+                      .child('TEST')
+                      .get());
                 },
                 child: const Text('get')),
             Row(

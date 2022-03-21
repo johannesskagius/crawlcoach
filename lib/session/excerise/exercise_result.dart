@@ -20,6 +20,7 @@ class _ExerciseResultState extends State<ExerciseResult> {
   Map<String, Map<Object, Object>> _resultMap = {};
   Map<Object, Object> _userRes = {};
   List<double> _tResult = [];
+  int j = 0;
 
   double _maxY = 0;
 
@@ -83,7 +84,7 @@ class _ExerciseResultState extends State<ExerciseResult> {
   Widget build(BuildContext context) {
     Future<double> getResult(int i) async {
       final _controller = TextEditingController();
-      int j = i + 1;
+      j = i + 1;
       return await showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -148,7 +149,6 @@ class _ExerciseResultState extends State<ExerciseResult> {
                       _maxY = _res;
                     }
                   });
-                  print(_userRes.toString());
                 },
                 child: const Text('Add result')),
             ElevatedButton(
@@ -157,7 +157,8 @@ class _ExerciseResultState extends State<ExerciseResult> {
                     _barData.removeLast();
                   } else {
                     _uploadRes();
-                    Navigator.pop(context, _resultMap);
+                    print(_resultMap.toString());
+                    Navigator.pop(context, j);
                   }
                 },
                 child: const Text('go back'))

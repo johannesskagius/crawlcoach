@@ -14,7 +14,7 @@ class OverView extends StatefulWidget {
 }
 
 class _OverViewState extends State<OverView> {
-  Map<String, dynamic> _exercises = {};
+  Map<String, dynamic> _exSet = {};
   Duration? _sessDur;
   final _contoller = TextEditingController();
   final _contoller2 = TextEditingController();
@@ -24,10 +24,12 @@ class _OverViewState extends State<OverView> {
     DateTime _date = DateTime.parse(_shared.getString('date')!);
     if (DateTime.now().difference(_date) < const Duration(hours: 4)) {
       setState(() {
-        String? s = _shared.getString('EX');
-        _exercises = json.decode(s!);
+        String? s2 = _shared.getString('EX');
+        _exSet = jsonDecode(s2!);
       });
     }
+    //print(_exercises.toString());
+    print(_exSet.toString());
   }
 
   void _getWorkOutTime() async {
@@ -99,21 +101,20 @@ class _OverViewState extends State<OverView> {
               child: ListView.builder(
                 key: const PageStorageKey<String>('Page1'),
                 shrinkWrap: true,
-                itemCount: _exercises.length,
+                itemCount: _exSet.length,
                 itemBuilder: (BuildContext context, int index) {
                   int _itemInList = index;
                   _itemInList++;
-                  return _exercises.isNotEmpty
+                  return _exSet.isNotEmpty
                       ? Card(
                           child: ListTile(
                             onTap: () {
                               //_remove(_exercises.keys.elementAt(index));
                             },
                             leading: Text(_itemInList.toString()),
-                            title: Text(
-                                _exercises.keys.elementAt(index).substring(1)),
-                            trailing: Text(
-                                _exercises.values.elementAt(index).toString()),
+                            title: Text(_exSet.keys.elementAt(index)),
+                            // trailing: Text(
+                            //     _exSet.values.elementAt(index).toString()),
                           ),
                         )
                       : const ListTile(
@@ -123,17 +124,17 @@ class _OverViewState extends State<OverView> {
               ),
             ),
             ElevatedButton(
-                onPressed: _exercises.keys.isNotEmpty
+                onPressed: _exSet.keys.isNotEmpty
                     ? () async {
                         final _user = await User2.getLocalUser();
                         //Upload t res
-                        _upLoadRes(_user);
+                        //_upLoadRes(_user);
                         if (_contoller.value.text.isNotEmpty) {
                           //Create a session,
-                          _upLoadPrivate(_user!);
+                          _upLoadPrivate(_user!); //Create private session
                         }
-                        await _resetSess();
-                        Navigator.pop(context);
+                        //await _resetSess();
+                        //Navigator.pop(context);
                       }
                     : null,
                 child: const Text('Completed'))
@@ -143,32 +144,6 @@ class _OverViewState extends State<OverView> {
     );
   }
 
-  void _upLoadRes(User2? _user) {
-    Map<String, Map<String, Object?>> result = {};
-    Set<String> _addedNames = {};
-
-    int i = 0;
-    for (String _exName in _exercises.keys) {
-      String _exNameFormatted = _exName.substring(1);
-      if (!_addedNames.contains(_exNameFormatted)) {
-        i = 0;
-      }
-      String _info = _exercises[_exName].toString();
-      _info = _info.substring(1, _info.length - 1);
-      //result[_exNameFormatted] = {'set_type': _info.replaceFirst(', ', '')} //TODO add sets and reps to info
-      _info = _info.split(',').elementAt(1).trim();
-      result[_exNameFormatted] = {i.toString(): double.parse(_info)};
-      User2.ref
-          .child(_user!.userAuth)
-          .child('r_exercise')
-          .child(_exNameFormatted)
-          .child(_getToday())
-          .update({i.toString(): double.parse(_info)});
-      result.clear();
-      i++;
-      _addedNames.add(_exNameFormatted);
-    }
-  }
 
   String _getToday() {
     final now = DateTime.now();
@@ -180,12 +155,13 @@ class _OverViewState extends State<OverView> {
   }
 
   void _upLoadPrivate(User2 _user) {
-    _exercises = _format();
+    _exSet = _format();
     Session _mySession = Session(
         sessionName: _contoller.value.text,
         desc: _contoller2.value.text,
-        exercises: _exercises,
+        exercises: _exSet,
         videoUrl: 'n');
+
     User2.ref
         .child(_user.userAuth)
         .child('my_sessions')
@@ -202,9 +178,9 @@ class _OverViewState extends State<OverView> {
 
   Map<String, dynamic> _format() {
     Map<String, Object> _formated = {};
-    for (String x in _exercises.keys) {
-      String _name = x.substring(1);
-      _formated[_name] = _exercises[x];
+    for (String x in _exSet.keys) {
+      //print(_exercises[x].toString().split(',').length);
+      _formated[x] = _exSet[x];
     }
     return _formated;
   }
