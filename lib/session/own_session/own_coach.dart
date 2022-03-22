@@ -14,22 +14,30 @@ class OwnCoach extends StatefulWidget {
 }
 
 class _OwnCoachState extends State<OwnCoach> {
+  List<Card> _cards = [];
   List<Session> _completed = [];
 
   void _getCompleted() async {
+    List<Card> _courses = [];
     final _user = await User2.getLocalUser();
     DataSnapshot _data =
-        await User2.ref.child(_user!.userAuth).child('my_sessions').get();
-    for (DataSnapshot _snapshot in _data.children) {
-      final _sess = Session.fromJson(_snapshot.value);
-      _completed.add(_sess);
+        await User2.ref.child(_user!.userAuth).child('c_courses').get();
+    for (DataSnapshot _d in _data.children) {
+      _courses.add(Card(
+        child: ListTile(
+          title: Text(_d.key.toString()),
+          trailing: const Icon(Icons.navigate_next_outlined),
+        ),
+      ));
     }
-    setState(() {});
+    setState(() {
+      _cards = _courses;
+    });
   }
 
   @override
   void initState() {
-    //_getCompleted();
+    _getCompleted();
     super.initState();
   }
 
@@ -71,6 +79,49 @@ class _OwnCoachState extends State<OwnCoach> {
             const Divider(
               height: 1,
             ),
+            Material(
+              elevation: 8,
+              child: Container(
+                child: _cards.isNotEmpty
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Completed courses',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w100,
+                            ),
+                          ),
+                          Scrollbar(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: _cards.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return _cards.elementAt(index);
+                              },
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black12,
+                        ),
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: const [
+                            ListTile(
+                              title: Text(
+                                  'Your completed courses will be saved here',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w100,
+                                  )),
+                            )
+                          ],
+                        ),
+                      ),
+              ),
+            )
           ],
         ),
       ),
