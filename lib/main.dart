@@ -14,6 +14,7 @@ import 'admin/add_session/add_session.dart';
 import 'admin/add_session/view_sessions.dart';
 import 'admin/admin.dart';
 import 'courses/add_offer.dart';
+import 'courses/offer.dart';
 import 'courses/view_offers.dart';
 import 'home.dart';
 import 'session/own_session/own_coach.dart';
@@ -55,6 +56,8 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
+  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
+  List<Offer> _assigned2 = [];
   final PageController pControl = PageController();
   bool isManager = false;
   int _selected = 0;
@@ -85,6 +88,7 @@ class _LayoutState extends State<Layout> {
   @override
   void initState() {
     _checkIfManager();
+    _activateListener();
     super.initState();
   }
 
@@ -111,18 +115,18 @@ class _LayoutState extends State<Layout> {
           onPageChanged: _onPageChanged,
           pageSnapping: true,
           children: isManager
-              ? const [
-                  Home(),
-                  MyCourses(),
-                  OwnCoach(),
-                  Settings(),
-                  Admin(),
+              ? [
+                  const Home(),
+                  MyCourses(_assigned2),
+                  const OwnCoach(),
+                  const Settings(),
+                  const Admin(),
                 ]
-              : const [
-                  Home(),
-                  MyCourses(),
-                  OwnCoach(),
-                  Settings(),
+              : [
+                  const Home(),
+                  MyCourses(_assigned2),
+                  const OwnCoach(),
+                  const Settings(),
                 ],
         ),
       ),
@@ -134,6 +138,44 @@ class _LayoutState extends State<Layout> {
         onTap: onTapped,
       ),
     );
+  }
+
+  Future<void> _activateListener() async {
+    if (User2.firebaseAuth.currentUser!.isAnonymous) {
+      return;
+    }
+    User2? _local = await User2.getLocalUser();
+    List<Offer> _offers = [];
+    _ref
+        .child('users')
+        .child(_local!.userAuth)
+        .child('a_sessions')
+        .onValue
+        .listen((event) async {
+      for (DataSnapshot _courseName in event.snapshot.children) {
+        if (!_courseName.hasChild('session')) {
+          String course = _courseName.key.toString();
+          User2.ref
+              .child(_local.userAuth)
+              .child('c_courses')
+              .child(course)
+              .set(_courseName.value);
+          User2.ref
+              .child(_local.userAuth)
+              .child('a_sessions')
+              .child(course)
+              .remove();
+          break;
+        }
+        Offer newOffer = Offer.fromJson(_courseName.value);
+        if (!_offers.contains(newOffer)) {
+          _offers.add(newOffer);
+        }
+      }
+      setState(() {
+        _assigned2 = _offers;
+      });
+    });
   }
 }
 

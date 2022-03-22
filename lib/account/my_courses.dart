@@ -1,22 +1,20 @@
 import 'package:crawl_course_3/courses/course_info.dart';
 import 'package:crawl_course_3/courses/offer.dart';
 import 'package:crawl_course_3/session/session.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../store.dart';
 import 'user2.dart';
 
 class MyCourses extends StatefulWidget {
-  const MyCourses({Key? key}) : super(key: key);
+  MyCourses(this._assigned2, {Key? key}) : super(key: key);
+  List<Offer> _assigned2 = [];
 
   @override
   State<MyCourses> createState() => _MyCoursesState();
 }
 
 class _MyCoursesState extends State<MyCourses> {
-  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
-  List<Offer> _assigned2 = [];
   bool _isSignedIn = false;
 
   void _setSignedIn() {
@@ -32,7 +30,7 @@ class _MyCoursesState extends State<MyCourses> {
     if (_isSignedIn) {
       return Scrollbar(
         child: CustomScrollView(
-          slivers: _sliverList(context, _assigned2),
+          slivers: _sliverList(context, widget._assigned2),
         ),
       );
     } else {
@@ -45,7 +43,6 @@ class _MyCoursesState extends State<MyCourses> {
   @override
   void initState() {
     _setSignedIn();
-    _activateListener();
     super.initState();
   }
 
@@ -57,44 +54,6 @@ class _MyCoursesState extends State<MyCourses> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<void> _activateListener() async {
-    if (User2.firebaseAuth.currentUser!.isAnonymous) {
-      return;
-    }
-    User2? _local = await User2.getLocalUser();
-    List<Offer> _offers = [];
-    _ref
-        .child('users')
-        .child(_local!.userAuth)
-        .child('a_sessions')
-        .onValue
-        .listen((event) async {
-      for (DataSnapshot _courseName in event.snapshot.children) {
-        if (!_courseName.hasChild('session')) {
-          String course = _courseName.key.toString();
-          User2.ref
-              .child(_local.userAuth)
-              .child('c_courses')
-              .child(course)
-              .set(_courseName.value);
-          User2.ref
-              .child(_local.userAuth)
-              .child('a_sessions')
-              .child(course)
-              .remove();
-          break;
-        }
-        Offer newOffer = Offer.fromJson(_courseName.value);
-        if (!_offers.contains(newOffer)) {
-          _offers.add(newOffer);
-        }
-      }
-      setState(() {
-        _assigned2 = _offers;
-      });
-    });
   }
 }
 

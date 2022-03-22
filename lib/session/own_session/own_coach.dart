@@ -1,5 +1,4 @@
 import 'package:crawl_course_3/session/session.dart';
-import 'package:crawl_course_3/session/session_view_00.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -72,50 +71,6 @@ class _OwnCoachState extends State<OwnCoach> {
             const Divider(
               height: 1,
             ),
-            Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 0.5,
-                    color: Colors.black,
-                  )),
-              child: Stack(
-                alignment: Alignment.topLeft,
-                children: [
-                  const Text(
-                    'Your saved session',
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white38,
-                    ),
-                  ),
-                  ListView.builder(
-                    itemCount: _completed.length,
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        elevation: 4,
-                        child: ListTile(
-                          title: Text(_completed.elementAt(index).sessionName),
-                          trailing:
-                              Text(_completed.elementAt(index).time.toString()),
-                          onTap: () async {
-                            final _user = await User2.getLocalUser();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Session00(
-                                        session: _completed.elementAt(index),
-                                        id: _user!.userAuth,
-                                        offerName: 'OWN')));
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),

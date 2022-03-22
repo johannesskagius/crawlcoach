@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -160,6 +161,7 @@ class Offer {
           buyOffer
               ? ElevatedButton(
                   onPressed: () async {
+                    _handlePurchase();
                     User2? _local = await User2.getLocalUser();
                     _local!.assignToCourse(this);
                     Navigator.pop(context);
@@ -169,6 +171,19 @@ class Offer {
         ],
       ),
     );
+  }
+
+  void _handlePurchase() async {
+    InAppPurchase _inAppPurchase = InAppPurchase.instance;
+    PurchaseParam _param = PurchaseParam(
+        productDetails: ProductDetails(
+            title: this.name,
+            id: '555',
+            currencyCode: '',
+            description: this.desc,
+            price: this.price,
+            rawPrice: 10));
+    _inAppPurchase = _inAppPurchase.getPlatformAddition();
   }
 
   Future<void> removeOfferPic() async {
