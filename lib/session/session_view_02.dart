@@ -22,7 +22,6 @@ class _Session02State extends State<Session02> {
   Future<void> _getListOfExercises3() async {
     DatabaseReference _ref = Exercise.exerciseRef;
     Map<Exercise, Map<String, dynamic>> _gottenExercises = {};
-
     for (Object? _exerciseToGet in widget._session.exercises.keys) {
       String s = jsonEncode(widget._session.exercises[_exerciseToGet]);
       Map<String, dynamic> _t = jsonDecode(s);
@@ -31,8 +30,8 @@ class _Session02State extends State<Session02> {
           .child(_t['exCat'])
           .child(_exerciseToGet.toString())
           .get();
-      //DataSnapshot _x = await _ref.child('standard').child('Body weight').child('High Plank').get();
       final _ex = Exercise.fromJson(_x.value);
+      _ex.other!['r_Type'] = _t['exType'];
       _gottenExercises[_ex] = _t;
     }
     setState(() {

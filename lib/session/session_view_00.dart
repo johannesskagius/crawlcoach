@@ -22,9 +22,13 @@ class Session00 extends StatefulWidget {
 class _Session00State extends State<Session00> {
   String _subTitle = 'video';
   int _selected = 0;
+  bool _showVideo = false;
 
   @override
   void initState() {
+    if (widget.session.videoUrl.isEmpty) {}
+    print(widget.session.videoUrl);
+    print(Uri.parse(widget.session.videoUrl));
     super.initState();
   }
 
@@ -52,27 +56,53 @@ class _Session00State extends State<Session00> {
       body: PageView(
         pageSnapping: true,
         controller: pControll,
-        children: [
-          Session01(widget.session), //Video
-          Session02(widget.session, widget.id), //Exercises as list,
-          Session04(widget.session, widget.id, widget.offerName), //
-        ],
+        children: _showVideo
+            ? _listWVideo(widget.session, widget.id, widget.offerName)
+            : _listWOVideo(widget.session, widget.id, widget.offerName),
         onPageChanged: (value) {
           _changeTitle(value);
         },
       ),
       bottomSheet: BottomNavigationBar(
         currentIndex: _selected,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.done), label: 'Video'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.check_outlined), label: 'Exercises'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.check_outlined), label: 'Completed'),
-        ],
+        items: _showVideo ? _bottomWVideo() : _bottomWOVideo(),
         showSelectedLabels: true,
         selectedItemColor: Colors.greenAccent,
       ),
     );
   }
+}
+
+List<BottomNavigationBarItem> _bottomWOVideo() {
+  return <BottomNavigationBarItem>[
+    const BottomNavigationBarItem(
+        icon: Icon(Icons.check_outlined), label: 'Exercises'),
+    const BottomNavigationBarItem(
+        icon: Icon(Icons.check_outlined), label: 'Completed'),
+  ];
+}
+
+List<BottomNavigationBarItem> _bottomWVideo() {
+  return <BottomNavigationBarItem>[
+    const BottomNavigationBarItem(icon: Icon(Icons.done), label: 'Video'),
+    const BottomNavigationBarItem(
+        icon: Icon(Icons.check_outlined), label: 'Exercises'),
+    const BottomNavigationBarItem(
+        icon: Icon(Icons.check_outlined), label: 'Completed'),
+  ];
+}
+
+List<Widget> _listWVideo(Session _session, String _id, String _offerName) {
+  return <Widget>[
+    Session01(_session), //Video
+    Session02(_session, _id), //Exercises as list,
+    Session04(_session, _id, _offerName),
+  ];
+}
+
+List<Widget> _listWOVideo(Session _session, String _id, String _offerName) {
+  return <Widget>[
+    Session02(_session, _id), //Exercises as list,
+    Session04(_session, _id, _offerName),
+  ];
 }

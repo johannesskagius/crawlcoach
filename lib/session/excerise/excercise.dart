@@ -12,20 +12,21 @@ class ExerciseViewPort extends StatefulWidget {
 
 class _ExerciseViewPortState extends State<ExerciseViewPort> {
   String _videoID = '';
-  late YoutubePlayerController _controller;
+  YoutubePlayerController? _controller;
   bool _isPlayerReady = false;
+  bool _showVideo = false;
   late PlayerState _playerState;
   late YoutubeMetaData _videoMetaData;
 
   @override
   void initState() {
-    if (widget.exercise.url != null) {
-      //_videoID = YoutubePlayer.convertUrlToId(widget.exercise.url.toString())!;
-      _videoID = YoutubePlayer.convertUrlToId(
-          'https://www.youtube.com/watch?v=IkDAb4hlof0')!;
+    String? _vidUrl = widget.exercise.url;
+    if (_vidUrl != null && _vidUrl.isNotEmpty) {
+      _videoID = YoutubePlayer.convertUrlToId(_vidUrl)!;
+      _showVideo = true;
+      _controller = YoutubePlayerController(initialVideoId: _videoID);
+      _controller!.setVolume(30);
     }
-    _controller = YoutubePlayerController(initialVideoId: _videoID);
-    _controller.setVolume(30);
     super.initState();
   }
 
@@ -43,40 +44,49 @@ class _ExerciseViewPortState extends State<ExerciseViewPort> {
           margin: const EdgeInsets.all(8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              SizedBox(
-                height: _height * 0.3,
-                child: YoutubePlayer(
-                  controller: _controller,
-                  showVideoProgressIndicator: true,
-                  progressIndicatorColor: Colors.greenAccent,
-                ),
-              ), //TODO show video of excercise,
-              SizedBox(
-                height: _height * 0.07,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(widget.exercise.perk1),
-                    Text(widget.exercise.perk2),
-                    Text(widget.exercise.perk3)
-                  ],
-                ),
-              ),
-              Expanded(
-                  child: ListView.builder(
-                itemCount: widget.exercise.description.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Explained(
-                    number: index.toString(),
-                    description:
-                        widget.exercise.description.elementAt(index).toString(),
-                    width: _width,
-                  );
-                },
-              ))
-            ],
+            children: _content(
+                _controller, _showVideo, _height, _width, widget.exercise),
           ),
         ));
   }
+}
+
+List<Widget> _content(YoutubePlayerController? _controller, bool _showVideo,
+    double _height, double _width, Exercise _ex) {
+  List<Widget> _list = [];
+  if (_showVideo) {
+    _list.add(_videoPlayer(_controller!, _height));
+  }
+  _list.addAll([
+    SizedBox(
+      height: _height * 0.07,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [Text(_ex.perk1), Text(_ex.perk2), Text(_ex.perk3)],
+      ),
+    ),
+    Expanded(
+        child: ListView.builder(
+      itemCount: _ex.description.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Explained(
+          number: index.toString(),
+          description: _ex.description.elementAt(index).toString(),
+          width: _width,
+        );
+      },
+    ))
+  ]);
+  return _list;
+}
+
+Widget _videoPlayer(YoutubePlayerController _controller, double _height) {
+  return SizedBox(
+    height: _height * 0.3,
+    child: YoutubePlayer(
+      controller: _controller,
+      showVideoProgressIndicator: true,
+      progressIndicatorColor: Colors.greenAccent,
+    ),
+  ); //TODO show video of excercise,
 }

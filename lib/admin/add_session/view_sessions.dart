@@ -3,7 +3,6 @@ import 'package:crawl_course_3/session/session.dart';
 import 'package:crawl_course_3/session/update_session.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 class ViewSessions extends StatefulWidget {
   const ViewSessions({Key? key}) : super(key: key);
@@ -13,14 +12,14 @@ class ViewSessions extends StatefulWidget {
 }
 
 class _ViewSessionsState extends State<ViewSessions> {
-  VideoPlayerController? controller;
   List<Session> _sessions = [];
+  User2? _user;
 
   void _getSessions() async {
-    User2? user = await User2.getLocalUser();
+    _user = await User2.getLocalUser();
     List<Session> _exer = [];
     DataSnapshot snapshot =
-        await Session.sessionRef.child(user!.userAuth).get();
+        await Session.sessionRef.child(_user!.userAuth).get();
     for (DataSnapshot data in snapshot.children) {
       _exer.add(Session.fromJson(data.value));
     }
@@ -53,8 +52,8 @@ class _ViewSessionsState extends State<ViewSessions> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              UpdateSession(_sessions.elementAt(index))));
+                          builder: (context) => UpdateSession(
+                              _user!, _sessions.elementAt(index))));
                 },
                 leading: Text(
                   index.toString(),

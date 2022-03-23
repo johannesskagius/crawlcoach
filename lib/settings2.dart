@@ -44,9 +44,8 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
           ],
         ),
         body: SafeArea(

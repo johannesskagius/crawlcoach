@@ -16,11 +16,10 @@ class AddExercises extends StatefulWidget {
 class _AddExercisesState extends State<AddExercises> {
   final TextEditingController _controller1 = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
-  Map<String, dynamic> _exercises = {};
-  List<String> _exercisesList = [];
-  Map<String, Map<String, String>> _exSet = {};
+  final List<String> _exercisesList = [];
+  final Map<String, Map<String, String>> _exSet = {};
   Map<String, dynamic> _exAdd = {};
-  Map<String, Exercise> _stringToEx = {};
+  final Map<String, Exercise> _stringToEx = {};
   String _exName = '';
   String _sessionStart = '';
 
@@ -162,9 +161,10 @@ class _AddExercisesState extends State<AddExercises> {
                   onPressed: () async {
                     List<String> _list = await Exercise.setUnitAndReps(context);
                     final _e = _stringToEx[_exName];
+                    _e!.other!['r_Type'] = _list.elementAt(2);
                     String _repsNSet =
                         _list.elementAt(0) + ' + ' + _list.elementAt(1);
-                    Object? x = _e!.addExerciseResult(context, _repsNSet);
+                    Object? x = _e.addExerciseResult(context, _repsNSet);
                     if (x != null) {
                       _exSet.putIfAbsent(_e.title, () => {}).addAll({
                         'set': _list.elementAt(0),
@@ -226,7 +226,6 @@ class AutocompleteBasicExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(_list.to);
     return Autocomplete<String>(
       optionsBuilder: (TextEditingValue textEditingValue) {
         if (textEditingValue.text == '') {

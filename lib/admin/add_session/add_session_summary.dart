@@ -50,10 +50,7 @@ class SessionsSummary extends StatelessWidget {
       bottomSheet: ElevatedButton(
         onPressed: () async {
           final user2 = await User2.getLocalUser();
-          Session.sessionRef
-              .child(user2!.userAuth)
-              .child(_session.sessionName)
-              .set(_session.toJson());
+          _session.uploadSession(user2!.userAuth);
           Navigator.pop(context);
         },
         child: const Text('To Server'),

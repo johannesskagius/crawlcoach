@@ -3,8 +3,9 @@ import 'package:crawl_course_3/session/session.dart';
 import 'package:flutter/material.dart';
 
 class UpdateSession extends StatelessWidget {
-  const UpdateSession(this._session, {Key? key}) : super(key: key);
+  const UpdateSession(this._user, this._session, {Key? key}) : super(key: key);
   final Session _session;
+  final User2 _user;
 
   @override
   Widget build(BuildContext context) {
@@ -12,12 +13,13 @@ class UpdateSession extends StatelessWidget {
       appBar: AppBar(
         title: Text(_session.sessionName),
       ),
-      body: sessionCon(_session, context),
+      body: sessionCon(_session, context, _user),
+      resizeToAvoidBottomInset: false,
     );
   }
 }
 
-Container sessionCon(Session _session, BuildContext context) {
+Container sessionCon(Session _session, BuildContext context, User2 _user) {
   final _width = MediaQuery.of(context).size.width;
   final _height =
       MediaQuery.of(context).size.height - AppBar().preferredSize.height;
@@ -31,7 +33,7 @@ Container sessionCon(Session _session, BuildContext context) {
             child: Image.asset('assets/crawl.jpeg'),
           ),
           //info about the session,
-          _session.previewTable(_width, _height),
+          _session.previewTable(_user.userAuth, _width, _height, context),
           //Exercises
           ListView.builder(
             itemCount: _session.exercises.keys.length,
@@ -49,10 +51,7 @@ Container sessionCon(Session _session, BuildContext context) {
           ElevatedButton(
               onPressed: () async {
                 final user2 = await User2.getLocalUser();
-                Session.sessionRef
-                    .child(user2!.userAuth)
-                    .child(_session.sessionName)
-                    .remove();
+                _session.removeSession(user2!.userAuth);
                 Navigator.pop(context);
               },
               child: const Text('Delete session')),

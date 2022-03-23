@@ -9,8 +9,8 @@ class Session {
   static final DatabaseReference sessionRef =
       FirebaseDatabase.instance.ref().child('sessions');
   String? time;
-  final String sessionName;
-  final String desc;
+  String sessionName;
+  String desc;
   final String videoUrl;
   final Map<Object?, Object?> exercises;
 
@@ -45,48 +45,98 @@ class Session {
     return 'Session{_sessionName: $sessionName, _desc: $desc}';
   }
 
-  Table previewTable(double _width, double _height) {
+  void uploadSession(String _id) {
+    Session.sessionRef.child(_id).child(sessionName).set(toJson());
+  }
+
+  void removeSession(String _id) {
+    Session.sessionRef.child(_id).child(sessionName).remove();
+  }
+
+  GestureDetector previewTable(
+      String _user, double _width, double _height, BuildContext context) {
+    final _controller = TextEditingController();
+    _controller.text = sessionName;
+    String _oldName = sessionName;
+    final _controller2 = TextEditingController();
+    _controller2.text = desc;
+    bool? _update = false;
     const double headerSize = 18;
-    return Table(
-      columnWidths: <int, TableColumnWidth>{
-        0: FixedColumnWidth(_width * 0.35),
-        1: const FlexColumnWidth(),
-      },
-      border: TableBorder.all(),
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: [
-        TableRow(children: <Widget>[
-          const TableCell(
-              child: Text(
-            'Name:',
-            style: TextStyle(fontSize: headerSize, fontWeight: FontWeight.bold),
-          )),
-          TableCell(child: Text(sessionName)),
-        ]),
-        TableRow(children: <Widget>[
-          const TableCell(
-              child: Text('Nr of exercises:',
-                  style: TextStyle(
-                      fontSize: headerSize, fontWeight: FontWeight.bold))),
-          TableCell(
-            child: Text(exercises.keys.length.toString()),
+    return GestureDetector(
+      onTap: () async {
+        _update = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('How many repetitions?'),
+            actions: [
+              TextField(
+                decoration: const InputDecoration(hintText: 'Sets'),
+                controller: _controller,
+                keyboardType: TextInputType.name,
+              ),
+              TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Reps',
+                ),
+                controller: _controller2,
+                keyboardType: TextInputType.multiline,
+              ),
+              TextButton(
+                  child: const Text("accept"),
+                  onPressed: () {
+                    removeSession(_user);
+                    sessionName = _controller.value.text;
+                    desc = _controller2.value.text;
+                    Navigator.pop(context, true);
+                  }),
+            ],
           ),
-        ]),
-        TableRow(children: <Widget>[
-          const TableCell(
-              child: Text('Description:',
-                  style: TextStyle(
-                      fontSize: headerSize, fontWeight: FontWeight.bold))),
-          TableCell(child: Text(desc)),
-        ]),
-      ],
+        );
+        if (_update != null && _update == true) {
+          uploadSession(_user);
+        }
+      },
+      child: Table(
+        columnWidths: <int, TableColumnWidth>{
+          0: FixedColumnWidth(_width * 0.35),
+          1: const FlexColumnWidth(),
+        },
+        border: TableBorder.all(),
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: [
+          TableRow(children: <Widget>[
+            const TableCell(
+                child: Text(
+              'Name:',
+              style:
+                  TextStyle(fontSize: headerSize, fontWeight: FontWeight.bold),
+            )),
+            TableCell(child: Text(sessionName)),
+          ]),
+          TableRow(children: <Widget>[
+            const TableCell(
+                child: Text('Nr of exercises:',
+                    style: TextStyle(
+                        fontSize: headerSize, fontWeight: FontWeight.bold))),
+            TableCell(
+              child: Text(exercises.keys.length.toString()),
+            ),
+          ]),
+          TableRow(children: <Widget>[
+            const TableCell(
+                child: Text('Description:',
+                    style: TextStyle(
+                        fontSize: headerSize, fontWeight: FontWeight.bold))),
+            TableCell(child: Text(desc)),
+          ]),
+        ],
+      ),
     );
   }
 }
 
 Session _sessionFromJson(dynamic json) {
-  return Session(
-      json['time'],
+  return Session(json['time'],
       sessionName: json['title'],
       desc: json['subTitle'],
       exercises: json['exercises'],
@@ -148,10 +198,10 @@ class SessionPreviewNoSession extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => Session00(
-                    session: session,
-                    id: _sessionKey,
-                    offerName: _offerName,
-                  )));
+                        session: session,
+                        id: _sessionKey,
+                        offerName: _offerName,
+                      )));
         },
         title: Text(
           _sessionName,

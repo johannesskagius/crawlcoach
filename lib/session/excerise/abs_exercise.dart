@@ -146,15 +146,8 @@ class Exercise {
       case 'times':
         return _openAntalProg(context, _repsSet);
       case 'minutes':
-        return _openAntalProg(context, _repsSet);
       case 'seconds':
-        break;
-      case 'kilometers':
-        break;
       case 'meters':
-        break;
-      case '':
-        print('you cant track this atm');
         break;
     }
     return null;
