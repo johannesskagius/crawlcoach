@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'own_sess_add_ex.dart';
 import 'own_sess_sum.dart';
 
-class FreeSession extends StatefulWidget {
-  const FreeSession({Key? key}) : super(key: key);
+class FreeSessionGym extends StatefulWidget {
+  const FreeSessionGym(this.sport, {Key? key}) : super(key: key);
+  final String sport;
 
   @override
-  _FreeSessionState createState() => _FreeSessionState();
+  _FreeSessionGymState createState() => _FreeSessionGymState();
 }
 
-class _FreeSessionState extends State<FreeSession> {
+class _FreeSessionGymState extends State<FreeSessionGym> {
   final _controller = PageController();
 
   @override

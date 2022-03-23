@@ -3,17 +3,17 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../../account/user2.dart';
-import 'free_session.dart';
+import 'free_session00.dart';
 import 'my_session.dart';
 
-class OwnCoach extends StatefulWidget {
-  const OwnCoach({Key? key}) : super(key: key);
+class OwnSessions extends StatefulWidget {
+  const OwnSessions({Key? key}) : super(key: key);
 
   @override
-  _OwnCoachState createState() => _OwnCoachState();
+  _OwnSessionsState createState() => _OwnSessionsState();
 }
 
-class _OwnCoachState extends State<OwnCoach> {
+class _OwnSessionsState extends State<OwnSessions> {
   List<Card> _cards = [];
   List<Session> _completed = [];
 
@@ -70,7 +70,7 @@ class _OwnCoachState extends State<OwnCoach> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const FreeSession()));
+                              builder: (context) => const FreeSession00()));
                     },
                     title: const Text('Start session'),
                   ),

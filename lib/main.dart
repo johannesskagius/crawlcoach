@@ -17,7 +17,7 @@ import 'courses/add_offer.dart';
 import 'courses/offer.dart';
 import 'courses/view_offers.dart';
 import 'home.dart';
-import 'session/own_session/own_coach.dart';
+import 'session/own_session/own_session.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -118,14 +118,14 @@ class _LayoutState extends State<Layout> {
               ? [
                   const Home(),
                   MyCourses(_assigned2),
-                  const OwnCoach(),
+                  const OwnSessions(),
                   const Settings(),
                   const Admin(),
                 ]
               : [
                   const Home(),
                   MyCourses(_assigned2),
-                  const OwnCoach(),
+                  const OwnSessions(),
                   const Settings(),
                 ],
         ),
