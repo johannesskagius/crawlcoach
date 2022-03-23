@@ -45,7 +45,7 @@ class _OwnCoachState extends State<OwnCoach> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Train'),
+        backgroundColor: Colors.transparent,
         actions: [
           IconButton(
               onPressed: () {

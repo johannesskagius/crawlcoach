@@ -43,18 +43,24 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          actions: [
+            IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+          ],
+        ),
         body: SafeArea(
-      child: Stack(
-        children: [
-          PageView(
-            scrollDirection: Axis.vertical,
-            controller: pControll,
-            pageSnapping: true,
-            children: _widgets,
+          child: Stack(
+            children: [
+              PageView(
+                scrollDirection: Axis.vertical,
+                controller: pControll,
+                pageSnapping: true,
+                children: _widgets,
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
 

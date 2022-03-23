@@ -21,21 +21,27 @@ class _OverViewState extends State<OverView> {
 
   void _getStoredData() async {
     SharedPreferences _shared = await SharedPreferences.getInstance();
-    DateTime _date = DateTime.parse(_shared.getString('date')!);
-    if (DateTime.now().difference(_date) < const Duration(hours: 4)) {
-      setState(() {
-        String? s2 = _shared.getString('EX');
-        _exSet = jsonDecode(s2!);
-      });
+    String? _startDate = _shared.getString('date');
+    if (_startDate != null) {
+      DateTime _date = DateTime.parse(_startDate);
+      if (DateTime.now().difference(_date) < const Duration(hours: 4)) {
+        setState(() {
+          String? s2 = _shared.getString('EX');
+          _exSet = jsonDecode(s2!);
+        });
+      }
     }
   }
 
   void _getWorkOutTime() async {
     SharedPreferences _shared = await SharedPreferences.getInstance();
-    DateTime _date = DateTime.parse(_shared.getString('date')!);
-    setState(() {
-      _sessDur = DateTime.now().difference(_date);
-    });
+    String? _workOutStart = _shared.getString('date');
+    if (_workOutStart != null) {
+      DateTime _date = DateTime.parse(_shared.getString('date')!);
+      setState(() {
+        _sessDur = DateTime.now().difference(_date);
+      });
+    }
   }
 
   @override
@@ -160,7 +166,6 @@ class _OverViewState extends State<OverView> {
         desc: _contoller2.value.text,
         exercises: _exSet,
         videoUrl: 'n');
-
     User2.ref
         .child(_user.userAuth)
         .child('my_sessions')
@@ -170,7 +175,6 @@ class _OverViewState extends State<OverView> {
 
   Future<void> _resetSess() async {
     SharedPreferences _shared = await SharedPreferences.getInstance();
-    //remove all
     _shared.remove('EX');
     _shared.remove('date');
   }
