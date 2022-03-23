@@ -26,9 +26,10 @@ class _Session00State extends State<Session00> {
 
   @override
   void initState() {
-    if (widget.session.videoUrl.isEmpty) {}
-    print(widget.session.videoUrl);
-    print(Uri.parse(widget.session.videoUrl));
+    String s = widget.session.videoUrl;
+    if (s.isNotEmpty) {
+      _showVideo = true;
+    }
     super.initState();
   }
 
