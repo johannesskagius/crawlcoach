@@ -19,7 +19,21 @@ class Session02 extends StatefulWidget {
 class _Session02State extends State<Session02> {
   Map<Exercise, Map<String, dynamic>> _values = {};
 
-  Future<void> _getListOfExercises3() async {
+  Future<void> _getListOfExercises() async {
+    switch (widget._session.sessionType) {
+      case 'Gym':
+        await _exercisesOnGymApi();
+        break;
+      case 'Swim':
+      case 'Run':
+      case 'Yoga':
+      case 'Bike':
+        await _exercisesOnFirebase();
+        break;
+    }
+  }
+
+  Future<void> _exercisesOnFirebase() async {
     DatabaseReference _ref = Exercise.exerciseRef;
     Map<Exercise, Map<String, dynamic>> _gottenExercises = {};
     for (Object? _exerciseToGet in widget._session.exercises.keys) {
@@ -41,7 +55,7 @@ class _Session02State extends State<Session02> {
 
   @override
   void initState() {
-    _getListOfExercises3();
+    _getListOfExercises();
     super.initState();
   }
 
@@ -86,4 +100,6 @@ class _Session02State extends State<Session02> {
       },
     );
   }
+
+  _exercisesOnGymApi() {}
 }

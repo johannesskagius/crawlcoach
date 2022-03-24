@@ -157,7 +157,7 @@ class Exercise {
     return Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ExerciseResult(this, _repsSet)));
+            builder: (context) => ExerciseResult(title, _repsSet)));
   }
 }
 

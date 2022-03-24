@@ -48,6 +48,7 @@ dependencies:
   firebase_in_app_messaging: ^0.6.0+9
   fl_chart: ^0.46.0
   in_app_purchase: ^3.0.2
+  http: ^0.13.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

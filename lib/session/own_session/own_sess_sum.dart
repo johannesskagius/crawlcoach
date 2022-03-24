@@ -55,6 +55,18 @@ class _OverViewState extends State<OverView> {
     WidgetsBinding.instance?.focusManager.primaryFocus?.unfocus();
   }
 
+  void _uploadRes(
+      String _name, User2 _user, Map<String, String> _resultMap) async {
+    print(_name);
+    print(_resultMap.toString());
+    User2.ref
+        .child(_user.userAuth)
+        .child('r_exercise')
+        .child(_name)
+        .child(_getToday())
+        .update(_resultMap);
+  }
+
   @override
   Widget build(BuildContext context) {
     final _height =
@@ -109,6 +121,7 @@ class _OverViewState extends State<OverView> {
                 itemBuilder: (BuildContext context, int index) {
                   int _itemInList = index;
                   _itemInList++;
+                  String _exName = _exSet.keys.elementAt(index);
                   return _exSet.isNotEmpty
                       ? Card(
                           child: ListTile(
@@ -116,9 +129,8 @@ class _OverViewState extends State<OverView> {
                               //_remove(_exercises.keys.elementAt(index));
                             },
                             leading: Text(_itemInList.toString()),
-                            title: Text(_exSet.keys.elementAt(index)),
-                            // trailing: Text(
-                            //     _exSet.values.elementAt(index).toString()),
+                            title: Text(_exName),
+                            trailing: Text(_exSet[_exName]['result']),
                           ),
                         )
                       : const ListTile(
@@ -130,11 +142,21 @@ class _OverViewState extends State<OverView> {
             ElevatedButton(
                 onPressed: _exSet.keys.isNotEmpty
                     ? () async {
-                        final _user = await User2.getLocalUser();
-                        //Upload t res
-                        //_upLoadRes(_user);
+                  final _user = await User2.getLocalUser();
+                        for (String s in _exSet.keys) {
+                          Map<String, String> _resMap = {};
+                          String _x = _exSet[s]['result'].toString();
+                          _x = _x.substring(1, _x.length - 1);
+                          for (String ss in _x.split(',')) {
+                            _resMap[_resMap.keys.length.toString()] =
+                                ss.toString();
+                          }
+                          _resMap['set'] = _exSet[s]['set'];
+                          _resMap['reps'] = _exSet[s]['reps'];
+                          _uploadRes(s, _user!, _resMap);
+                        }
+
                         if (_contoller.value.text.isNotEmpty) {
-                          //Create a session,
                           _upLoadPrivate(_user!); //Create private session
                         }
                         await _resetSess();
@@ -159,13 +181,13 @@ class _OverViewState extends State<OverView> {
   }
 
   void _upLoadPrivate(User2 _user) {
-    _exSet = _format();
     Session _mySession = Session(
-        _sessDur!.inMinutes.toString() + 'min',
+        _sessDur!.inMinutes.toString() + 'min', 'Gym',
         sessionName: _contoller.value.text,
         desc: _contoller2.value.text,
         exercises: _exSet,
         videoUrl: 'n');
+
     User2.ref
         .child(_user.userAuth)
         .child('my_sessions')
@@ -177,13 +199,5 @@ class _OverViewState extends State<OverView> {
     SharedPreferences _shared = await SharedPreferences.getInstance();
     _shared.remove('EX');
     _shared.remove('date');
-  }
-
-  Map<String, dynamic> _format() {
-    Map<String, Object> _formated = {};
-    for (String x in _exSet.keys) {
-      _formated[x] = _exSet[x];
-    }
-    return _formated;
   }
 }

@@ -7,8 +7,9 @@ import '../../session/session.dart';
 import 'add_session_summary.dart';
 
 class SessionExercises extends StatefulWidget {
-  const SessionExercises(this._name, this._desc, {Key? key}) : super(key: key);
-  final String _name, _desc;
+  const SessionExercises(this._name, this._desc, this._sport, {Key? key})
+      : super(key: key);
+  final String _name, _desc, _sport;
 
   @override
   _SessionExercisesState createState() => _SessionExercisesState();
@@ -72,15 +73,6 @@ class _SessionExercisesState extends State<SessionExercises> {
         'exType': _reps.elementAt(2)
       },
     );
-    // if (_exReps.containsKey(_ex.title)) {
-    //   _exReps[_ex.title]!
-    //     ..add(_reps)
-    //     ..add(_isUserMade.toString())
-    //     ..add(_exType);
-    // } else {
-    //   List<Object> _list = [_reps, _isUserMade, _exType];
-    //   _exReps[_ex.title] = _list;
-    // }
     setState(() {
       _nrChosen++;
     });
@@ -115,6 +107,7 @@ class _SessionExercisesState extends State<SessionExercises> {
                             MaterialPageRoute(
                                 builder: (context) => SessionsSummary(Session(
                                   '',
+                                      widget._sport,
                                       exercises: _exReps2,
                                       sessionName: widget._name,
                                       desc: widget._desc,

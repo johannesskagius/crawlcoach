@@ -22,7 +22,7 @@ class AddSession extends StatelessWidget {
         child: SizedBox(
           width: _width * 0.9,
           height: _height,
-          child: SessionGeneral(),
+          child: const SessionGeneral(),
         ),
       ),
     );
@@ -42,9 +42,18 @@ class _SessionGeneralState extends State<SessionGeneral> {
   @override
   Widget build(BuildContext context) {
     final List<TextEditingController> _txtEditList =
-        List.generate(2, (index) => TextEditingController());
+        List.generate(3, (index) => TextEditingController());
     _txtEditList.elementAt(0).text = 'TEST';
-    _txtEditList.elementAt(1).text = 'Strengthen';
+    _txtEditList.elementAt(1).text = 'Sport';
+    _txtEditList.elementAt(2).text = 'Strengthen';
+    String _exName = '';
+    List<String> _sports = [
+      'Swim',
+      'Gym',
+      'Run',
+      'Yoga',
+      'Bike',
+    ];
 
     return Container(
       margin: const EdgeInsets.all(8),
@@ -53,16 +62,36 @@ class _SessionGeneralState extends State<SessionGeneral> {
         child: Column(
           children: [
             _sessionName(_txtEditList),
+            Autocomplete(onSelected: (value) {
+              _exName = value as String;
+            }, optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return const Iterable<String>.empty();
+              }
+              return _sports.where((String option) {
+                return option.contains(textEditingValue.text);
+              });
+            }),
             _desc(_txtEditList),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  if (_exName.isEmpty) {
+                    return await showDialog(
+                        context: context,
+                        builder: (context) => const AlertDialog(
+                              title: Text('Set sport'),
+                            ));
+                  }
                   if (_formKey.currentState!.validate()) {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SessionExercises(
-                                _txtEditList.elementAt(0).value.text,
-                                _txtEditList.elementAt(1).value.text)));
+                          builder: (context) => SessionExercises(
+                              _txtEditList.elementAt(0).value.text,
+                              _exName,
+                              //_txtEditList.elementAt(1).value.text,
+                              _txtEditList.elementAt(2).value.text),
+                        ));
                   }
                 },
                 child: const Text('Show exercises')),
@@ -78,7 +107,7 @@ class _SessionGeneralState extends State<SessionGeneral> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       minLines: 1,
       maxLines: 4,
-      controller: _txtEditList.elementAt(1),
+      controller: _txtEditList.elementAt(2),
       decoration: const InputDecoration(
           hintText: 'Describe it', labelText: 'Description'),
       validator: (value) {
@@ -94,6 +123,21 @@ class _SessionGeneralState extends State<SessionGeneral> {
       keyboardType: TextInputType.text,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: _txtEditList.elementAt(0),
+      decoration: const InputDecoration(
+          hintText: 'Intro crawl', labelText: 'Session name'),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Session name';
+        }
+      },
+    );
+  }
+
+  TextFormField _sessionSport(List<TextEditingController> _txtEditList) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: _txtEditList.elementAt(1),
       decoration: const InputDecoration(
           hintText: 'Intro crawl', labelText: 'Session name'),
       validator: (value) {

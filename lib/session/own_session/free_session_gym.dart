@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'own_sess_add_ex.dart';
+import 'own_gym_sess.dart';
 import 'own_sess_sum.dart';
 
 class FreeSessionGym extends StatefulWidget {
@@ -13,6 +13,8 @@ class FreeSessionGym extends StatefulWidget {
 
 class _FreeSessionGymState extends State<FreeSessionGym> {
   final _controller = PageController();
+
+  void _getExercises() {}
 
   @override
   void initState() {
@@ -39,9 +41,9 @@ class _FreeSessionGymState extends State<FreeSessionGym> {
           controller: _controller,
           pageSnapping: true,
           onPageChanged: _pageChanged,
-          children: const [
-            AddExercises(),
-            OverView(),
+          children: [
+            AddExercises(widget.sport),
+            const OverView(),
           ],
         ),
         bottomNavigationBar: Row(),

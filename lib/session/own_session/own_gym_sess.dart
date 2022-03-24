@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:crawl_course_3/session/excerise/gym_exercise.dart';
+import 'package:crawl_course_3/session/excerise/gym_exercise_desc.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../excerise/abs_exercise.dart';
 
 class AddExercises extends StatefulWidget {
-  const AddExercises({Key? key}) : super(key: key);
+  const AddExercises(this._sport, {Key? key}) : super(key: key);
+  final String _sport;
 
   @override
   _AddExercisesState createState() => _AddExercisesState();
@@ -20,6 +23,7 @@ class _AddExercisesState extends State<AddExercises> {
   final Map<String, Map<String, String>> _exSet = {};
   Map<String, dynamic> _exAdd = {};
   final Map<String, Exercise> _stringToEx = {};
+  Map<String, GymExercise> _listOfExercises = {};
   String _exName = '';
   String _sessionStart = '';
 
@@ -44,6 +48,10 @@ class _AddExercisesState extends State<AddExercises> {
     setState(() {});
   }
 
+  void _getAllExercises2() async {
+    _listOfExercises = await APIService().getData();
+  }
+
   void _getStoredData() async {
     SharedPreferences _shared = await SharedPreferences.getInstance();
     String? _x = _shared.getString('date');
@@ -66,9 +74,13 @@ class _AddExercisesState extends State<AddExercises> {
       _shared.setString('date', DateTime.now().toString());
       _shared.setString('EX', _ex);
       setState(() {
-        _sessionStart = DateTime.now().hour.toString() +
-            ':' +
-            DateTime.now().minute.toString();
+        String min = '';
+        if (DateTime.now().minute.toString().length == 1) {
+          min = '0' + DateTime.now().minute.toString();
+        } else {
+          min = DateTime.now().minute.toString();
+        }
+        _sessionStart = DateTime.now().hour.toString() + ':' + min;
       });
     } else {
       _shared.remove('EX');
@@ -77,7 +89,8 @@ class _AddExercisesState extends State<AddExercises> {
 
   @override
   void initState() {
-    _getAllExercises();
+    //_getAllExercises();
+    _getAllExercises2();
     _getStoredData();
     super.initState();
   }
@@ -150,7 +163,7 @@ class _AddExercisesState extends State<AddExercises> {
                 if (textEditingValue.text == '') {
                   return const Iterable<String>.empty();
                 }
-                return _exercisesList.where((String option) {
+                return _listOfExercises.keys.where((String option) {
                   return option.contains(textEditingValue.text);
                 });
               }),
@@ -159,22 +172,12 @@ class _AddExercisesState extends State<AddExercises> {
               padding: const EdgeInsets.all(20),
               child: ElevatedButton(
                   onPressed: () async {
-                    List<String> _list = await Exercise.setUnitAndReps(context);
-                    final _e = _stringToEx[_exName];
-                    _e!.other!['r_Type'] = _list.elementAt(2);
-                    String _repsNSet =
-                        _list.elementAt(0) + ' + ' + _list.elementAt(1);
-                    Object? x = _e.addExerciseResult(context, _repsNSet);
-                    if (x != null) {
-                      _exSet.putIfAbsent(_e.title, () => {}).addAll({
-                        'set': _list.elementAt(0),
-                        'reps': _list.elementAt(1),
-                      });
-                      _exAdd[_e.title] = _exSet[_e.title];
-                      _saveData();
-                      _controller1.text = '';
-                      _controller2.text = '';
-                    }
+                    final _e = _listOfExercises[_exName];
+                    _exAdd[_e!.name] = {};
+                    _saveData();
+                    _controller1.text = '';
+                    _controller2.text = '';
+                    _exName = '';
                     WidgetsBinding.instance?.focusManager.primaryFocus
                         ?.unfocus();
                   },
@@ -190,19 +193,64 @@ class _AddExercisesState extends State<AddExercises> {
                 itemBuilder: (BuildContext context, int index) {
                   int _itemInList = index;
                   _itemInList++;
+                  String _exName = _exAdd.keys.toList().elementAt(index);
                   return _exAdd.isNotEmpty
-                      ? Card(
-                    child: ListTile(
-                      onTap: () {
-                        _remove(_exAdd.keys.elementAt(index));
-                      },
-                      leading: Text(_itemInList.toString()),
-                      title: Text(_exAdd.keys.elementAt(index)),
-                    ),
-                  )
+                      ? Dismissible(
+                          key: UniqueKey(),
+                          onDismissed: (direction) {
+                            _remove(_exName);
+                          },
+                          background: Container(
+                            color: Colors.red.shade900,
+                            child: const Center(child: Text('Remove')),
+                          ),
+                          child: Card(
+                            child: ListTile(
+                              onTap: () async {
+                                GymExercise? _ex = _listOfExercises[_exName];
+                                List<String>? _list =
+                                    await _ex!.setUnitAndReps(context);
+                                if (_list == null) {
+                                  return;
+                                }
+                                List<String>? x =
+                                    await _ex.addExerciseResult(context, _list);
+                                if (x.length > 2) {
+                                  List<String> _res = x.sublist(3);
+                                  _exSet.putIfAbsent(
+                                      _ex.name,
+                                      () => {
+                                            'set': _list.elementAt(1),
+                                            'reps': _list.elementAt(2),
+                                            'result': _res.toString()
+                                          });
+                                  setState(() {
+                                    _exAdd[_ex.name] = _exSet[_ex.name];
+                                  });
+                                  _saveData();
+                                }
+                              },
+                              onLongPress: () {
+                                GymExercise? _ex = _listOfExercises[
+                                    _exAdd.keys.elementAt(index)];
+                                if (_ex != null) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              GymExerciseDesc(exercise: _ex)));
+                                }
+                              },
+                              leading: Text(_itemInList.toString()),
+                              title: Text(_exName),
+                              trailing:
+                                  Text(_exAdd[_exName]['result'].toString()),
+                            ),
+                          ),
+                        )
                       : const ListTile(
-                    title: Text('Complete first exercise'),
-                  );
+                          title: Text('Complete first exercise'),
+                        );
                 },
               ),
             ),
@@ -232,7 +280,7 @@ class AutocompleteBasicExample extends StatelessWidget {
           return const Iterable<String>.empty();
         }
         return _list.where((String option) {
-          return option.contains(textEditingValue.text.toLowerCase());
+          return option.contains(textEditingValue.text);
         });
       },
       onSelected: (String selection) {

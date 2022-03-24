@@ -89,6 +89,7 @@ class _LayoutState extends State<Layout> {
   void initState() {
     _checkIfManager();
     _activateListener();
+    //_downloadGymExercises(); Todo download all gymexercises and save them locally.
     super.initState();
   }
 

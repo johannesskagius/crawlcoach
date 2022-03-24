@@ -3,12 +3,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import 'abs_exercise.dart';
-
 class ExerciseResult extends StatefulWidget {
-  const ExerciseResult(this._exercise, this._type, {Key? key})
-      : super(key: key);
-  final Exercise _exercise;
+  const ExerciseResult(this._exTitle, this._type, {Key? key}) : super(key: key);
+  final String _exTitle;
   final String _type;
 
   @override
@@ -19,7 +16,8 @@ class _ExerciseResultState extends State<ExerciseResult> {
   final List<BarChartGroupData> _barData = [];
   Map<String, Map<Object, Object>> _resultMap = {};
   Map<Object, Object> _userRes = {};
-  List<double> _tResult = [];
+  List<double> _earlierResult = [];
+  List<double> _todaysRes = [];
   int j = 0;
 
   double _maxY = 0;
@@ -29,7 +27,7 @@ class _ExerciseResultState extends State<ExerciseResult> {
     DataSnapshot _data = await User2.ref
         .child(user!.userAuth)
         .child('r_exercise')
-        .child(widget._exercise.title)
+        .child(widget._exTitle)
         .get();
     for (DataSnapshot x in _data.children) {
       List<double> _results = [];
@@ -37,7 +35,7 @@ class _ExerciseResultState extends State<ExerciseResult> {
         if (x2.key != null && x2.key != 'set_type') {
           double _res = double.parse(x2.value.toString());
           if (x.key.toString() == _getToday()) {
-            _tResult.add(_res);
+            _earlierResult.add(_res);
           } else {
             _results.add(_res);
           }
@@ -59,7 +57,7 @@ class _ExerciseResultState extends State<ExerciseResult> {
     User2.ref
         .child(user!.userAuth)
         .child('r_exercise')
-        .child(widget._exercise.title)
+        .child(widget._exTitle)
         .update(_resultMap);
   }
 
@@ -75,8 +73,8 @@ class _ExerciseResultState extends State<ExerciseResult> {
 
   @override
   void initState() {
-    _getData().whenComplete(
-        () => _barData.add(_makeGroupData(int.parse(_getToday()), _tResult)));
+    _getData().whenComplete(() =>
+        _barData.add(_makeGroupData(int.parse(_getToday()), _earlierResult)));
     super.initState();
   }
 
@@ -138,13 +136,14 @@ class _ExerciseResultState extends State<ExerciseResult> {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  double _res = await getResult(_tResult.length);
-                  _userRes[_tResult.length.toString()] = _res;
+                  double _res = await getResult(_earlierResult.length);
+                  _userRes[_earlierResult.length.toString()] = _res;
+                  _todaysRes.add(_res);
                   _barData.removeLast();
                   setState(() {
-                    _tResult.add(_res);
-                    _barData
-                        .add(_makeGroupData(int.parse(_getToday()), _tResult));
+                    _earlierResult.add(_res);
+                    _barData.add(
+                        _makeGroupData(int.parse(_getToday()), _earlierResult));
                     if (_res > _maxY) {
                       _maxY = _res;
                     }
@@ -153,12 +152,15 @@ class _ExerciseResultState extends State<ExerciseResult> {
                 child: const Text('Add result')),
             ElevatedButton(
                 onPressed: () {
-                  if (_tResult.isEmpty) {
+                  if (_earlierResult.isEmpty) {
                     _barData.removeLast();
                   } else {
-                    _uploadRes();
-                    print(_resultMap.toString());
-                    Navigator.pop(context, j);
+                    //_uploadRes();
+                    List<String> _res = [j.toString()];
+                    for (double x in _todaysRes) {
+                      _res.add(x.toString());
+                    }
+                    Navigator.pop(context, _res);
                   }
                 },
                 child: const Text('go back'))

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'free_session01.dart';
+import 'free_session_gym.dart';
 
 class FreeSession00 extends StatelessWidget {
   const FreeSession00({Key? key}) : super(key: key);
@@ -8,8 +8,12 @@ class FreeSession00 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void _sendToNext(String _sport) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => FreeSessionGym(_sport)));
+      switch (_sport) {
+        case 'Gym':
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => FreeSessionGym(_sport)));
+          break;
+      }
     }
 
     return Scaffold(
@@ -22,7 +26,7 @@ class FreeSession00 extends StatelessWidget {
           SliverPadding(
             padding: const EdgeInsets.all(20),
             sliver: SliverGrid.count(
-              crossAxisCount: 1,
+              crossAxisCount: 2,
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
               children: [
@@ -31,7 +35,7 @@ class FreeSession00 extends StatelessWidget {
                   child: Container(
                     color: Colors.red,
                     padding: const EdgeInsets.all(8),
-                    child: Center(child: const Text('Gym')),
+                    child: const Center(child: Text('Gym')),
                   ),
                 ),
                 GestureDetector(

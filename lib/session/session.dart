@@ -12,15 +12,17 @@ class Session {
   String sessionName;
   String desc;
   final String videoUrl;
+  final String? sessionType;
   final Map<Object?, Object?> exercises;
 
-  Session(this.time,
+  Session(this.time, this.sessionType,
       {required this.sessionName,
       required this.desc,
       required this.exercises,
       required this.videoUrl});
 
   Map<String, dynamic> toJson() => {
+        'sessiontype': sessionType,
         'title': sessionName,
         'subTitle': desc,
         'video_url': '',
@@ -136,7 +138,7 @@ class Session {
 }
 
 Session _sessionFromJson(dynamic json) {
-  return Session(json['time'],
+  return Session(json['time'], json['sessionType'],
       sessionName: json['title'],
       desc: json['subTitle'],
       exercises: json['exercises'],
